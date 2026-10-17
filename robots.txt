@@ -1,0 +1,6 @@
+# tfkir.net
+User-agent: *
+Allow: /
+Disallow: /functions/
+
+Sitemap: https://tfkir.net/sitemap.xml

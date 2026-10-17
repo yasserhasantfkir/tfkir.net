@@ -1,0 +1,66 @@
+# tfkir.net — الدكتور ياسر حسن
+
+موقع شخصي لـالدكتور ياسر حسن: تفكير طبي، أفكار ومقالات، مشاريع شخصية، ومحاضرات.
+مبني كصفحات ثابتة (Static) بدون أي إطار عمل، ومنشور على **Cloudflare Pages**.
+
+---
+
+## البنية
+
+```
+index.html …            الصفحات المولَّدة (المحتوى النهائي)
+assets/css/             base · components · pages
+assets/js/app.js        كل الوظائف (سمة، قائمة، كشف، تصفية، نموذج…)
+assets/js/ideas.data.js بيانات المقالات (مولَّدة آليًا)
+assets/img/             الصور والأيقونات
+functions/api/contact.js Cloudflare Pages Function — استقبال رسائل النموذج
+tools/content.mjs       ← المصدر الوحيد للمحتوى (عدّله أولًا)
+tools/pages.mjs         قوالب الصفحات
+tools/render.mjs        الهيكل العام (هيدر، فوتر، SEO، JSON-LD)
+tools/icons.mjs         أيقونات SVG
+tools/build.mjs         مُولّد الموقع
+```
+
+## تعديل المحتوى
+
+1. عدّل `tools/content.mjs` فقط.
+2. شغّل:
+
+```bash
+npm run build
+```
+
+3. ادفع التغييرات — Cloudflare Pages سيعيد النشر تلقائيًا.
+
+> markers على شكل `TODO` في `content.mjs` هي الفراغات المخصّصة لملء المحتوى.
+> راجع `CONTENT.md` لقائمة ما يجب تعبئته.
+
+## النشر
+
+- المستودع: GitHub
+- المشروع: Cloudflare Pages (تكامل Git)
+- النطاق: `tfkir.net` مربوط بالمشروع
+- أمر البناء: **فارغ** (المخرجات جاهزة في الجذر)
+- مجلد الإخراج: `/`
+
+## نموذج التواصل
+
+يعمل عبر Cloudflare Pages Function في `functions/api/contact.js`.
+بدون إعداد إضافي يعمل التحقق والمصيدة، ويعيد الموقع الردّ بـ `503`
+فتتح رسالة `mailto:` عند الزائر كبديل آمن.
+
+لتفعيل الإرسال الحقيقي، اضبط متغيّرًا سرّيًا في إعدادات Pages:
+
+```
+CONTACT_WEBHOOK_URL   رابط Webhook (Make / Zapier / n8n / Cloudflare Worker)
+```
+
+أو أضف مفتاح `RESEND_API_KEY` + `CONTACT_TO` للإرسال عبر Resend
+(يتطلب إضافة سطر واحد في الدالة).
+
+## الدومين
+
+```
+tfkir.net      CNAME  <project>.pages.dev
+www.tfkir.net  CNAME  <project>.pages.dev
+```

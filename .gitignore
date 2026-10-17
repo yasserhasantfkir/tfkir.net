@@ -1,0 +1,21 @@
+# نظام
+.DS_Store
+Thumbs.db
+node_modules/
+npm-debug.log*
+
+# محرّرات
+.vscode/
+.idea/
+*.swp
+
+# مؤقت
+.cache/
+tmp/
+*.log
+
+# الصورة الأصلية غير المقروءة داخل هذه البيئة
+IMG-20251209-WA0052.jpg
+.and-code/
+__pycache__/
+*.pyc

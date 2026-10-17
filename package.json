@@ -1,0 +1,15 @@
+{
+  "name": "tfkir-net",
+  "version": "1.0.0",
+  "private": true,
+  "description": "تفكير — موقع شخصي للدكتور ياسر حسن",
+  "type": "module",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "dev": "node tools/serve.mjs",
+    "watch": "node tools/build.mjs --watch"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

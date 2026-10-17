@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="tfkir.net — الدكتور ياسر حسن">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#070b10"/>
+      <stop offset=".55" stop-color="#0a1119"/>
+      <stop offset="1" stop-color="#0d1620"/>
+    </linearGradient>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34d0b8"/>
+      <stop offset=".45" stop-color="#7fd7e8"/>
+      <stop offset="1" stop-color="#d9b96a"/>
+    </linearGradient>
+    <radialGradient id="a1" cx=".82" cy=".08" r=".62">
+      <stop offset="0" stop-color="#34d0b8" stop-opacity=".30"/>
+      <stop offset="1" stop-color="#34d0b8" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="a2" cx=".06" cy=".96" r=".6">
+      <stop offset="0" stop-color="#d9b96a" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#d9b96a" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="72" height="72" patternUnits="userSpaceOnUse">
+      <path d="M72 0H0V72" fill="none" stroke="#ffffff" stroke-opacity=".05" stroke-width="1"/>
+    </pattern>
+    <clipPath id="frame"><rect width="1200" height="630"/></clipPath>
+  </defs>
+
+  <g clip-path="url(#frame)">
+    <rect width="1200" height="630" fill="url(#bg)"/>
+    <rect width="1200" height="630" fill="url(#a1)"/>
+    <rect width="1200" height="630" fill="url(#a2)"/>
+    <rect width="1200" height="630" fill="url(#grid)"/>
+
+    <!-- waveform -->
+    <path d="M-20 470h150l14-2 12-26 10 46 12-38 12 20h150l14-2 12-26 10 46 12-38 12 20h150l14-2 12-26 10 46 12-38 12 20h150l14-2 12-26 10 46 12-38 12 20h140"
+          fill="none" stroke="#34d0b8" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- ring -->
+    <circle cx="960" cy="250" r="150" fill="none" stroke="url(#brand)" stroke-opacity=".28" stroke-width="1.5" stroke-dasharray="5 9"/>
+    <circle cx="960" cy="250" r="196" fill="none" stroke="#ffffff" stroke-opacity=".07" stroke-width="1"/>
+
+    <!-- monogram -->
+    <g transform="translate(78 96)">
+      <rect width="72" height="72" rx="20" fill="url(#brand)"/>
+      <g fill="none" stroke="#04100e" stroke-width="6.5" stroke-linecap="round">
+        <path d="M17 22h38"/>
+        <path d="M36 22v26"/>
+        <path d="M36 33c0 9-8 15-18 16"/>
+        <path d="M36 33c0 7 7 13 17 13"/>
+      </g>
+    </g>
+
+    <text x="176" y="146" font-family="Space Grotesk, IBM Plex Sans Arabic, sans-serif" font-size="26"
+          letter-spacing="7" fill="#8b97a5">TAFKIR  ·  TFKIR.NET</text>
+
+    <text x="78" y="268" font-family="IBM Plex Sans Arabic, sans-serif" font-size="88" font-weight="600"
+          fill="#e9edf2">الدكتور ياسر حسن</text>
+
+    <text x="78" y="368" font-family="IBM Plex Sans Arabic, sans-serif" font-size="54" font-weight="500"
+          fill="url(#brand)">الطب، والفكرة التي تسبقه</text>
+
+    <text x="78" y="428" font-family="IBM Plex Sans Arabic, sans-serif" font-size="30" font-weight="300"
+          fill="#c3ccd6">التفكير الطبي · الأفكار والمقالات · المشاريع الشخصية · المحاضرات</text>
+
+    <!-- chips -->
+    <g font-family="IBM Plex Sans Arabic, sans-serif" font-size="22" fill="#c3ccd6">
+      <g transform="translate(78 486)">
+        <rect width="196" height="52" rx="26" fill="#ffffff" fill-opacity=".05" stroke="#34d0b8" stroke-opacity=".35"/>
+        <text x="98" y="34" text-anchor="middle">التفكير الطبي</text>
+      </g>
+      <g transform="translate(290 486)">
+        <rect width="176" height="52" rx="26" fill="#ffffff" fill-opacity=".05" stroke="#d9b96a" stroke-opacity=".35"/>
+        <text x="88" y="34" text-anchor="middle">أفكار ومقالات</text>
+      </g>
+      <g transform="translate(482 486)">
+        <rect width="164" height="52" rx="26" fill="#ffffff" fill-opacity=".05" stroke="#7fd7e8" stroke-opacity=".3"/>
+        <text x="82" y="34" text-anchor="middle">مشاريع</text>
+      </g>
+      <g transform="translate(662 486)">
+        <rect width="164" height="52" rx="26" fill="#ffffff" fill-opacity=".05" stroke="#d9b96a" stroke-opacity=".3"/>
+        <text x="82" y="34" text-anchor="middle">محاضرات</text>
+      </g>
+    </g>
+
+    <text x="1122" y="574" text-anchor="end" font-family="Space Grotesk, sans-serif" font-size="22"
+          letter-spacing="4" fill="#5d6975">tfkir.net</text>
+  </g>
+</svg>

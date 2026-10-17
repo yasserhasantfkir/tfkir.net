@@ -1,0 +1,22 @@
+# Cloudflare Pages — إعادة التوجيه
+
+/index.html      /            301
+/index           /            301
+/home            /            301
+/من-الرئيسية     /            301
+
+/privacy         /privacy.html  301
+/contact         /contact.html  301
+/links           /links.html    301
+/ideas           /ideas.html    301
+/projects        /projects.html 301
+/about           /about.html    301
+/thinking        /thinking.html 301
+/talks           /talks.html    301
+/article         /article.html  301
+
+/rss             /feed.xml      301
+/feed            /feed.xml      301
+
+# Sphinx / واجهات برمجية قديمة
+/api/health      /api/contact   302

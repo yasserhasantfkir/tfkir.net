@@ -1,0 +1,46 @@
+{
+  "name": "تفكير — الدكتور ياسر حسن",
+  "short_name": "تفكير",
+  "description": "مساحة شخصية يشارك فيها الدكتور ياسر حسن أفكاره ومشاريعه، ويعالج من خلالها التفكير الطبي بوصفه أقدم أشكال الفهم وأدقّها أثرًا في الممارسة.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "lang": "ar",
+  "dir": "rtl",
+  "background_color": "#0a0f15",
+  "theme_color": "#0a0f15",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/img/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/img/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "عن الدكتور",
+      "url": "/about.html"
+    },
+    {
+      "name": "التفكير الطبي",
+      "url": "/thinking.html"
+    },
+    {
+      "name": "الأفكار",
+      "url": "/ideas.html"
+    }
+  ]
+}
