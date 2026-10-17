@@ -202,7 +202,7 @@ export function siteFooter() {
 
     <div class="footer-bottom">
       <span>© <span class="latin" id="year">${new Date().getFullYear()}</span> ${esc(doctor.nameAr)} — جميع الحقوق محفوظة.</span>
-      <span class="footer-bottom__built"><span class="pulse-dot" aria-hidden="true"></span> مبني على <span class="latin">Cloudflare Pages</span></span>
+      <span class="footer-bottom__built"><span class="pulse-dot" aria-hidden="true"></span> ${esc(site.domain)}</span>
     </div>
   </div>
 </footer>

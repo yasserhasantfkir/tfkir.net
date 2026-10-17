@@ -185,7 +185,7 @@ export function aboutPage() {
     kicker: "عن الدكتور",
     title: `${esc(D.nameShort)}، <span class="gradient-text">طبيبٌ يفكّر ويكتب</span>`,
     lead:
-      "صفحة تعريفية بالمسار المهني والفكري: من أين أتى، وما الذي أعمل عليه الآن، وما الذي أ believe به في ممارسة الطب.",
+      "صفحة تعريفية بالمنصة ومؤسسها: الأفكار، والميادين، والدعوة.",
     crumbs: [{ label: "الرئيسية", href: "/" }, { label: "عن الدكتور" }],
     aside: `<div class="contact-method" style="background:var(--grad-brand-soft)">
             <span class="contact-method__ico">${icon("user")}</span>
@@ -519,7 +519,7 @@ export function projectsPage() {
     .map(
       (p, idx) => `<article class="proj" data-reveal data-cat="${esc(p.statusAr)}" style="--d:${(idx % 3) * 90}ms">
             <div class="proj__top">
-              <div class="proj__thumb" aria-hidden="true"><span class="glyph">${esc(p.glyph)}</span></div>
+              <span class="card__icon">${icon("spark")}</span>
               <span class="status status--${p.status}">${esc(p.statusAr)}</span>
             </div>
             <h2 class="proj__title">${esc(p.title)}</h2>
@@ -812,7 +812,7 @@ export function contactPage() {
     kicker: "تواصل",
     title: "اتصل <span class=\"gradient-text\">بنا</span>",
     lead:
-      "لطلبات المحاضرات، ومناقشة الأفكار، واقتراح المصادر، أو أي سؤال concerns المحتوى. الرسالة تصل مباشرة، ويجيبها الدكتور ياسر شخصيًا أو عبر بريده.",
+      "لطلبات المحاضرات، ومناقشة الأفكار، واقتراح المصادر، أو أي سؤال يتعلّق بالمحتوى. الرسالة تصل مباشرة، ويجيبها الدكتور ياسر شخصيًا أو عبر بريده.",
     crumbs: [{ label: "الرئيسية", href: "/" }, { label: "اتصل بنا" }],
     aside: `<span class="availability"><span class="pulse-dot" aria-hidden="true"></span>${esc(D.availability)}</span>`,
   })}
