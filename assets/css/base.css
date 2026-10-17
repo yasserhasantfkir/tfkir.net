@@ -4,7 +4,7 @@
    ============================================================ */
 
 /* ---------- Fonts ---------- */
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@200;300;400;500;600;700&family=Reem+Kufi:wght@400;500;600;700&family=Amiri:ital,wght@0,400;0,700;1,400&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap");
 
 /* ---------- Tokens ---------- */
 :root {
@@ -54,10 +54,10 @@
   --grad-fade-x: linear-gradient(90deg, transparent, var(--ink-850) 82%);
 
   /* Typography */
-  --font-display: "Reem Kufi", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-display: "Noto Naskh Arabic", "IBM Plex Sans Arabic", "Amiri", serif;
   --font-body: "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
-  --font-serif: "Amiri", "Times New Roman", serif;
-  --font-latin: "Space Grotesk", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font-serif: "Noto Naskh Arabic", "Amiri", "Times New Roman", serif;
+  --font-latin: "IBM Plex Sans Arabic", "Noto Naskh Arabic", system-ui, sans-serif;
 
   /* Fluid type scale */
   --fs-hero: clamp(2.55rem, 1.15rem + 5.4vw, 6.1rem);

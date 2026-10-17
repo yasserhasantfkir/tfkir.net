@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
-  site, doctor, marquee, pillars, domains,
+  site, doctor, marquee, domains,
   timeline, ideas, ideaCategories, projects, projectFilters, talks, talkTypes,
   linkGroups, footer, nav,
 } from "./content.mjs";

@@ -2,7 +2,7 @@
    tools/pages.mjs — بناء صفحات الموقع
    ============================================================ */
 import {
-  site, doctor, marquee, pillars, domains,
+  site, doctor, marquee, domains,
   timeline, ideas, ideaCategories, projects, projectFilters, talks, talkTypes,
   linkGroups,
 } from "./content.mjs";
@@ -16,19 +16,6 @@ const articleHref = (slug) => `/article?id=${encodeURIComponent(slug)}`;
    1) الرئيسية
    ============================================================ */
 export function homePage() {
-  const pillarCards = pillars
-    .map(
-      (p, i) => `<a class="card" href="${p.href}" data-reveal style="--d:${i * 90}ms">
-            <span class="card__icon">${icon(p.icon)}</span>
-            <h3 class="card__title">${esc(p.title)}</h3>
-            <p class="card__text">${esc(p.text)}</p>
-            <div class="card__foot">
-              <span class="tlink">${esc(p.cta)}${icon("arrowLeft", "btn__arrow")}</span>
-            </div>
-          </a>`
-    )
-    .join("\n          ");
-
   const domainCards = domains
     .map(
       (d, i) => `<a class="card" href="/thinking" data-reveal style="--d:${i * 60}ms">
@@ -142,43 +129,7 @@ export function homePage() {
   </div>
 </section>
 
-<!-- ===================== المحاور ===================== -->
-<section class="section" id="pillars">
-  <div class="shell">
-    <div class="sect-head sect-head--center">
-      <span class="kicker" data-reveal>${icon("layers")} المحاور</span>
-      <h2 style="margin-top:.9rem" data-reveal>أربعة مسارات <span class="gradient-text">واحد</span></h2>
-      <p class="lead" data-reveal style="--d:120ms">الموقع مبني على أربعة أعمدة مترابطة: تفكيرٌ يُكتب، وأفكارٌ تُنشر، ومشاريعٌ تُبنى، وجلساتٌ تُشارك.</p>
-    </div>
-    <div class="grid grid--4">
-          ${pillarCards}
-    </div>
-  </div>
-</section>
-
-<!-- ===================== التفكير الطبي ===================== -->
-<section class="section" id="thinking-preview">
-  <div class="shell">
-    <div class="grid" style="grid-template-columns:minmax(0,1fr);gap:clamp(1.5rem,1rem+2.5vw,3rem)">
-      <div class="sect-head" style="margin-bottom:0">
-        <span class="kicker" data-reveal>${icon("brain")} التفكير الطبي</span>
-        <h2 style="margin-top:.9rem" data-reveal>الفرق بين من يعرف، <span class="mark">ومن يعرف مريضه</span></h2>
-        <p class="lead" data-reveal style="--d:120ms">
-          يبدأ كل شيء من هنا: التشخيص ليس اسمًا يُمنح، بل قرارٌ يُبنى. وهذه بعض المبادئ التي أعمل بها،
-          وأكتب عنها كثيرًا.
-        </p>
-      </div>
-      <div data-reveal>
-        <a class="btn btn--primary" href="/thinking">كل المبادئ والمنهجية${icon("arrowLeft", "btn__arrow")}</a>
-      </div>
-    </div>
-  </div>
-  <div class="shell" style="padding-top:clamp(2rem,1.4rem+2vw,3.5rem)">
-    <div class="is-in">${pulseSvg}</div>
-  </div>
-</section>
-
-<!-- ===================== ستة ميادين ===================== -->
+<!-- ===================== ستة ميادين (محور) ===================== -->
 <section class="section" id="domains">
   <div class="shell">
     <div class="sect-head sect-head--center">
@@ -188,24 +139,6 @@ export function homePage() {
     </div>
     <div class="grid grid--3">
           ${domainCards}
-    </div>
-  </div>
-</section>
-
-<!-- ===================== دعوة ===================== -->
-<section class="section" id="invite">
-  <div class="shell">
-    <div class="cta-band" data-reveal="scale">
-      <span class="kicker" style="justify-content:center">${icon("spark")} دعوة</span>
-      <h2 class="cta-band__title" style="margin-top:.8rem">هل أنت منظم مؤتمر أو مركز تدريب؟</h2>
-      <p class="lead cta-band__text">
-        أستقبل دعوات الدورات والمحاضرات في التفكير الطبي والمنطق والحِجاج واللغة
-        والنهضة، خصوصًا في كليات الطب وبرامج تدريب المقيمين.
-      </p>
-      <div class="cta-band__actions">
-        <a class="btn btn--primary btn--lg" href="/contact?type=talk">${icon("send")}<span>أرسل دعوة</span></a>
-        <a class="btn btn--ghost btn--lg" href="/links">${icon("link")}<span>كل الروابط</span></a>
-      </div>
     </div>
   </div>
 </section>
