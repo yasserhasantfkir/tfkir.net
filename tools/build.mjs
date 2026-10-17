@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 import {
@@ -23,9 +24,18 @@ const cleanUrls = (html) =>
 const write = (rel, content) => {
   const full = path.join(ROOT, rel);
   fs.mkdirSync(path.dirname(full), { recursive: true });
-  fs.writeFileSync(full, cleanUrls(content));
+  fs.writeFileSync(full, content);
   return rel;
 };
+
+/* بصمة محتوى لكل ملف ثابت: تكسر كاش المتصفح وCloudflare عند كل تغيير */
+const assetHash = (absUrl) => {
+  const p = path.join(ROOT, absUrl.replace(/^\//, "").split("?")[0]);
+  if (!fs.existsSync(p)) return "0";
+  return createHash("sha1").update(fs.readFileSync(p)).digest("hex").slice(0, 8);
+};
+const versionAssets = (html) =>
+  html.replace(/(\/assets\/(?:css|js)\/[\w.-]+\.(?:css|js))"/g, (m, url) => `${url}?v=${assetHash(url)}"`);
 
 const log = [];
 const done = (rel) => log.push(rel);
@@ -44,12 +54,14 @@ const jsFor = (lang) =>
   Object.fromEntries(Object.entries(jsStrings).map(([k, v]) => [k, v[lang]]).filter(([, v]) => v));
 const stripI18nAttrs = (html) => html.replace(/\s+data-i18n(?:-placeholder)?="[^"]*"/g, "");
 
-const emitPage = (file, html, urlPath) => {
+const emitPage = (file, rawHtml, urlPath) => {
+  /* توحيد الروابط (إزالة .html) قبل أي معالجة، حتى تنجح تثبيت البادئة */
+  const html = cleanUrls(rawHtml);
   /* النسخة العربية: بلا معالجة شجرية — نفس المخرجات السابقة */
   let ar = stripI18nAttrs(html);
   ar = fillSwitcher(ar, "ar", urlPath, site.origin);
   ar = patchHead(ar, "ar", urlPath, null, site.origin);
-  done(write(file, ar));
+  done(write(file, versionAssets(ar)));
 
   /* TR / EN: شجرة ترجمة كاملة */
   for (const lang of LOCALES) {
@@ -62,7 +74,7 @@ const emitPage = (file, html, urlPath) => {
       `<script>window.TFKIR_STR=${JSON.stringify(jsFor(lang))};</script>
 <script src="/assets/js/app.js" defer></script>`
     );
-    done(write(`${lang}/${file}`, h));
+    done(write(`${lang}/${file}`, versionAssets(h)));
   }
 };
 
@@ -152,6 +164,8 @@ const today = site.updatedAt;
 const statics = [
   { loc: "/", pri: "1.0", freq: "weekly" },
   { loc: "/about", pri: "0.9", freq: "monthly" },
+  { loc: "/article", pri: "0.6", freq: "monthly" },
+  { loc: "/thank-you", pri: "0.2", freq: "yearly" },
   { loc: "/thinking", pri: "0.9", freq: "monthly" },
   { loc: "/ideas", pri: "0.8", freq: "weekly" },
   { loc: "/projects", pri: "0.8", freq: "monthly" },
@@ -571,6 +585,7 @@ done(
         type: "module",
         scripts: {
           build: "node tools/build.mjs",
+          verify: "node tools/verify.mjs",
           dev: "node tools/serve.mjs",
           watch: "node tools/build.mjs --watch",
         },
