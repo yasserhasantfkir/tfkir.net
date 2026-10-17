@@ -313,48 +313,31 @@ export function aboutPage() {
   </div>
 </section>
 
-<section class="section">
-  <div class="shell">
-    <div class="sect-head">
-      <span class="kicker" data-reveal>${icon("clock")} المسار</span>
-      <h2 style="margin-top:.9rem" data-reveal>الرحلة <span class="mark">حتى الآن</span></h2>
-      <p class="lead" data-reveal style="--d:120ms">محطات أسّست أسلوب التفكير الحالي، من العيادة إلى الكتابة.</p>
-    </div>
-    <div class="timeline">
-          <p class="form-note">${icon("pen")} السيرة ستُضاف لاحقًا.</p>
-    </div>
-    <p class="form-note" style="margin-top:1.6rem">${icon("pen")} محطات موضوعة كهيكل جاهز — املأ التواريخ والنصوص في <span class="latin">tools/content.mjs</span>.</p>
-  </div>
-</section>
-
-<section class="section section--tight">
-  <div class="shell">
-    <div class="sect-head">
-      <span class="kicker" data-reveal>${icon("message")} أسئلة شائعة</span>
-      <h2 style="margin-top:.9rem" data-reveal>قبل أن <span class="gradient-text">تكتب</span></h2>
-    </div>
-    ${accordion(faqs, "about-faq")}
-  </div>
-</section>
-
-${ctaBand()}`;
+${ctaBand({
+  title: "لديك حالة تستحق المناقشة؟",
+  text: "أحيانًا تكون الفكرة الأكثر قيمة هي الفكرة التي لم تُكتب بعد. أرسلها، وسأقرأها.",
+  primary: { href: "/contact", label: "أرسل فكرتك" },
+  secondary: { href: "/projects", label: "تصفّح المشاريع" },
+})}`;
 
   return layout({
-    active: "/about",
-    path: "/about",
-    title: `عن ${D.nameShort}`,
-    desc: `الملف الشخصي والمهني لـ${D.nameAr}: المسار، والقيم، ومجال العمل، والأسئلة الشائعة حول محتوى الموقع.`,
+    active: "/thinking",
+    path: "/thinking",
+    title: "التفكير الطبي — المنهجية والمبادئ",
+    desc:
+      "منهجية التفكير في الطب: المراحل، والمبادئ، وأدوات التفكير السريري، وأمثلة على تدوين الحالة وقراءة الأدلة.",
     body,
     jsonLd: {
       "@context": "https://schema.org",
-      "@type": "AboutPage",
-      mainEntity: personLd(),
+      "@type": "CollectionPage",
+      name: "التفكير الطبي",
+      about: { "@type": "Thing", name: "التفكير السريري" },
     },
   });
 }
 
 /* ============================================================
-   3) التفكير الطبي
+   4) الأفكار
    ============================================================ */
 export function thinkingPage() {
   const domainCards = domains
@@ -385,7 +368,7 @@ export function thinkingPage() {
     <div class="sect-head">
       <span class="kicker" data-reveal>${icon("layers")} المراحل</span>
       <h2 style="margin-top:.9rem" data-reveal>كيف يعمل <span class="mark">العقل السريري</span></h2>
-      <p class="lead" data-reveal style="--d:120ms">خمس مراحل متكررة في كل حالة، من أول انتباه إلى آخر توثيق.</p>
+      <p class="lead" data-reveal style="--d:120ms">ستة ميادين، من أول انتباه إلى آخر توثيق.</p>
     </div>
     <div class="grid grid--3">
           ${domainCards}
@@ -393,43 +376,18 @@ export function thinkingPage() {
   </div>
 </section>
 
-<section class="section section--tight">
-  <div class="shell">
-    <div class="sect-head">
-      <span class="kicker" data-reveal>${icon("scales")} المبادئ</span>
-      <h2 style="margin-top:.9rem" data-reveal>التفكير <span class="gradient-text">الطبّي</span> كمنهج</h2>
-    </div>
-  </div>
-</section>
-
-<section class="section section--tight">
-  <div class="shell">
-    <div class="sect-head sect-head--center">
-      <span class="kicker" data-reveal>${icon("quote")} خلاصة</span>
-      <h2 style="margin-top:.9rem" data-reveal>ما أحاول <span class="gradient-text">أن أتقنه</span></h2>
-    </div>
-    <div class="shell--narrow" style="padding-inline:0;margin-inline:auto">
-      <blockquote class="quote" data-reveal="scale">
-        <p>أن تصلك حالة، فتبني بدلًا من الانطباع الفرضيات، وتكتب بدل أن تنسى، وتعترف بنقطة لا تعرف فيها بدل أن تخترع إجابة. الباقي تفاصيل تقنية يمكن تعلّمها؛ أما هذا فشأنه.</p>
-        <cite>مبدأ شخصي، مستمد من الممارسة لا من الكتاب</cite>
-      </blockquote>
-    </div>
-  </div>
-</section>
-
 ${ctaBand({
-  title: "لديك حالة تستحق المناقشة؟",
-  text: "أحيانًا تكون الفكرة الأكثر قيمة هي الفكرة التي لم تُكتب بعد. أرسلها، وسأقرأها.",
-  primary: { href: "/contact", label: "أرسل فكرتك" },
-  secondary: { href: "/projects", label: "تصفّح المشاريع" },
+  title: "لديك idea أو طلب؟".replace("idea","فكرة"),
+  text: "أرسل طلبك أو نبذة عن فكرتك، وسأقرأها بتمعّن.",
+  primary: { href: "/contact", label: "أرسل طلبك" },
+  secondary: { href: "/links", label: "كل الروابط" },
 })}`;
 
   return layout({
     active: "/thinking",
     path: "/thinking",
     title: "التفكير الطبي — المنهجية والمبادئ",
-    desc:
-      "منهجية التفكير في الطب: المراحل، والمبادئ، وأدوات التفكير السريري، وأمثلة على تدوين الحالة وقراءة الأدلة.",
+    desc: "منهجية التفكير في الطب: المراحل، والمبادئ، وأدوات التفكير السريري.",
     body,
     jsonLd: {
       "@context": "https://schema.org",
@@ -440,9 +398,6 @@ ${ctaBand({
   });
 }
 
-/* ============================================================
-   4) الأفكار
-   ============================================================ */
 export function ideasPage() {
   const chips = ideaCategories
     .map(
@@ -1076,15 +1031,7 @@ export function contactPage() {
   </div>
 </section>
 
-<section class="section section--tight">
-  <div class="shell">
-    <div class="sect-head">
-      <span class="kicker" data-reveal>${icon("message")} أسئلة شائعة</span>
-      <h2 style="margin-top:.9rem" data-reveal>قبل أن <span class="gradient-text">تكتب</span></h2>
-    </div>
-    ${accordion(faqs, "contact-faq")}
-  </div>
-</section>`;
+`;
 
   return layout({
     active: "/contact",

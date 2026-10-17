@@ -33,6 +33,7 @@ const done = (rel) => log.push(rel);
 done(write("index.html", P.homePage()));
 done(write("about.html", P.aboutPage()));
 done(write("thinking.html", P.thinkingPage()));
+
 done(write("ideas.html", P.ideasPage()));
 done(write("article.html", P.articlePage()));
 done(write("projects.html", P.projectsPage()));
