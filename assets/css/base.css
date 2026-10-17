@@ -276,6 +276,13 @@ strong, b { font-weight: 600; color: var(--text); }
   background: linear-gradient(90deg, transparent, var(--teal-400));
 }
 
+.kicker svg {
+  width: 1.55em;
+  height: 1.55em;
+  flex: none;
+}
+.kicker > span { flex: none; }
+
 .latin {
   font-family: var(--font-latin);
   font-variant-numeric: tabular-nums;
