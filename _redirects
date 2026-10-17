@@ -1,22 +1,18 @@
 # Cloudflare Pages — إعادة التوجيه
+# ملاحظة: لا تُستخدم اختصارات بلا امتداد هنا، لأن Pages يخدمها أصلًا
+# (/about ← about.html مباشرة). الاختصارات أدناه تخص مسارات أخرى فقط.
+
+# www ← النطاق الأساسي (نسخة واحدة فقط للمحتوى، أفضل لمحركات البحث)
+https://www.tfkir.net/*   https://tfkir.net/:splat   301
 
 /index.html      /            301
 /index           /            301
 /home            /            301
-/من-الرئيسية     /            301
-
-/privacy         /privacy.html  301
-/contact         /contact.html  301
-/links           /links.html    301
-/ideas           /ideas.html    301
-/projects        /projects.html 301
-/about           /about.html    301
-/thinking        /thinking.html 301
-/talks           /talks.html    301
-/article         /article.html  301
+/الرئيسية        /            301
 
 /rss             /feed.xml      301
 /feed            /feed.xml      301
+/feed.xml        /feed.xml      200
 
-# Sphinx / واجهات برمجية قديمة
-/api/health      /api/contact   302
+# اختصار عربي إضافي
+/ابدأ-من-هنا   /            301

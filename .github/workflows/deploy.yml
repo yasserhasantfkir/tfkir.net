@@ -1,0 +1,79 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [deploy]
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build &amp; Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Generate pages
+        run: node tools/build.mjs
+
+      - name: Stage deploy folder
+        run: node tools/stage.mjs "${{ runner.temp }}/tfkir-site"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: ${{ runner.temp }}/tfkir-site
+          retention-days: 7
+          if-no-files-found: error
+
+  deploy:
+    name: Deploy to Cloudflare
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://tfkir.net
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: ${{ runner.temp }}/tfkir-site
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          api_token: ${{ secrets.CF_API_TOKEN }}
+          account_id: ${{ secrets.CF_ACCOUNT_ID }}
+          project_name: tfkir
+          directory: ${{ runner.temp }}/tfkir-site
+          branch: main
+          git_commit_hash: ${{ github.sha }}
+          git_commit_message: ${{ github.event.head_commit.message }}
+          fail_open: true
+
+      - name: Verify
+        run: |
+          sleep 15
+          for url in https://tfkir.net/ https://tfkir.net/about https://tfkir.net/contact; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' "$url" || true)
+            echo "$url -> $code"
+          done

@@ -1,0 +1,11 @@
+# Cloudflare Pages — إعدادات wrangler
+# تُستخدم فقط عند النشر من سطر الأوامر؛ النشر التلقائي يتم عبر
+# .github/workflows/deploy.yml
+#
+#   node tools/build.mjs
+#   node tools/stage.mjs /tmp/tfkir-site
+#   npx wrangler pages deploy /tmp/tfkir-site --project-name=tfkir
+
+name = "tfkir"
+compatibility_date = "2026-10-17"
+pages_build_output_dir = "/tmp/tfkir-site"

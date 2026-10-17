@@ -10,10 +10,19 @@ import {
 import * as P from "./pages.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+
+/* Cloudflare Pages يخدم /about مباشرةً ويحوّل /about.html إليها (308).
+   لذلك نجعل كل الروابط والـ canonical بلا امتداد: صفر قفزات. */
+const cleanUrls = (html) =>
+  html
+    .replace(/href="(\/[\w-]+)\.html(#[^"]*)?"/g, 'href="$1$2"')
+    .replace(/(<link rel="canonical" href="https?:\/\/[^"]+)\.html(")/g, "$1$2")
+    .replace(/(og:url" content="https?:\/\/[^"]+)\.html(")/g, "$1$2");
+
 const write = (rel, content) => {
   const full = path.join(ROOT, rel);
   fs.mkdirSync(path.dirname(full), { recursive: true });
-  fs.writeFileSync(full, content);
+  fs.writeFileSync(full, cleanUrls(content));
   return rel;
 };
 
@@ -77,18 +86,18 @@ Sitemap: ${site.origin}/sitemap.xml
 const today = site.updatedAt;
 const statics = [
   { loc: "/", pri: "1.0", freq: "weekly" },
-  { loc: "/about.html", pri: "0.9", freq: "monthly" },
-  { loc: "/thinking.html", pri: "0.9", freq: "monthly" },
-  { loc: "/ideas.html", pri: "0.8", freq: "weekly" },
-  { loc: "/projects.html", pri: "0.8", freq: "monthly" },
-  { loc: "/talks.html", pri: "0.7", freq: "monthly" },
-  { loc: "/links.html", pri: "0.6", freq: "monthly" },
-  { loc: "/contact.html", pri: "0.7", freq: "yearly" },
-  { loc: "/privacy.html", pri: "0.3", freq: "yearly" },
+  { loc: "/about", pri: "0.9", freq: "monthly" },
+  { loc: "/thinking", pri: "0.9", freq: "monthly" },
+  { loc: "/ideas", pri: "0.8", freq: "weekly" },
+  { loc: "/projects", pri: "0.8", freq: "monthly" },
+  { loc: "/talks", pri: "0.7", freq: "monthly" },
+  { loc: "/links", pri: "0.6", freq: "monthly" },
+  { loc: "/contact", pri: "0.7", freq: "yearly" },
+  { loc: "/privacy", pri: "0.3", freq: "yearly" },
 ];
 const urls = [
   ...statics,
-  ...ideas.map((i) => ({ loc: `/article.html?id=${encodeURIComponent(i.slug)}`, pri: "0.7", freq: "monthly", mod: i.date })),
+  ...ideas.map((i) => ({ loc: `/article?id=${encodeURIComponent(i.slug)}`, pri: "0.7", freq: "monthly", mod: i.date })),
 ];
 done(
   write(
@@ -127,8 +136,8 @@ ${ideas
   .map(
     (i) => `    <item>
       <title><![CDATA[${i.title}]]></title>
-      <link>${site.origin}/article.html?id=${encodeURIComponent(i.slug)}</link>
-      <guid isPermaLink="true">${site.origin}/article.html?id=${encodeURIComponent(i.slug)}</guid>
+      <link>${site.origin}/article?id=${encodeURIComponent(i.slug)}</link>
+      <guid isPermaLink="true">${site.origin}/article?id=${encodeURIComponent(i.slug)}</guid>
       <category>${i.category}</category>
       <pubDate>${new Date(i.date).toUTCString()}</pubDate>
       <description><![CDATA[${i.excerpt}]]></description>
@@ -146,16 +155,22 @@ done(
   write(
     "_headers",
     `# Cloudflare Pages — رؤوس الاستجابات
+# ملاحظة مهمة: يُسمح بقسم واحد فقط لكل مسار؛ لذلك كل ما هو عام في كتلة /* أدناه.
 
 /*
   X-Content-Type-Options: nosniff
   X-Frame-Options: SAMEORIGIN
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
-  X-DNS-Prefetch-Control: off
-  Cross-Origin-Opener-Policy: same-origin
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Cross-Origin-Opener-Policy: same-origin
+  X-DNS-Prefetch-Control: off
+  X-Robots-Tag: index, follow
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self'; form-action 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+
+/api/*
+  Cache-Control: no-store
+  X-Robots-Tag: noindex
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
@@ -173,6 +188,10 @@ done(
   Cache-Control: public, max-age=604800
   Accept-Ranges: bytes
 
+/*.jpeg
+  Cache-Control: public, max-age=604800
+  Accept-Ranges: bytes
+
 /*.png
   Cache-Control: public, max-age=604800
   Accept-Ranges: bytes
@@ -180,13 +199,6 @@ done(
 /*.webp
   Cache-Control: public, max-age=604800
   Accept-Ranges: bytes
-
-/api/*
-  Cache-Control: no-store
-  X-Robots-Tag: noindex
-
-/*
-  X-Robots-Tag: index, follow
 `
   )
 );
@@ -196,27 +208,23 @@ done(
   write(
     "_redirects",
     `# Cloudflare Pages — إعادة التوجيه
+# ملاحظة: لا تُستخدم اختصارات بلا امتداد هنا، لأن Pages يخدمها أصلًا
+# (/about ← about.html مباشرة). الاختصارات أدناه تخص مسارات أخرى فقط.
+
+# www ← النطاق الأساسي (نسخة واحدة فقط للمحتوى، أفضل لمحركات البحث)
+https://www.tfkir.net/*   https://tfkir.net/:splat   301
 
 /index.html      /            301
 /index           /            301
 /home            /            301
-/من-الرئيسية     /            301
-
-/privacy         /privacy.html  301
-/contact         /contact.html  301
-/links           /links.html    301
-/ideas           /ideas.html    301
-/projects        /projects.html 301
-/about           /about.html    301
-/thinking        /thinking.html 301
-/talks           /talks.html    301
-/article         /article.html  301
+/الرئيسية        /            301
 
 /rss             /feed.xml      301
 /feed            /feed.xml      301
+/feed.xml        /feed.xml      200
 
-# Sphinx / واجهات برمجية قديمة
-/api/health      /api/contact   302
+# اختصار عربي إضافي
+/ابدأ-من-هنا   /            301
 `
   )
 );
@@ -459,12 +467,18 @@ npm-debug.log*
 # محرّرات
 .vscode/
 .idea/
+.and-code/
 *.swp
 
 # مؤقت
 .cache/
 tmp/
+__pycache__/
+*.pyc
 *.log
+
+# الصورة الأصلية غير المقروءة داخل بيئة البناء
+IMG-20251209-WA0052.jpg
 `
   )
 );

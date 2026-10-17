@@ -7,15 +7,18 @@ npm-debug.log*
 # محرّرات
 .vscode/
 .idea/
+.and-code/
 *.swp
 
 # مؤقت
 .cache/
 tmp/
-*.log
-
-# الصورة الأصلية غير المقروءة داخل هذه البيئة
-IMG-20251209-WA0052.jpg
-.and-code/
 __pycache__/
 *.pyc
+*.log
+
+# الصورة الأصلية غير المقروءة داخل بيئة البناء
+IMG-20251209-WA0052.jpg
+
+# wrangler
+.wrangler/
