@@ -4,10 +4,10 @@
 import {
   site, doctor, marquee, pillars, domains,
   timeline, ideas, ideaCategories, projects, projectFilters, talks, talkTypes,
-  linkGroups, faqs,
+  linkGroups,
 } from "./content.mjs";
 import { icon, socialIcon } from "./icons.mjs";
-import { esc, layout, pageHero, accordion, ctaBand, portrait, pulseSvg, personLd } from "./render.mjs";
+import { esc, layout, pageHero, ctaBand, portrait, pulseSvg, personLd } from "./render.mjs";
 
 const D = doctor;
 const articleHref = (slug) => `/article?id=${encodeURIComponent(slug)}`;

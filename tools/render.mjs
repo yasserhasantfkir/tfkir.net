@@ -2,7 +2,7 @@
    tools/render.mjs — القوالب والهياكل المشتركة
    ============================================================ */
 import {
-  site, doctor, nav, footer, faqs,
+  site, doctor, nav, footer,
 } from "./content.mjs";
 import { icon, socialIcon } from "./icons.mjs";
 
@@ -342,4 +342,3 @@ export function personLd() {
   };
 }
 
-export { faqs };

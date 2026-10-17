@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import {
   site, doctor, marquee, pillars, domains,
   timeline, ideas, ideaCategories, projects, projectFilters, talks, talkTypes,
-  linkGroups, faqs, footer, nav,
+  linkGroups, footer, nav,
 } from "./content.mjs";
 import * as P from "./pages.mjs";
 
