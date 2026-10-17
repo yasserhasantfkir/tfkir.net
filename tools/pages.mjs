@@ -43,17 +43,17 @@ export function homePage() {
 
   <div class="shell hero__grid">
     <div class="hero__text">
-      <span class="kicker" data-reveal>${icon("stethoscope")} ${esc(D.nameAr)}</span>
+      <span class="kicker" data-reveal>${icon("stethoscope")} <span data-i18n="hero.kicker">${esc(D.nameAr)}</span></span>
 
       <h1 class="hero__title" data-reveal style="--d:90ms">
-        <span class="ln"><span class="split-line"><span class="gradient-text">${esc(D.title)}</span></span></span>
+        <span class="ln"><span class="split-line"><span class="gradient-text" data-i18n="hero.title">${esc(D.title)}</span></span></span>
       </h1>
 
       <div class="hero__role" data-reveal style="--d:180ms">
         <span class="tag tag--teal">${esc(D.roleLine)}</span>
       </div>
 
-      <p class="lead hero__lead" data-reveal style="--d:260ms">${esc(D.subtitle)}</p>
+      <p class="lead hero__lead" data-reveal style="--d:260ms" data-i18n="hero.lead">${esc(D.subtitle)}</p>
 
       <div class="hero__cta" data-reveal style="--d:340ms">
         <a class="btn btn--primary btn--lg" href="/about">${icon("user")}<span>من هو الدكتور؟</span></a>
@@ -62,8 +62,8 @@ export function homePage() {
       </div>
 
       <div class="hero__cta" data-reveal style="--d:340ms">
-        <a class="btn btn--primary btn--lg" href="/thinking">${icon("compass")}<span>ابدأ من الميادين</span></a>
-        <a class="btn btn--ghost btn--lg" href="/contact">${icon("message")}<span>تواصل</span></a>
+        <a class="btn btn--primary btn--lg" href="/thinking">${icon("compass")}<span data-i18n="hero.cta1">ابدأ من الميادين</span></a>
+        <a class="btn btn--ghost btn--lg" href="/contact">${icon("message")}<span data-i18n="hero.cta2">تواصل</span></a>
       </div>
     </div>
 
@@ -87,17 +87,17 @@ export function homePage() {
   <div class="shell">
     <div class="grid grid--2" style="gap:clamp(1.5rem,1rem+3vw,3.5rem);align-items:start">
       <div>
-        <span class="chip-num">01 — عن المنصة</span>
-        <h2 style="margin-top:1rem">${esc(D.title)}</h2>
-        <p class="lead" style="margin-top:1.1rem">${esc(D.subtitle)}</p>
+        <span class="chip-num" data-i18n="intro.chip">01 — عن المنصة</span>
+        <h2 style="margin-top:1rem" data-i18n="intro.title">${esc(D.title)}</h2>
+        <p class="lead" style="margin-top:1.1rem" data-i18n="intro.lead">${esc(D.subtitle)}</p>
         <p style="margin-top:1rem;color:var(--muted)">
           هذه منصة فكرية وتدريبية: نظريات ومنهجيات ودورات في الطب والمنطق والحِجاج
           واللغة والنهضة والتحقيق والتجديد — يجمعها خيط واحد. كل ميدان يبدأ من
           سؤال واحد: كيف نفكّر فيه؟
         </p>
         <div class="hero__cta" style="margin-top:1.8rem">
-          <a class="btn btn--primary" href="/thinking">${icon("compass")}<span>ابدأ من الميادين</span></a>
-          <a class="btn btn--ghost" href="/contact">${icon("message")}<span>تواصل</span></a>
+          <a class="btn btn--primary" href="/thinking">${icon("compass")}<span data-i18n="intro.cta1">ابدأ من الميادين</span></a>
+          <a class="btn btn--ghost" href="/contact">${icon("message")}<span data-i18n="intro.cta2">تواصل</span></a>
         </div>
       </div>
 
@@ -133,9 +133,9 @@ export function homePage() {
 <section class="section" id="domains">
   <div class="shell">
     <div class="sect-head sect-head--center">
-      <span class="kicker" data-reveal>${icon("compass")} الميادين</span>
-      <h2 style="margin-top:.9rem" data-reveal>ستة ميادين، <span class="gradient-text">خيطٌ واحد</span></h2>
-      <p class="lead" data-reveal style="--d:120ms">كل ميدان يبدأ من سؤال واحد: كيف نفكّر فيه؟</p>
+      <span class="kicker" data-reveal>${icon("compass")} <span data-i18n="domains.kicker">الميادين</span></span>
+      <h2 style="margin-top:.9rem" data-reveal data-i18n="domains.title">ستة ميادين، <span class="gradient-text">خيطٌ واحد</span></h2>
+      <p class="lead" data-reveal style="--d:120ms" data-i18n="domains.lead">كل ميدان يبدأ من سؤال واحد: كيف نفكّر فيه؟</p>
     </div>
     <div class="grid grid--3">
           ${domainCards}

@@ -73,12 +73,27 @@ window.TFKIR_IDEAS = ${JSON.stringify(
 done(
   write(
     "robots.txt",
-    `# ${site.domain}
+    `# ${site.domain} — robots.txt
 User-agent: *
 Allow: /
 Disallow: /functions/
+Disallow: /api/
+
+# Major crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
 
 Sitemap: ${site.origin}/sitemap.xml
+Host: ${site.domain}
 `
   )
 );
@@ -104,11 +119,16 @@ done(
   write(
     "sitemap.xml",
     `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
 ${urls
   .map(
     (u) => `  <url>
     <loc>${site.origin}${u.loc}</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="${site.origin}${u.loc}"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="${site.origin}${u.loc}"/>
+    <xhtml:link rel="alternate" hreflang="en" href="${site.origin}${u.loc}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${site.origin}${u.loc}"/>
     <lastmod>${u.mod || today}</lastmod>
     <changefreq>${u.freq}</changefreq>
     <priority>${u.pri}</priority>

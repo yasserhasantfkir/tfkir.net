@@ -1,55 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://tfkir.net/</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://tfkir.net/"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tfkir.net/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tfkir.net/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tfkir.net/"/>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://tfkir.net/about</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://tfkir.net/about"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tfkir.net/about"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tfkir.net/about"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tfkir.net/about"/>
     <lastmod>2026-10-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://tfkir.net/thinking</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://tfkir.net/thinking"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tfkir.net/thinking"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tfkir.net/thinking"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tfkir.net/thinking"/>
     <lastmod>2026-10-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://tfkir.net/ideas</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://tfkir.net/ideas"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tfkir.net/ideas"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tfkir.net/ideas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tfkir.net/ideas"/>
     <lastmod>2026-10-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://tfkir.net/projects</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://tfkir.net/projects"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tfkir.net/projects"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tfkir.net/projects"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tfkir.net/projects"/>
     <lastmod>2026-10-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://tfkir.net/talks</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://tfkir.net/talks"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tfkir.net/talks"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tfkir.net/talks"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tfkir.net/talks"/>
     <lastmod>2026-10-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://tfkir.net/links</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://tfkir.net/links"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tfkir.net/links"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tfkir.net/links"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tfkir.net/links"/>
     <lastmod>2026-10-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://tfkir.net/contact</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://tfkir.net/contact"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tfkir.net/contact"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tfkir.net/contact"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tfkir.net/contact"/>
     <lastmod>2026-10-17</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://tfkir.net/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://tfkir.net/privacy"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tfkir.net/privacy"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tfkir.net/privacy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tfkir.net/privacy"/>
     <lastmod>2026-10-17</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>

@@ -1,6 +1,21 @@
-# tfkir.net
+# tfkir.net — robots.txt
 User-agent: *
 Allow: /
 Disallow: /functions/
+Disallow: /api/
+
+# Major crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
 
 Sitemap: https://tfkir.net/sitemap.xml
+Host: tfkir.net
