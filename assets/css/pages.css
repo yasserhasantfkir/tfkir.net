@@ -154,7 +154,7 @@
   position: absolute;
   inset-block-end: 22px;
   inset-inline-start: 50%;
-  transform: translateX(50%);
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -186,6 +186,7 @@
   100% { transform: translateY(48px); opacity: 0; }
 }
 @media (max-width: 700px) { .hero__cue { display: none; } }
+@media (max-width: 480px) { .hero__meta { grid-template-columns: 1fr; } }
 
 /* ---- Hero portrait (faint side image) ---- */
 .hero__portrait {
@@ -340,6 +341,10 @@
 }
 @media (max-width: 420px) {
   .portrait__card { display: none; }
+}
+@media (max-width: 768px) {
+  .hero__aura { filter: blur(30px); }
+  body::after { animation: none; opacity: 0.015; }
 }
 
 /* Vertical side label */
@@ -874,7 +879,7 @@
 [data-reveal] {
   opacity: 0;
   transform: translateY(26px);
-  transition: opacity 0.85s var(--ease-out), transform 0.85s var(--ease-out);
+  transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
   transition-delay: var(--d, 0ms);
 }
 [data-reveal="right"] { transform: translateX(30px); }

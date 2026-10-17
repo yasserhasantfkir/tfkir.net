@@ -581,7 +581,7 @@
       }
 
       if (img.complete && img.naturalWidth > 0) ok();
-      else fail();
+      else if (img.complete) fail();
       img.addEventListener("load", ok);
       img.addEventListener("error", fail);
     });

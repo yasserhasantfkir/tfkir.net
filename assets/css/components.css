@@ -124,7 +124,7 @@
 }
 .brand:hover { color: var(--text); }
 .brand__mark {
-  width: 40px; height: 40px;
+  width: 44px; height: 44px;
   flex: none;
   border-radius: 12px;
   display: grid;
@@ -197,7 +197,7 @@
 }
 
 .icon-btn {
-  width: 40px; height: 40px;
+  width: 44px; height: 44px;
   display: grid;
   place-items: center;
   border-radius: 11px;
@@ -267,6 +267,7 @@
   overflow-y: auto;
 }
 [dir="rtl"] .drawer__panel { transform: translateX(-102%); }
+[dir="ltr"] .drawer__panel { transform: translateX(102%); }
 .drawer[data-open="true"] .drawer__panel { transform: translateX(0); }
 
 .drawer__head {
@@ -284,7 +285,7 @@
   border: 1px solid transparent;
   opacity: 0;
   transform: translateX(-14px);
-  transition: color 0.25s, background 0.25s, border-color 0.25s;
+  transition: color 0.25s, background 0.25s, border-color 0.25s, opacity 0.4s, transform 0.4s var(--ease-out);
 }
 .drawer[data-open="true"] .drawer__link {
   opacity: 1;
@@ -365,6 +366,7 @@
 
 /* Numbered feature cards */
 .fcard { counter-increment: fcard; }
+.card__num { font-family: var(--font-latin); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.2em; color: var(--teal-400); }
 .fcard__num {
   font-family: var(--font-latin);
   font-size: 0.72rem;
@@ -607,6 +609,8 @@
   padding-inline-end: 1em;
   padding-inline-start: 2.6rem;
 }
+[dir="ltr"] .select { background-position: right 0.95rem center; padding-inline-start: 1em; padding-inline-end: 2.6rem; }
+}
 .field[data-invalid="true"] .input,
 .field[data-invalid="true"] .textarea,
 .field[data-invalid="true"] .select { border-color: #e0645c; }
@@ -652,8 +656,8 @@
 /* ---------- Floating UI ---------- */
 .to-top {
   position: fixed;
-  inset-block-end: 22px;
-  inset-inline-start: 22px;
+  inset-block-end: calc(22px + env(safe-area-inset-bottom, 0px));
+  inset-inline-start: calc(22px + env(safe-area-inset-left, 0px));
   z-index: 80;
   width: 44px; height: 44px;
   display: grid;
@@ -675,8 +679,8 @@
 
 .toast {
   position: fixed;
-  inset-block-end: 24px;
-  inset-inline-end: 24px;
+  inset-block-end: calc(24px + env(safe-area-inset-bottom, 0px));
+  inset-inline-end: calc(24px + env(safe-area-inset-right, 0px));
   z-index: 200;
   display: flex;
   align-items: center;
@@ -718,7 +722,7 @@
 
 .socials { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 1.35rem; }
 .social {
-  width: 40px; height: 40px;
+  width: 44px; height: 44px;
   display: grid;
   place-items: center;
   border-radius: 11px;

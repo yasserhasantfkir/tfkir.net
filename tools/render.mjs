@@ -28,7 +28,7 @@ function head(p) {
     desc,
     path,
     type = "website",
-    ogImage = "/assets/img/og-cover.svg",
+    ogImage = "/assets/img/og-cover.png",
     noIndex = false,
     extraHead = "",
     jsonLd = null,
@@ -49,7 +49,7 @@ function head(p) {
 <title>${esc(fullTitle)}</title>
 <meta name="description" content="${esc(desc)}">
 <meta name="author" content="${esc(doctor.nameAr)}">
-<meta name="keywords" content="Dr. Yasser Hassan, tfkir.net, tıbbî düşünce, medical thinking, mantık, argümantasyon, dil, nehye, تفكير طبي, منطق, حِجاج">
+<meta name="keywords" content="Dr. Yasser Hassan, tfkir.net, tıbbî düşünce, medical thinking, mantık, argümantasyon, dil, تفكير طبي, منطق, حِجاج">
 <meta name="theme-color" content="${site.themeColor}" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f6f8fa" media="(prefers-color-scheme: light)">
 <meta name="color-scheme" content="dark light">
@@ -153,6 +153,11 @@ export function header(active = "/") {
     </div>
         ${drawerLinks}
     <div class="drawer__foot">
+      <div class="lang-switch" role="group" aria-label="Language" style="margin-inline-end:auto">
+        <button type="button" data-lang-btn="ar" onclick="window.tfkirSetLang('ar')">AR</button>
+        <button type="button" data-lang-btn="tr" onclick="window.tfkirSetLang('tr')">TR</button>
+        <button type="button" data-lang-btn="en" onclick="window.tfkirSetLang('en')">EN</button>
+      </div>
       <a class="btn btn--ghost btn--sm" href="/links">${icon("link")}<span>الروابط</span></a>
       <a class="btn btn--primary btn--sm" href="/contact">${icon("message")}<span>تواصل</span></a>
     </div>

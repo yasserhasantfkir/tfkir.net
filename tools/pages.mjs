@@ -213,7 +213,7 @@ export function aboutPage() {
           <span class="card__icon">${icon("book")}</span>
           <h3 class="card__title">القصة باختصار</h3>
           <p class="card__text">
-            بدأت الرحلة الطبية وهو السؤال، لا الشهادة. ما زال هذا الموقع استمرارًا لنفس السؤال بصيغة أخرى:
+            بدأت الرحلة الطبية وهو السؤال، لا الشهادة. ما يزال هذا الموقع استمرارًا لنفس السؤال بصيغة أخرى:
             ما الذي يحدث للطبيب حين يكتب ما يراه، وما الذي يحدث للطب حين يُناقَش علنًا؟
           </p>
         </div>
@@ -254,17 +254,15 @@ ${ctaBand({
 })}`;
 
   return layout({
-    active: "/thinking",
-    path: "/thinking",
-    title: "التفكير الطبي — المنهجية والمبادئ",
-    desc:
-      "منهجية التفكير في الطب: المراحل، والمبادئ، وأدوات التفكير السريري، وأمثلة على تدوين الحالة وقراءة الأدلة.",
+    active: "/about",
+    path: "/about",
+    title: `عن ${D.nameShort}`,
+    desc: `الملف الشخصي والمهني لـ${D.nameAr}: الميادين، والمنهاج، والدعوة.`,
     body,
     jsonLd: {
       "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      name: "التفكير الطبي",
-      about: { "@type": "Thing", name: "التفكير السريري" },
+      "@type": "AboutPage",
+      mainEntity: personLd(),
     },
   });
 }
@@ -287,7 +285,7 @@ export function thinkingPage() {
     kicker: "المنهجية",
     title: "التفكير <span class=\"gradient-text\">الطبّي</span> كمنهج",
     lead:
-      "ليست مجموعة مهارات، بل تعلّمات: كيف ننتقي المعطيات، وكيف نبني فرضية يمكن اختبارها، وكيف نعرف أن الوقت مناسب لإغلاق التشخيص.",
+      "ليست مجموعة مهارات، بل تعلّم: كيف ننتقي المعطيات، وكيف نبني فرضية يمكن اختبارها، وكيف نعرف أن الوقت مناسب لإغلاق التشخيص.",
     crumbs: [{ label: "الرئيسية", href: "/" }, { label: "التفكير الطبي" }],
     meta: [],
     aside: `<div class="quote" style="padding:1.2rem 1.3rem">
@@ -380,10 +378,7 @@ export function ideasPage() {
 
     <p class="empty-note" id="idea-empty" hidden>لا توجد مقالات منشورة بعد. المقالات ستُضاف لاحقًا.</p>
 
-    <p class="form-note" style="margin-top:2rem">
-      ${icon("search")} لتصفية المقالات حسب التصنيف. ${icon("rss")} يتوفر الأرشيف أيضًا عبر
-      <a href="/feed.xml" class="tlink">RSS</a>.
-    </p>
+
   </div>
 </section>
 
@@ -588,7 +583,7 @@ export function projectsPage() {
       <div class="card" data-reveal style="--d:90ms">
         <span class="card__num">02</span>
         <h3 class="card__title">الاكتفاء قرار</h3>
-        <p class="card__text">ليس بناء ما يكفي سهولةً، بل حكمة. الأداة التي تتغير كل أسبوع لا تُستعمل.</p>
+        <p class="card__text">ليس بناء ما يكفي سهلًا، بل حكمة. الأداة التي تتغير كل أسبوع لا تُستعمل.</p>
       </div>
       <div class="card" data-reveal style="--d:180ms">
         <span class="card__num">03</span>
@@ -601,7 +596,7 @@ export function projectsPage() {
 
 ${ctaBand({
   title: "لديك مشروع يخرج من فكرة؟",
-  text: "أرسل وصف المشكلة في سطرين. أبجث عن المشاريع التي تختصر خطوة مكررة، لا عن أفكار جديدة كليًا.",
+  text: "أرسل وصف المشكلة في سطرين. أبحث عن المشاريع التي تختصر خطوة مكررة، لا عن أفكار جديدة كليًا.",
   primary: { href: "/contact", label: "ناقش مشروعك" },
   secondary: { href: "/ideas", label: "اقرأ الأفكار" },
 })}`;
@@ -675,7 +670,7 @@ export function talksPage() {
           ${cards}
     </div>
     <p class="empty-note" id="talk-empty" hidden>لا توجد جلسات منشورة بعد. المحاضرات ستُضاف لاحقًا.</p>
-    <p class="form-note" style="margin-top:2rem">${icon("video")} روابط الفيديو والمواد تُضاف من <span class="latin">tools/content.mjs</span>.</p>
+
   </div>
 </section>
 
@@ -753,7 +748,7 @@ export function linksPage() {
     kicker: "مركز الروابط",
     title: "كل <span class=\"gradient-text\">الروابط</span>",
     lead:
-      "صفحة واحدة تجمع كل ما يوصّل بك إلى محتوى الموقع وحساباتي: روابط داخلية، حسابات، ومصادر أرجو بها. اضغط أيقونة النسخ لتأخذ الرابط مباشرة.",
+      "صفحة واحدة تجمع كل ما يوصلك إلى محتوى الموقع وحساباتي: روابط داخلية، حسابات، ومصادر أوصي بها. اضغط أيقونة النسخ لتأخذ الرابط مباشرة.",
     crumbs: [{ label: "الرئيسية", href: "/" }, { label: "الروابط" }],
     meta: [`${linkGroups.length} مجموعات`, pending ? `${pending} رابط بانتظار الإضافة` : "كل الروابط جاهزة"],
   })}
@@ -957,7 +952,7 @@ export function contactPage() {
           <li>${icon("check")} اكتب ما تريده في سطرين — التصريح يختصر الوقت.</li>
           <li>${icon("check")} لا ترسل بيانات مريض أو أي معلومات سرّية.</li>
           <li>${icon("check")} للاستفسارات العاجلة استعمل البريد المباشر.</li>
-          <li>${icon("check")} المحتوى الطبي هنا تثقفي وليس استشارة.</li>
+          <li>${icon("check")} المحتوى الطبي هنا تثقيفي وليس استشارة.</li>
         </ul>
       </aside>
     </div>
@@ -1104,7 +1099,7 @@ export function privacyPage() {
       <h2>4. الخطوط الخارجية</h2>
       <p>
         يُحمَّل الموقع الخطوط من خدمة Google Fonts. عند تحميلها، يتلقّى مزوّد الخدمة عنوان IP
-        الخاص بك كأي طلب شبكي عادي. يمكن منع ذلك باستخدام محرّك البحث أو إضافة حجب.
+        الخاص بك كأي طلب شبكي عادي. يمكن منع ذلك باستخدام إضافة حجب في المتصفح.
       </p>
 
       <h2>5. أدوات التحليل</h2>
@@ -1127,7 +1122,7 @@ export function privacyPage() {
 
       <h2>8. تحديث السياسة</h2>
       <p>
-        قد تتحدّث هذه السياسة عند تغيّر الموقع. آخر تحديث: <span class="latin">${site.updatedAt}</span>.
+        قد تُحدَّث هذه السياسة عند تغيّر الموقع. آخر تحديث: <span class="latin">${site.updatedAt}</span>.
       </p>
 
       <hr>
