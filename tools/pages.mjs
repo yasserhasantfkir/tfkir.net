@@ -274,7 +274,7 @@ ${ctaBand()}`;
   return layout({
     active: "/",
     path: "/",
-    title: `${D.nameAr} — ${site.tagline}`,
+    title: site.tagline,
     desc: D.subtitle,
     body,
     jsonLd: {

@@ -35,7 +35,10 @@ function head(p) {
   } = p;
 
   const url = site.origin + (path || "/");
-  const fullTitle = title.includes("tfkir.net") ? title : `${title} | ${site.shortName} — ${doctor.nameAr}`;
+  const fullTitle =
+    title.includes("tfkir.net") || title.includes(site.shortName)
+      ? title
+      : `${title} | ${site.shortName} — ${doctor.nameAr}`;
   const img = ogImage.startsWith("http") ? ogImage : site.origin + ogImage;
 
   return `<!doctype html>
