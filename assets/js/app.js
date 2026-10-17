@@ -6,6 +6,8 @@
   "use strict";
 
   var $ = function (s, c) { return (c || document).querySelector(s); };
+  var STRINGS = window.TFKIR_STR || {};
+  var S = function (key, fallback) { return STRINGS[key] || fallback; };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -21,7 +23,7 @@
       var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
       root.setAttribute("data-theme", next);
       try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
-      btn.setAttribute("aria-label", next === "dark" ? "تفعيل السمة الفاتحة" : "تفعيل السمة الداكنة");
+      btn.setAttribute("aria-label", next === "dark" ? S("themeOn","تفعيل السمة الفاتحة") : S("themeOff","تفعيل السمة الداكنة"));
     });
   }
 
@@ -268,8 +270,8 @@
       if (!btn) return;
       e.preventDefault();
       var val = btn.dataset.copy;
-      copyText(val).then(function () { notify("نُسخ: " + val); })
-        .catch(function () { notify("تعذّر النسخ — انسخ يدويًا: " + val); });
+      copyText(val).then(function () { notify(S("copiedPrefix","نُسخ: ") + val); })
+        .catch(function () { notify(S("copyFailed","تعذّر النسخ — انسخ يدويًا: ") + val); });
     });
 
     window.__tfkirToast = notify;
@@ -355,18 +357,22 @@
     }
 
     function buildMailto(data) {
+      var from = S("mailFrom", "من");
+      var lName = S("labelName", "الاسم");
+      var lEmail = S("labelEmail", "البريد");
+      var lPhone = S("labelPhone", "الهاتف");
       return (
         "mailto:" + form.dataset.email + "?subject=" +
-        encodeURIComponent("[" + data.subject + "] من " + data.name) +
-        "&body=" + encodeURIComponent(data.message + "\n\n—\nالاسم: " + data.name +
-          "\nالبريد: " + data.email + (data.phone ? "\nالهاتف: " + data.phone : ""))
+        encodeURIComponent("[" + data.subject + "] " + from + " " + data.name) +
+        "&body=" + encodeURIComponent(data.message + "\n\n—\n" + lName + ": " + data.name +
+          "\n" + lEmail + ": " + data.email + (data.phone ? "\n" + lPhone + ": " + data.phone : ""))
       );
     }
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!validateAll()) {
-        setStatus("err", "الرجاء تصحيح الحقول المعلَّمة بالأحمر قبل الإرسال.");
+        setStatus("err", S("fixFields", "الرجاء تصحيح الحقول المعلَّمة بالأحمر قبل الإرسال."));
         var bad = $('[data-invalid="true"] input, [data-invalid="true"] textarea, [data-invalid="true"] select', form);
         if (bad) bad.focus();
         return;
@@ -374,7 +380,7 @@
 
       // مصيدة الرسائل الآلية (honeypot)
       if (form.elements.website && form.elements.website.value) {
-        setStatus("ok",("شكرًا لك، تم استلام رسالتك."));
+        setStatus("ok",S("thanksSpam", "شكرًا لك، تم استلام رسالتك."));
         return;
       }
 
@@ -382,14 +388,14 @@
         name: $("#cf-name").value.trim(),
         email: $("#cf-email").value.trim(),
         phone: $("#cf-phone").value.trim(),
-        subject: $("#cf-subject").value,
+        subject: (function () { var sl = $("#cf-subject"); return sl && sl.selectedIndex >= 0 ? sl.options[sl.selectedIndex].textContent.trim() : sl.value; })(),
         message: $("#cf-message").value.trim(),
       };
 
       var btnLabel = submit ? submit.innerHTML : "";
       if (submit) {
         submit.disabled = true;
-        submit.innerHTML = '<span>جارٍ الإرسال…</span>';
+        submit.innerHTML = '<span>' + S("sending", "جارٍ الإرسال…") + '</span>';
       }
 
       fetch("/api/contact", {
@@ -400,20 +406,20 @@
         .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
         .then(function (res) {
           if (res.ok && res.j && res.j.ok) {
-            setStatus("ok", "وصلت رسالتك بنجاح. سيُردّ عليها خلال ٢–٧ أيام عمل. شكرًا لك.");
+            setStatus("ok", S("sentOk", "وصلت رسالتك بنجاح. سيُردّ عليها خلال ٢–٧ أيام عمل. شكرًا لك."));
             form.reset();
             if (counter) counter.textContent = "0";
           } else {
             // لا توجد وظيفة خادم: افتح برنامج البريد كبديل آمن
             window.location.href = buildMailto(data);
-            setStatus("ok",
-              "لم يتوفّر الإرسال التلقائي، فُتح برنامج البريد برسالتك جاهزة. اضغط <b>إرسال</b> لإتمامها.");
+            setStatus("ok", S("mailtoAuto",
+              "لم يتوفّر الإرسال التلقائي، فُتح برنامج البريد برسالتك جاهزة. اضغط <b>إرسال</b> لإتمامها."));
           }
         })
         .catch(function () {
           window.location.href = buildMailto(data);
-          setStatus("ok",
-            "تعذّر الاتصال المباشر، فُتح برنامج البريد برسالتك جاهزة. اضغط <b>إرسال</b> لإتمامها.");
+          setStatus("ok", S("mailtoDirect",
+            "تعذّر الاتصال المباشر، فُتح برنامج البريد برسالتك جاهزة. اضغط <b>إرسال</b> لإتمامها."));
         })
         .then(function () {
           if (submit) { submit.disabled = false; submit.innerHTML = btnLabel; }
@@ -448,7 +454,7 @@
     if (!post) {
       if (loading) loading.hidden = true;
       if (notFound) notFound.hidden = false;
-      document.title = "المقال غير موجود | " + document.title;
+      document.title = S("articleNotFound", "المقال غير موجود") + " | " + document.title;
       return;
     }
 
@@ -518,8 +524,8 @@
         var btn = this;
         navigator.clipboard && window.isSecureContext
           ? navigator.clipboard.writeText(url).then(function () {
-              btn.innerHTML = '<span>تم النسخ ✓</span>';
-              setTimeout(function () { btn.innerHTML = 'نُسخ الرابط'; }, 2000);
+              btn.innerHTML = '<span>' + S("shareCopied", "تم النسخ ✓") + '</span>';
+              setTimeout(function () { btn.innerHTML = S("shareCopyAgain", "نُسخ الرابط"); }, 2000);
             })
           : null;
       });
@@ -534,8 +540,8 @@
       headline: post.title,
       description: post.excerpt,
       datePublished: post.date,
-      author: { "@type": "Person", name: "الدكتور ياسر حسن" },
-      publisher: { "@type": "Person", name: "الدكتور ياسر حسن" },
+      author: { "@type": "Person", name: S("personName", "الدكتور ياسر حسن") },
+      publisher: { "@type": "Person", name: S("personName", "الدكتور ياسر حسن") },
       mainEntityOfPage: url,
     });
     document.head.appendChild(ld);

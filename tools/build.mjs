@@ -8,6 +8,7 @@ import {
   linkGroups, footer, nav,
 } from "./content.mjs";
 import * as P from "./pages.mjs";
+import { applyDict, fillSwitcher, patchHead, prefixLinks } from "./i18n.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -29,20 +30,68 @@ const write = (rel, content) => {
 const log = [];
 const done = (rel) => log.push(rel);
 
-/* ---------------- الصفحات ---------------- */
-done(write("index.html", P.homePage()));
-done(write("about.html", P.aboutPage()));
-done(write("thinking.html", P.thinkingPage()));
+/* ---------------- الترجمة ---------------- */
+const LOCALES = ["tr", "en"];
+const dicts = Object.fromEntries(
+  LOCALES.map((l) => {
+    const file = path.join(ROOT, "tools/locales", `${l}.json`);
+    return [l, fs.existsSync(file) ? JSON.parse(fs.readFileSync(file, "utf8")) : {}];
+  })
+);
+const i18nStats = { missing: new Set(), badPh: new Set() };
+const jsStrings = JSON.parse(fs.readFileSync(path.join(ROOT, "tools/locales/js.json"), "utf8"));
+const jsFor = (lang) =>
+  Object.fromEntries(Object.entries(jsStrings).map(([k, v]) => [k, v[lang]]).filter(([, v]) => v));
+const stripI18nAttrs = (html) => html.replace(/\s+data-i18n(?:-placeholder)?="[^"]*"/g, "");
 
-done(write("ideas.html", P.ideasPage()));
-done(write("article.html", P.articlePage()));
-done(write("projects.html", P.projectsPage()));
-done(write("talks.html", P.talksPage()));
-done(write("links.html", P.linksPage()));
-done(write("contact.html", P.contactPage()));
-done(write("thank-you.html", P.thankYouPage()));
-done(write("404.html", P.notFoundPage()));
-done(write("privacy.html", P.privacyPage()));
+const emitPage = (file, html, urlPath) => {
+  /* النسخة العربية: بلا معالجة شجرية — نفس المخرجات السابقة */
+  let ar = stripI18nAttrs(html);
+  ar = fillSwitcher(ar, "ar", urlPath, site.origin);
+  ar = patchHead(ar, "ar", urlPath, null, site.origin);
+  done(write(file, ar));
+
+  /* TR / EN: شجرة ترجمة كاملة */
+  for (const lang of LOCALES) {
+    let h = applyDict(html, dicts[lang], i18nStats);
+    h = prefixLinks(h, lang, site.origin);
+    h = fillSwitcher(h, lang, urlPath, site.origin);
+    h = patchHead(h, lang, urlPath, dicts[lang], site.origin);
+    h = h.replace(
+      '<script src="/assets/js/app.js" defer></script>',
+      `<script>window.TFKIR_STR=${JSON.stringify(jsFor(lang))};</script>
+<script src="/assets/js/app.js" defer></script>`
+    );
+    done(write(`${lang}/${file}`, h));
+  }
+};
+
+/* ---------------- الصفحات ---------------- */
+const PAGES = [
+  ["index.html", P.homePage(), "/"],
+  ["about.html", P.aboutPage(), "/about"],
+  ["thinking.html", P.thinkingPage(), "/thinking"],
+  ["ideas.html", P.ideasPage(), "/ideas"],
+  ["article.html", P.articlePage(), "/article"],
+  ["projects.html", P.projectsPage(), "/projects"],
+  ["talks.html", P.talksPage(), "/talks"],
+  ["links.html", P.linksPage(), "/links"],
+  ["contact.html", P.contactPage(), "/contact"],
+  ["thank-you.html", P.thankYouPage(), "/thank-you"],
+  ["404.html", P.notFoundPage(), "/404"],
+  ["privacy.html", P.privacyPage(), "/privacy"],
+];
+for (const [file, html, urlPath] of PAGES) emitPage(file, html, urlPath);
+
+if (i18nStats.missing.size) {
+  console.warn(`\n  ⚠  ترجمات ناقصة: ${i18nStats.missing.size} مفتاحًا بقي بالعربية في tr/en`);
+  [...i18nStats.missing].slice(0, 20).forEach((k) => console.warn(`     · ${k.slice(0, 90)}`));
+  if (i18nStats.missing.size > 20) console.warn(`     … و${i18nStats.missing.size - 20} غيرها`);
+}
+if (i18nStats.badPh.size) {
+  console.warn(`\n  ⚠  مواضع {0} غير متطابقة: ${i18nStats.badPh.size}`);
+  [...i18nStats.badPh].slice(0, 10).forEach((k) => console.warn(`     · ${k.slice(0, 90)}`));
+}
 
 /* ---------------- بيانات المقالات للعميل ---------------- */
 done(
@@ -111,30 +160,35 @@ const statics = [
   { loc: "/contact", pri: "0.7", freq: "yearly" },
   { loc: "/privacy", pri: "0.3", freq: "yearly" },
 ];
-const urls = [
-  ...statics,
-  ...ideas.map((i) => ({ loc: `/article?id=${encodeURIComponent(i.slug)}`, pri: "0.7", freq: "monthly", mod: i.date })),
-];
+const articleUrls = ideas.map((i) => ({ loc: `/article?id=${encodeURIComponent(i.slug)}`, pri: "0.7", freq: "monthly", mod: i.date }));
+const allStatics = [...statics, ...articleUrls];
+const localized = (lang, loc) => {
+  const [p, qs] = loc.split("?");
+  const base = lang === "ar" ? p : `/${lang}${p === "/" ? "/" : p}`;
+  return site.origin + base + (qs ? "?" + qs : "");
+};
+const urlEntries = [];
+for (const u of allStatics) {
+  for (const lang of ["ar", "tr", "en"]) {
+    urlEntries.push(`  <url>
+    <loc>${localized(lang, u.loc)}</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="${localized("ar", u.loc)}"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="${localized("tr", u.loc)}"/>
+    <xhtml:link rel="alternate" hreflang="en" href="${localized("en", u.loc)}"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="${localized("ar", u.loc)}"/>
+    <lastmod>${u.mod || today}</lastmod>
+    <changefreq>${u.freq}</changefreq>
+    <priority>${lang === "ar" ? u.pri : (Number(u.pri) * 0.9).toFixed(1)}</priority>
+  </url>`);
+  }
+}
 done(
   write(
     "sitemap.xml",
     `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
-${urls
-  .map(
-    (u) => `  <url>
-    <loc>${site.origin}${u.loc}</loc>
-    <xhtml:link rel="alternate" hreflang="ar" href="${site.origin}${u.loc}"/>
-    <xhtml:link rel="alternate" hreflang="tr" href="${site.origin}${u.loc}"/>
-    <xhtml:link rel="alternate" hreflang="en" href="${site.origin}${u.loc}"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="${site.origin}${u.loc}"/>
-    <lastmod>${u.mod || today}</lastmod>
-    <changefreq>${u.freq}</changefreq>
-    <priority>${u.pri}</priority>
-  </url>`
-  )
-  .join("\n")}
+${urlEntries.join("\n")}
 </urlset>
 `
   )

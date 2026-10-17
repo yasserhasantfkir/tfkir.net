@@ -784,7 +784,12 @@
   background: var(--surface);
   gap: 2px;
 }
-.lang-switch button {
+.lang-switch__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.1rem;
+  min-height: 1.7rem;
   padding: 0.32em 0.7em;
   border-radius: var(--r-pill);
   font-family: var(--font-latin);
@@ -794,11 +799,11 @@
   color: var(--muted);
   transition: color 0.25s, background 0.25s;
 }
-.lang-switch button[aria-pressed="true"] {
+.lang-switch__btn.is-current {
   color: #04100e;
   background: var(--grad-brand);
 }
-[data-theme="light"] .lang-switch button[aria-pressed="true"] { color: #fff; }
-.lang-switch button:hover:not([aria-pressed="true"]) { color: var(--teal-300); }
+[data-theme="light"] .lang-switch__btn.is-current { color: #fff; }
+.lang-switch__btn:hover:not(.is-current) { color: var(--teal-300); }
 
 @media (max-width: 560px) { .lang-switch { display: none; } }

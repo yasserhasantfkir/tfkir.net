@@ -561,10 +561,6 @@ export function projectsPage() {
 
     <p class="empty-note" id="proj-empty" hidden>لا توجد مشاريع منشورة بعد. المشاريع ستُضاف لاحقًا.</p>
 
-    <p class="form-note" style="margin-top:2rem">
-      ${icon("pen")} حالة كل مشروع (منشور / قيد التطوير / فكرة) وروابطه تُعدَّل في
-      <span class="latin">tools/content.mjs</span> ثم <span class="latin">npm run build</span>.
-    </p>
   </div>
 </section>
 
@@ -680,7 +676,7 @@ export function talksPage() {
       <span class="kicker" style="justify-content:center">${icon("mic")} دعوة</span>
       <h2 class="cta-band__title" style="margin-top:.8rem">دعوة لمحاضرة أو ورشة؟</h2>
       <p class="lead cta-band__text">
-        أستقبل دعوات المحاضرات وورش العمل في التفكير السريري،특히 في كليات الطب وبرامج تدريب المقيمين.
+        أستقبل دعوات المحاضرات وورش العمل في التفكير السريري، خصوصًا في كليات الطب وبرامج تدريب المقيمين.
       </p>
       <div class="cta-band__actions">
         <a class="btn btn--primary btn--lg" href="/contact?type=talk">${icon("send")}<span>أرسل دعوة</span></a>
@@ -1104,8 +1100,7 @@ export function privacyPage() {
 
       <h2>5. أدوات التحليل</h2>
       <p>
-        في حال إضافة أدوات تحليل (مثل Cloudflare Web Analytics) ستُوضَّح هنا طبيعة البيانات المجمَّعة.
-        المجمَّعة وهويتها.
+        في حال إضافة أدوات تحليل (مثل Cloudflare Web Analytics) ستُوضَّح هنا طبيعة البيانات المجمَّعة وهويتها.
       </p>
 
       <h2>6. المحتوى الطبي</h2>
@@ -1125,11 +1120,6 @@ export function privacyPage() {
         قد تُحدَّث هذه السياسة عند تغيّر الموقع. آخر تحديث: <span class="latin">${site.updatedAt}</span>.
       </p>
 
-      <hr>
-      <p class="form-note">
-        ${icon("pen")} هذه السياسة قالب عام — راجعها مع مستشار قانوني قبل الاعتماد النهائي، وخاصةً
-        الأقسام الخاصة بالتحليلات والامتثال المحلي.
-      </p>
     </div>
   </div>
 </section>`;

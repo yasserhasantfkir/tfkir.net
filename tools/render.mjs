@@ -95,18 +95,17 @@ ${extraHead}
 
 /* ---------- header ---------- */
 export function header(active = "/") {
-  const I18N_KEYS = { "/": "nav.home", "/about": "nav.about", "/thinking": "nav.thinking", "/ideas": "nav.ideas", "/projects": "nav.projects", "/talks": "nav.talks", "/links": "nav.links", "/contact": "nav.contact" };
   const links = nav
     .map(
       (n) =>
-        `<a class="nav__link" href="${n.href}"${n.href === active ? ' aria-current="page"' : ""} data-i18n="${I18N_KEYS[n.href] || ""}">${esc(n.label)}</a>`
+        `<a class="nav__link" href="${n.href}"${n.href === active ? ' aria-current="page"' : ""}>${esc(n.label)}</a>`
     )
     .join("\n          ");
 
   const drawerLinks = nav
     .map(
       (n, i) =>
-        `<a class="drawer__link" style="--i:${i}" href="${n.href}"${n.href === active ? ' aria-current="page"' : ""} data-i18n="${I18N_KEYS[n.href] || ""}">${esc(n.label)}</a>`
+        `<a class="drawer__link" style="--i:${i}" href="${n.href}"${n.href === active ? ' aria-current="page"' : ""}>${esc(n.label)}</a>`
     )
     .join("\n        ");
 
@@ -115,9 +114,9 @@ export function header(active = "/") {
 <header class="site-header" id="site-header">
   <div class="shell site-header__bar">
     <a class="brand" href="/" aria-label="${esc(doctor.nameAr)} — الصفحة الرئيسية">
-      <span class="brand__mark" aria-hidden="true">ت</span>
+      <span class="brand__mark" aria-hidden="true" data-no-translate>ت</span>
       <span class="brand__text">
-        <span class="brand__name" data-i18n="brand">${esc(site.shortName)}</span>
+        <span class="brand__name">${esc(site.shortName)}</span>
         <span class="brand__sub">tfkir.net</span>
       </span>
     </a>
@@ -127,11 +126,7 @@ export function header(active = "/") {
     </nav>
 
     <div class="header-actions">
-      <div class="lang-switch" role="group" aria-label="Language">
-        <button type="button" data-lang-btn="ar" data-i18n="misc.langAr" onclick="window.tfkirSetLang('ar')">AR</button>
-        <button type="button" data-lang-btn="tr" data-i18n="misc.langTr" onclick="window.tfkirSetLang('tr')">TR</button>
-        <button type="button" data-lang-btn="en" data-i18n="misc.langEn" onclick="window.tfkirSetLang('en')">EN</button>
-      </div>
+      <div class="lang-switch" role="group" aria-label="Language" data-lang-switch></div>
       <button class="icon-btn" id="theme-toggle" type="button" aria-label="تبديل السمة" title="تبديل السمة الفاتحة/الداكنة">
         ${icon("moon", "i-moon")}${icon("sun", "i-sun")}
       </button>
@@ -153,11 +148,7 @@ export function header(active = "/") {
     </div>
         ${drawerLinks}
     <div class="drawer__foot">
-      <div class="lang-switch" role="group" aria-label="Language" style="margin-inline-end:auto">
-        <button type="button" data-lang-btn="ar" onclick="window.tfkirSetLang('ar')">AR</button>
-        <button type="button" data-lang-btn="tr" onclick="window.tfkirSetLang('tr')">TR</button>
-        <button type="button" data-lang-btn="en" onclick="window.tfkirSetLang('en')">EN</button>
-      </div>
+      <div class="lang-switch" role="group" aria-label="Language" style="margin-inline-end:auto" data-lang-switch></div>
       <a class="btn btn--ghost btn--sm" href="/links">${icon("link")}<span>الروابط</span></a>
       <a class="btn btn--primary btn--sm" href="/contact">${icon("message")}<span>تواصل</span></a>
     </div>
@@ -191,13 +182,13 @@ export function siteFooter() {
     <div class="footer-top">
       <div>
         <a class="brand" href="/" aria-label="الصفحة الرئيسية">
-          <span class="brand__mark" aria-hidden="true">ت</span>
+          <span class="brand__mark" aria-hidden="true" data-no-translate>ت</span>
           <span class="brand__text">
-            <span class="brand__name" data-i18n="brand">${esc(site.shortName)}</span>
+            <span class="brand__name">${esc(site.shortName)}</span>
             <span class="brand__sub">tfkir.net</span>
           </span>
         </a>
-        <p class="footer-brand__text" data-i18n="footer.tagline">${esc(footer.tagline)}</p>
+        <p class="footer-brand__text">${esc(footer.tagline)}</p>
         <div class="socials">
         ${soc}
         </div>
@@ -222,7 +213,7 @@ export function portrait() {
             <span class="portrait__ring" aria-hidden="true"></span>
             <div class="portrait__frame">
               <div class="portrait__fallback" data-portrait-fallback aria-hidden="true">
-                <span class="mono">${esc(doctor.initials)}</span>
+                <span class="mono" data-no-translate>${esc(doctor.initials)}</span>
               </div>
               <img class="portrait__img" src="/${doctor.portrait}"
                    alt="صورة الدكتور ياسر حسن"
@@ -254,7 +245,6 @@ ${p.body}
 
 ${siteFooter()}
 
-<script src="/assets/js/i18n.js" defer></script>
 <script src="/assets/js/app.js" defer></script>
 ${p.scripts || ""}
 </body>
