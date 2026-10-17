@@ -806,4 +806,9 @@
 [data-theme="light"] .lang-switch__btn.is-current { color: #fff; }
 .lang-switch__btn:hover:not(.is-current) { color: var(--teal-300); }
 
-@media (max-width: 560px) { .lang-switch { display: none; } }
+@media (max-width: 560px) {
+  .lang-switch__btn { min-width: 1.75rem; min-height: 1.55rem; padding: 0.24em 0.45em; font-size: 0.66rem; letter-spacing: 0.05em; }
+  .site-header .header-actions .btn--primary { display: none; }
+  .site-header__bar { gap: 0.55rem; }
+  .brand__sub { display: none; }
+}

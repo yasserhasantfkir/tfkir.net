@@ -54,20 +54,15 @@ export function homePage() {
       </div>
 
       <p class="lead hero__lead" data-reveal style="--d:260ms" data-i18n="hero.lead">${esc(D.subtitle)}</p>
-
-      <div class="hero__cta" data-reveal style="--d:340ms">
-        <a class="btn btn--primary btn--lg" href="/about">${icon("user")}<span>من هو الدكتور؟</span></a>
-        <a class="btn btn--ghost btn--lg" href="/thinking">${icon("brain")}<span>منهجية التفكير</span></a>
-        <a class="btn btn--quiet btn--lg" href="/ideas">الأفكار${icon("arrowLeft", "btn__arrow")}</a>
-      </div>
-
-      <div class="hero__cta" data-reveal style="--d:340ms">
-        <a class="btn btn--primary btn--lg" href="/thinking">${icon("compass")}<span data-i18n="hero.cta1">ابدأ من الميادين</span></a>
-        <a class="btn btn--ghost btn--lg" href="/contact">${icon("message")}<span data-i18n="hero.cta2">تواصل</span></a>
-      </div>
     </div>
 
           ${portrait()}
+
+    <div class="hero__cta hero__grid-actions" data-reveal style="--d:340ms">
+      <a class="btn btn--primary btn--lg" href="/thinking">${icon("compass")}<span>ابدأ من الميادين</span></a>
+      <a class="btn btn--ghost btn--lg" href="/about">${icon("user")}<span>من هو الدكتور؟</span></a>
+      <a class="btn btn--quiet btn--lg" href="/ideas">الأفكار${icon("arrowLeft", "btn__arrow")}</a>
+    </div>
   </div>
 
   <div class="hero__cue" aria-hidden="true">

@@ -116,7 +116,19 @@
   width: 100%;
 }
 @media (min-width: 1000px) {
-  .hero__grid { grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr); }
+  .hero__grid {
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+    grid-template-areas:
+      "text    portrait"
+      "actions portrait";
+  }
+  .hero__text { grid-area: text; }
+  .hero__portrait { grid-area: portrait; }
+  .hero__grid-actions { grid-area: actions; }
+}
+@media (max-width: 999px) {
+  .hero__portrait { width: min(84%, 350px); }
+  .hero__grid-actions { margin-top: 0; }
 }
 
 .hero__title {
@@ -227,15 +239,15 @@
   height: 100%;
   object-fit: cover;
   object-position: center 22%;
-  filter: grayscale(0.62) contrast(0.94) brightness(0.72) saturate(0.7);
-  opacity: 0.46;
+  filter: grayscale(0.12) contrast(1.03) brightness(0.98) saturate(0.96);
+  opacity: 0.94;
   transform: scale(1.04);
   transition: filter 1.1s var(--ease), opacity 1.1s var(--ease), transform 1.4s var(--ease-out);
 }
 .hero__portrait:hover .portrait__img,
 .hero__portrait:focus-within .portrait__img {
-  filter: grayscale(0.1) contrast(1.02) brightness(0.95) saturate(1);
-  opacity: 0.94;
+  filter: grayscale(0) contrast(1.05) brightness(1.03) saturate(1);
+  opacity: 1;
   transform: scale(1);
 }
 
@@ -245,17 +257,17 @@
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(7, 12, 18, 0.34) 0%, transparent 28%, rgba(7, 12, 18, 0.72) 100%),
-    linear-gradient(to left, rgba(52, 208, 184, 0.16), transparent 52%);
+    linear-gradient(180deg, rgba(7, 12, 18, 0.1) 0%, transparent 30%, rgba(7, 12, 18, 0.5) 100%),
+    linear-gradient(to left, rgba(52, 208, 184, 0.1), transparent 52%);
   mix-blend-mode: normal;
   transition: opacity 1.1s var(--ease);
 }
 [data-theme="light"] .portrait__wash {
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 30%, rgba(255, 255, 255, 0.72) 100%),
-    linear-gradient(to left, rgba(13, 148, 136, 0.12), transparent 52%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, transparent 30%, rgba(255, 255, 255, 0.45) 100%),
+    linear-gradient(to left, rgba(13, 148, 136, 0.08), transparent 52%);
 }
-.hero__portrait:hover .portrait__wash { opacity: 0.5; }
+.hero__portrait:hover .portrait__wash { opacity: 0.45; }
 
 /* Fallback monogram shown if the photo file is missing */
 .portrait__fallback {
