@@ -122,7 +122,7 @@ export function header(active = "/") {
       <button class="icon-btn" id="theme-toggle" type="button" aria-label="تبديل السمة" title="تبديل السمة الفاتحة/الداكنة">
         ${icon("moon", "i-moon")}${icon("sun", "i-sun")}
       </button>
-      <a class="btn btn--primary btn--sm" href="/contact.html">${icon("message")}<span>تواصل</span></a>
+      <a class="btn btn--primary btn--sm" href="/contact">${icon("message")}<span>تواصل</span></a>
       <button class="icon-btn nav-toggle" id="nav-toggle" type="button" aria-label="فتح القائمة" aria-expanded="false" aria-controls="drawer" aria-haspopup="dialog">
         ${icon("menu")}
       </button>
@@ -140,8 +140,8 @@ export function header(active = "/") {
     </div>
         ${drawerLinks}
     <div class="drawer__foot">
-      <a class="btn btn--ghost btn--sm" href="/links.html">${icon("link")}<span>الروابط</span></a>
-      <a class="btn btn--primary btn--sm" href="/contact.html">${icon("message")}<span>تواصل</span></a>
+      <a class="btn btn--ghost btn--sm" href="/links">${icon("link")}<span>الروابط</span></a>
+      <a class="btn btn--primary btn--sm" href="/contact">${icon("message")}<span>تواصل</span></a>
     </div>
   </nav>
 </div>`;
@@ -189,7 +189,7 @@ export function siteFooter() {
 
     <div class="footer-bottom">
       <span>© <span class="latin" id="year">${new Date().getFullYear()}</span> ${esc(doctor.nameAr)} — جميع الحقوق محفوظة.</span>
-      <span class="footer-bottom__built"><span class="pulse-dot" aria-hidden="true"></span> مبنيّ بـ <span class="latin">HTML</span> + <span class="latin">Cloudflare Pages</span></span>
+      <span class="footer-bottom__built"><span class="pulse-dot" aria-hidden="true"></span> مبني على <span class="latin">Cloudflare Pages</span></span>
     </div>
   </div>
 </footer>
@@ -302,8 +302,8 @@ export function accordion(items, idPrefix = "faq") {
 export function ctaBand({
   title = "لديك فكرة تستحق أن تُكتب؟",
   text = "باب الموقع مفتوح للحوارات الفكرية، وطلبات المحاضرات، ومناقشة أي فكرة طبية أو إنسانية تلتقي عندها الممارسة بالتفكير.",
-  primary = { href: "/contact.html", label: "تواصل مع الدكتور" },
-  secondary = { href: "/links.html", label: "كل الروابط" },
+  primary = { href: "/contact", label: "تواصل مع الدكتور" },
+  secondary = { href: "/links", label: "كل الروابط" },
 } = {}) {
   return `<section class="section section--tight">
   <div class="shell">

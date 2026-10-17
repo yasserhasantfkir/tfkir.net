@@ -2,7 +2,7 @@
    tools/pages.mjs — بناء صفحات الموقع
    ============================================================ */
 import {
-  site, doctor, stats, marquee, pillars, principles, reasoning, values,
+  site, doctor, marquee, pillars, domains,
   timeline, ideas, ideaCategories, projects, projectFilters, talks, talkTypes,
   linkGroups, faqs,
 } from "./content.mjs";
@@ -10,7 +10,7 @@ import { icon, socialIcon } from "./icons.mjs";
 import { esc, layout, pageHero, accordion, ctaBand, portrait, pulseSvg, personLd } from "./render.mjs";
 
 const D = doctor;
-const articleHref = (slug) => `/article.html?id=${encodeURIComponent(slug)}`;
+const articleHref = (slug) => `/article?id=${encodeURIComponent(slug)}`;
 
 /* ============================================================
    1) الرئيسية
@@ -29,59 +29,15 @@ export function homePage() {
     )
     .join("\n          ");
 
-  const statItems = stats
+  const domainCards = domains
     .map(
-      (s, i) => `<div class="stat" data-reveal style="--d:${i * 80}ms">
-            <div class="stat__num"><span data-count="${s.value}">0</span>${esc(s.suffix)}</div>
-            <div class="stat__label">${esc(s.label)}</div>
-          </div>`
-    )
-    .join("\n          ");
-
-  const featured = ideas.find((i) => i.featured) || ideas[0];
-  const latest = ideas.filter((i) => i.slug !== featured.slug).slice(0, 3);
-
-  const latestCards = latest
-    .map(
-      (i, idx) => `<a class="post-card" href="${articleHref(i.slug)}" data-reveal style="--d:${idx * 90}ms">
-            <div class="post-card__meta"><span class="post-card__cat">${esc(i.category)}</span><span>${esc(i.dateAr)}</span></div>
-            <h3 class="post-card__title">${esc(i.title)}</h3>
-            <p class="post-card__excerpt">${esc(i.excerpt)}</p>
-            <div class="post-card__foot">
-              <span class="post-card__read">قراءة ${esc(i.read)}${icon("arrowLeft")}</span>
-              <span>${i.tags.map((t) => esc(t)).join(" · ")}</span>
-            </div>
+      (d, i) => `<a class="card" href="/thinking" data-reveal style="--d:${i * 60}ms">
+            <span class="card__icon">${icon("compass")}</span>
+            <h3 class="card__title">${esc(d.t)}</h3>
+            <p class="card__text">${esc(d.p)}</p>
           </a>`
     )
     .join("\n          ");
-
-  const projPreview = projects
-    .slice(0, 3)
-    .map(
-      (p, idx) => `<a class="proj" href="/projects.html" data-reveal style="--d:${idx * 90}ms">
-            <div class="proj__top">
-              <div class="proj__thumb" aria-hidden="true"><span class="glyph">${esc(p.glyph)}</span></div>
-              <span class="status status--${p.status}">${esc(p.statusAr)}</span>
-            </div>
-            <h3 class="proj__title">${esc(p.title)}</h3>
-            <p class="proj__text">${esc(p.text)}</p>
-            <div class="proj__foot"><span>${esc(p.updated)}</span><span class="post-card__read">التفاصيل${icon("arrowLeft")}</span></div>
-          </a>`
-    )
-    .join("\n          ");
-
-  const principlesPreview = principles
-    .slice(0, 3)
-    .map(
-      (p, i) => `<div class="pillar" data-reveal>
-          <div class="pillar__idx">${esc(p.n)}</div>
-          <h3 class="pillar__title">${esc(p.title)}</h3>
-          <div class="pillar__body">
-            <p class="pillar__text">${esc(p.text)}</p>
-          </div>
-        </div>`
-    )
-    .join("\n        ");
 
   const marqueeItems = [...marquee, ...marquee]
     .map((m) => `<span class="marquee__item">${esc(m)}</span>`)
@@ -103,28 +59,24 @@ export function homePage() {
       <span class="kicker" data-reveal>${icon("stethoscope")} ${esc(D.nameAr)}</span>
 
       <h1 class="hero__title" data-reveal style="--d:90ms">
-        <span class="ln"><span class="split-line"><span>${esc(D.title.split("،")[0])}،</span></span></span>
-        <span class="ln"><span class="split-line"><span class="gradient-text">${esc(D.title.split("،")[1] || "والفكرة")}</span></span></span>
+        <span class="ln"><span class="split-line"><span class="gradient-text">${esc(D.title)}</span></span></span>
       </h1>
 
       <div class="hero__role" data-reveal style="--d:180ms">
-        <span class="tag tag--teal">${icon("stethoscope")} ${esc(D.roleLine.split("·")[0].trim())}</span>
-        <span class="dot">•</span>
-        <span class="tag">${esc(D.roleLine.split("·")[1].trim())}</span>
-        <span class="dot">•</span>
-        <span class="tag tag--brass">${esc(D.roleLine.split("·")[2].trim())}</span>
+        <span class="tag tag--teal">${esc(D.roleLine)}</span>
       </div>
 
       <p class="lead hero__lead" data-reveal style="--d:260ms">${esc(D.subtitle)}</p>
 
       <div class="hero__cta" data-reveal style="--d:340ms">
-        <a class="btn btn--primary btn--lg" href="/about.html">${icon("user")}<span>من هو الدكتور؟</span></a>
-        <a class="btn btn--ghost btn--lg" href="/thinking.html">${icon("brain")}<span>منهجية التفكير</span></a>
-        <a class="btn btn--quiet btn--lg" href="/ideas.html">الأفكار${icon("arrowLeft", "btn__arrow")}</a>
+        <a class="btn btn--primary btn--lg" href="/about">${icon("user")}<span>من هو الدكتور؟</span></a>
+        <a class="btn btn--ghost btn--lg" href="/thinking">${icon("brain")}<span>منهجية التفكير</span></a>
+        <a class="btn btn--quiet btn--lg" href="/ideas">الأفكار${icon("arrowLeft", "btn__arrow")}</a>
       </div>
 
-      <div class="hero__meta">
-          ${statItems}
+      <div class="hero__cta" data-reveal style="--d:340ms">
+        <a class="btn btn--primary btn--lg" href="/thinking">${icon("compass")}<span>ابدأ من الميادين</span></a>
+        <a class="btn btn--ghost btn--lg" href="/contact">${icon("message")}<span>تواصل</span></a>
       </div>
     </div>
 
@@ -148,37 +100,41 @@ export function homePage() {
   <div class="shell">
     <div class="grid grid--2" style="gap:clamp(1.5rem,1rem+3vw,3.5rem);align-items:start">
       <div>
-        <span class="chip-num">01 — من أنا</span>
-        <h2 style="margin-top:1rem">طبيبٌ يكتب، <span class="mark">ومشاريع</span> يبني</h2>
+        <span class="chip-num">01 — عن المنصة</span>
+        <h2 style="margin-top:1rem">${esc(D.title)}</h2>
         <p class="lead" style="margin-top:1.1rem">${esc(D.subtitle)}</p>
         <p style="margin-top:1rem;color:var(--muted)">
-          هذا الموقع ليس سيرة ذاتية رسمية، ولا هو منصة طبية مهنية. إنه ببساطة مساحة لي: أكتب فيها ما تعلّمته
-          من الحالات، وأعرض فيها ما أبنيه من أدوات، وأترك المساحة مفتوحة لمن يريد أن يناقش.
+          هذه منصة فكرية وتدريبية: نظريات ومنهجيات ودورات في الطب والمنطق والحِجاج
+          واللغة والنهضة والتحقيق والتجديد — يجمعها خيط واحد. كل ميدان يبدأ من
+          سؤال واحد: كيف نفكّر فيه؟
         </p>
         <div class="hero__cta" style="margin-top:1.8rem">
-          <a class="btn btn--ghost" href="/about.html">اقرأ الملف الكامل${icon("arrowLeft", "btn__arrow")}</a>
-          <a class="btn btn--quiet" href="/links.html">كل الروابط${icon("arrowLeft", "btn__arrow")}</a>
+          <a class="btn btn--primary" href="/thinking">${icon("compass")}<span>ابدأ من الميادين</span></a>
+          <a class="btn btn--ghost" href="/contact">${icon("message")}<span>تواصل</span></a>
         </div>
       </div>
 
       <div class="grid" style="gap:1rem">
         <div class="card" data-reveal="left">
-          <span class="card__icon">${icon("location")}</span>
-          <h3 class="card__title">${esc(D.city)}</h3>
-          <p class="card__text">${esc(D.country)} — ${esc(D.timezone)}</p>
-        </div>
-        <div class="card" data-reveal="left" style="--d:110ms">
-          <span class="card__icon">${icon("checkCircle")}</span>
-          <h3 class="card__title">${esc(D.availability)}</h3>
-          <p class="card__text">لطلبات المحاضرات والحوارات والمشاركة في النقاش.</p>
-          <div class="card__foot"><a class="tlink" href="/contact.html">قدّم طلبك${icon("arrowLeft", "btn__arrow")}</a></div>
-        </div>
-        <div class="card" data-reveal="left" style="--d:200ms">
           <span class="card__icon">${icon("mail")}</span>
           <h3 class="card__title">${esc(D.email)}</h3>
           <p class="card__text">أسرع طريقة للوصول. اضغط للنسخ.</p>
           <div class="card__foot">
             <button class="tlink" type="button" data-copy="${esc(D.email)}">${icon("copy")}نسخ البريد</button>
+          </div>
+        </div>
+        <div class="card" data-reveal="left" style="--d:110ms">
+          <span class="card__icon">${icon("checkCircle")}</span>
+          <h3 class="card__title">${esc(D.availability)}</h3>
+          <p class="card__text">لطلبات الدورات والحوارات والتعاون الفكري.</p>
+          <div class="card__foot"><a class="tlink" href="/contact">قدّم طلبك${icon("arrowLeft", "btn__arrow")}</a></div>
+        </div>
+        <div class="card" data-reveal="left" style="--d:200ms">
+          <span class="card__icon">${icon("phone")}</span>
+          <h3 class="card__title">${esc(D.phone)}</h3>
+          <p class="card__text">هاتف / واتساب.</p>
+          <div class="card__foot">
+            <a class="tlink" href="${esc(D.socials.whatsapp)}" target="_blank" rel="noopener">${icon("whatsapp")}فتح واتساب</a>
           </div>
         </div>
       </div>
@@ -212,9 +168,8 @@ export function homePage() {
           وأكتب عنها كثيرًا.
         </p>
       </div>
-        ${principlesPreview}
       <div data-reveal>
-        <a class="btn btn--primary" href="/thinking.html">كل المبادئ والمنهجية${icon("arrowLeft", "btn__arrow")}</a>
+        <a class="btn btn--primary" href="/thinking">كل المبادئ والمنهجية${icon("arrowLeft", "btn__arrow")}</a>
       </div>
     </div>
   </div>
@@ -223,48 +178,34 @@ export function homePage() {
   </div>
 </section>
 
-<!-- ===================== الأحدث ===================== -->
-<section class="section" id="latest">
+<!-- ===================== ستة ميادين ===================== -->
+<section class="section" id="domains">
   <div class="shell">
-    <div class="sect-head" style="display:flex;flex-wrap:wrap;gap:1.2rem;align-items:end;justify-content:space-between;max-width:none">
-      <div>
-        <span class="kicker" data-reveal>${icon("pen")} الأحدث</span>
-        <h2 style="margin-top:.9rem" data-reveal>أفكارٌ <span class="gradient-text">كتبتُها</span> مؤخرًا</h2>
-      </div>
-      <a class="btn btn--ghost" href="/ideas.html" data-reveal>كل الأفكار${icon("arrowLeft", "btn__arrow")}</a>
+    <div class="sect-head sect-head--center">
+      <span class="kicker" data-reveal>${icon("compass")} الميادين</span>
+      <h2 style="margin-top:.9rem" data-reveal>ستة ميادين، <span class="gradient-text">خيطٌ واحد</span></h2>
+      <p class="lead" data-reveal style="--d:120ms">كل ميدان يبدأ من سؤال واحد: كيف نفكّر فيه؟</p>
     </div>
-
     <div class="grid grid--3">
-      <a class="post-card post-card--feature" href="${articleHref(featured.slug)}" data-reveal>
-        <div>
-          <div class="post-card__meta">
-            <span class="post-card__cat">${esc(featured.category)}</span><span>${esc(featured.dateAr)}</span><span>${esc(featured.read)}</span>
-          </div>
-          <h3 class="post-card__title" style="margin-top:.7rem">${esc(featured.title)}</h3>
-          <p class="post-card__excerpt" style="-webkit-line-clamp:4;line-clamp:4">${esc(featured.excerpt)}</p>
-        </div>
-        <div class="post-card__foot" style="border-top:0;padding-top:0">
-          <span class="post-card__read">اقرأ المقال${icon("arrowLeft")}</span>
-          <span>${featured.tags.map(esc).join(" · ")}</span>
-        </div>
-      </a>
-          ${latestCards}
+          ${domainCards}
     </div>
   </div>
 </section>
 
-<!-- ===================== المشاريع ===================== -->
-<section class="section" id="projects-preview">
+<!-- ===================== دعوة ===================== -->
+<section class="section" id="invite">
   <div class="shell">
-    <div class="sect-head" style="display:flex;flex-wrap:wrap;gap:1.2rem;align-items:end;justify-content:space-between;max-width:none">
-      <div>
-        <span class="kicker" data-reveal>${icon("spark")} المشاريع</span>
-        <h2 style="margin-top:.9rem" data-reveal>ما <span class="gradient-text">أبنيه</span></h2>
+    <div class="cta-band" data-reveal="scale">
+      <span class="kicker" style="justify-content:center">${icon("spark")} دعوة</span>
+      <h2 class="cta-band__title" style="margin-top:.8rem">هل أنت منظم مؤتمر أو مركز تدريب؟</h2>
+      <p class="lead cta-band__text">
+        أستقبل دعوات الدورات والمحاضرات في التفكير الطبي والمنطق والحِجاج واللغة
+        والنهضة، خصوصًا في كليات الطب وبرامج تدريب المقيمين.
+      </p>
+      <div class="cta-band__actions">
+        <a class="btn btn--primary btn--lg" href="/contact?type=talk">${icon("send")}<span>أرسل دعوة</span></a>
+        <a class="btn btn--ghost btn--lg" href="/links">${icon("link")}<span>كل الروابط</span></a>
       </div>
-      <a class="btn btn--ghost" href="/projects.html" data-reveal>كل المشاريع${icon("arrowLeft", "btn__arrow")}</a>
-    </div>
-    <div class="grid grid--3">
-          ${projPreview}
     </div>
   </div>
 </section>
@@ -290,7 +231,7 @@ ${ctaBand()}`;
           publisher: { "@id": site.origin + "/#person" },
           potentialAction: {
             "@type": "SearchAction",
-            target: { "@type": "EntryPoint", urlTemplate: site.origin + "/ideas.html?q={search_term_string}" },
+            target: { "@type": "EntryPoint", urlTemplate: site.origin + "/ideas?q={search_term_string}" },
             "query-input": "required name=search_term_string",
           },
         },
@@ -303,26 +244,6 @@ ${ctaBand()}`;
    2) عن الدكتور
    ============================================================ */
 export function aboutPage() {
-  const valueCards = values
-    .map(
-      (v, i) => `<div class="value" data-reveal style="--d:${i * 80}ms">
-            <div class="value__n">${esc(v.n)}</div>
-            <h3 class="value__t">${esc(v.t)}</h3>
-            <p class="value__d">${esc(v.d)}</p>
-          </div>`
-    )
-    .join("\n          ");
-
-  const tl = timeline
-    .map(
-      (t, i) => `<div class="tl-item" data-reveal style="--d:${i * 90}ms">
-            <div class="tl-item__when">${esc(t.when)}</div>
-            <h3 class="tl-item__title">${esc(t.title)}</h3>
-            <p class="tl-item__text">${esc(t.text)}</p>
-          </div>`
-    )
-    .join("\n          ");
-
   const chips = D.specialties
     .map((s) => `<span class="tag tag--teal">${esc(s)}</span>`)
     .join("\n            ");
@@ -392,18 +313,6 @@ export function aboutPage() {
   </div>
 </section>
 
-<section class="section section--tight">
-  <div class="shell">
-    <div class="sect-head sect-head--center">
-      <span class="kicker" data-reveal>${icon("spark")} القيم</span>
-      <h2 style="margin-top:.9rem" data-reveal>أربع <span class="gradient-text">قيم</span> لا أتنازل عنها</h2>
-    </div>
-    <div class="grid grid--4">
-          ${valueCards}
-    </div>
-  </div>
-</section>
-
 <section class="section">
   <div class="shell">
     <div class="sect-head">
@@ -412,7 +321,7 @@ export function aboutPage() {
       <p class="lead" data-reveal style="--d:120ms">محطات أسّست أسلوب التفكير الحالي، من العيادة إلى الكتابة.</p>
     </div>
     <div class="timeline">
-          ${tl}
+          <p class="form-note">${icon("pen")} السيرة ستُضاف لاحقًا.</p>
     </div>
     <p class="form-note" style="margin-top:1.6rem">${icon("pen")} محطات موضوعة كهيكل جاهز — املأ التواريخ والنصوص في <span class="latin">tools/content.mjs</span>.</p>
   </div>
@@ -431,8 +340,8 @@ export function aboutPage() {
 ${ctaBand()}`;
 
   return layout({
-    active: "/about.html",
-    path: "/about.html",
+    active: "/about",
+    path: "/about",
     title: `عن ${D.nameShort}`,
     desc: `الملف الشخصي والمهني لـ${D.nameAr}: المسار، والقيم، ومجال العمل، والأسئلة الشائعة حول محتوى الموقع.`,
     body,
@@ -448,35 +357,12 @@ ${ctaBand()}`;
    3) التفكير الطبي
    ============================================================ */
 export function thinkingPage() {
-  const principleRows = principles
+  const domainCards = domains
     .map(
-      (p) => `<div class="pillar" data-reveal>
-          <div class="pillar__idx">${esc(p.n)}</div>
-          <h3 class="pillar__title">${esc(p.title)}</h3>
-          <div class="pillar__body"><p class="pillar__text">${esc(p.text)}</p></div>
-        </div>`
-    )
-    .join("\n        ");
-
-  const reasonCards = reasoning
-    .map(
-      (r, i) => `<div class="reason" data-reveal style="--d:${i * 90}ms">
-            <div class="reason__step">${esc(r.step)}</div>
-            <h3 class="reason__t">${esc(r.title)}</h3>
-            <p class="reason__d">${esc(r.text)}</p>
-          </div>`
-    )
-    .join("\n          ");
-
-  const related = ideas
-    .filter((i) => ["التفكير الطبي", "الأدلة", "الممارسة"].includes(i.category))
-    .slice(0, 3)
-    .map(
-      (i, idx) => `<a class="post-card" href="${articleHref(i.slug)}" data-reveal style="--d:${idx * 90}ms">
-            <div class="post-card__meta"><span class="post-card__cat">${esc(i.category)}</span><span>${esc(i.dateAr)}</span></div>
-            <h3 class="post-card__title">${esc(i.title)}</h3>
-            <p class="post-card__excerpt">${esc(i.excerpt)}</p>
-            <div class="post-card__foot"><span class="post-card__read">قراءة ${esc(i.read)}${icon("arrowLeft")}</span></div>
+      (d, i) => `<a class="card" href="/thinking" data-reveal style="--d:${i * 60}ms">
+            <span class="card__icon">${icon("compass")}</span>
+            <h3 class="card__title">${esc(d.t)}</h3>
+            <p class="card__text">${esc(d.p)}</p>
           </a>`
     )
     .join("\n          ");
@@ -487,7 +373,7 @@ export function thinkingPage() {
     lead:
       "ليست مجموعة مهارات، بل تعلّمات: كيف ننتقي المعطيات، وكيف نبني فرضية يمكن اختبارها، وكيف نعرف أن الوقت مناسب لإغلاق التشخيص.",
     crumbs: [{ label: "الرئيسية", href: "/" }, { label: "التفكير الطبي" }],
-    meta: [`${principles.length} مبادئ`, `${reasoning.length} مراحل`, "قراءة ٦ دقائق"],
+    meta: [],
     aside: `<div class="quote" style="padding:1.2rem 1.3rem">
             <p style="font-size:1.05rem">«أخطر لحظة في التشخيص ليست الخطأ، بل اليقين المبكر.»</p>
             <cite>— من ملاحظات العمل</cite>
@@ -502,7 +388,7 @@ export function thinkingPage() {
       <p class="lead" data-reveal style="--d:120ms">خمس مراحل متكررة في كل حالة، من أول انتباه إلى آخر توثيق.</p>
     </div>
     <div class="grid grid--3">
-          ${reasonCards}
+          ${domainCards}
     </div>
   </div>
 </section>
@@ -511,9 +397,8 @@ export function thinkingPage() {
   <div class="shell">
     <div class="sect-head">
       <span class="kicker" data-reveal>${icon("scales")} المبادئ</span>
-      <h2 style="margin-top:.9rem" data-reveal>${principles.length} مبادئ <span class="gradient-text">لا أُخالفها</span></h2>
+      <h2 style="margin-top:.9rem" data-reveal>التفكير <span class="gradient-text">الطبّي</span> كمنهج</h2>
     </div>
-        ${principleRows}
   </div>
 </section>
 
@@ -532,34 +417,19 @@ export function thinkingPage() {
   </div>
 </section>
 
-<section class="section section--tight">
-  <div class="shell">
-    <div class="sect-head" style="display:flex;flex-wrap:wrap;gap:1.2rem;align-items:end;justify-content:space-between;max-width:none">
-      <div>
-        <span class="kicker" data-reveal>${icon("book")} مقالات ذات صلة</span>
-        <h2 style="margin-top:.9rem" data-reveal>اقرأ <span class="gradient-text">أعمق</span></h2>
-      </div>
-      <a class="btn btn--ghost" href="/ideas.html" data-reveal>كل الأفكار${icon("arrowLeft", "btn__arrow")}</a>
-    </div>
-    <div class="grid grid--3">
-          ${related}
-    </div>
-  </div>
-</section>
-
 ${ctaBand({
   title: "لديك حالة تستحق المناقشة؟",
   text: "أحيانًا تكون الفكرة الأكثر قيمة هي الفكرة التي لم تُكتب بعد. أرسلها، وسأقرأها.",
-  primary: { href: "/contact.html", label: "أرسل فكرتك" },
-  secondary: { href: "/projects.html", label: "تصفّح المشاريع" },
+  primary: { href: "/contact", label: "أرسل فكرتك" },
+  secondary: { href: "/projects", label: "تصفّح المشاريع" },
 })}`;
 
   return layout({
-    active: "/thinking.html",
-    path: "/thinking.html",
+    active: "/thinking",
+    path: "/thinking",
     title: "التفكير الطبي — المنهجية والمبادئ",
     desc:
-      "منهجية التفكير في الطب: المراحل، والمبادئ، وأدوات التفكير السريري، وأمثل{DOCTYPE} على تدوين الحالة وقراءة الأدلة.",
+      "منهجية التفكير في الطب: المراحل، والمبادئ، وأدوات التفكير السريري، وأمثلة على تدوين الحالة وقراءة الأدلة.",
     body,
     jsonLd: {
       "@context": "https://schema.org",
@@ -620,7 +490,7 @@ export function ideasPage() {
           ${cards}
     </div>
 
-    <p class="empty-note" id="idea-empty" hidden>لا توجد مقالات في هذا التصنيف بعد.</p>
+    <p class="empty-note" id="idea-empty" hidden>لا توجد مقالات منشورة بعد. المقالات ستُضاف لاحقًا.</p>
 
     <p class="form-note" style="margin-top:2rem">
       ${icon("search")} لتصفية المقالات حسب التصنيف. ${icon("rss")} يتوفر الأرشيف أيضًا عبر
@@ -630,15 +500,15 @@ export function ideasPage() {
 </section>
 
 ${ctaBand({
-  title: "هل لديك فكرة تستحق أن تُنشر هنا؟",
-  text: "أرسل مسودتك أو نبذتها، وسأقرأها بتمعّن. المساهمات الأصيلة في التفكير الطبي всегда موضع ترحيب.",
-  primary: { href: "/contact.html", label: "أرسل مسودة" },
-  secondary: { href: "/thinking.html", label: "اقرأ المنهجية" },
+  title: "هل لديك فكرة أو طلب؟",
+  text: "أرسل طلبك أو نبذة عن فكرتك، وسأقرأها بتمعّن.",
+  primary: { href: "/contact", label: "أرسل طلبك" },
+  secondary: { href: "/links", label: "كل الروابط" },
 })}`;
 
   return layout({
-    active: "/ideas.html",
-    path: "/ideas.html",
+    active: "/ideas",
+    path: "/ideas",
     title: "الأفكار والمقالات",
     desc: "مقالات في التفكير الطبي وقراءة الأدلة وتعليم الطب والكتابة. قراءةٌ سريعة في الفهم، بطيئة في الحكم.",
     body,
@@ -677,7 +547,7 @@ export function articlePage() {
   <div class="shell">
     <nav class="crumbs" aria-label="مسار التصفح" style="margin-bottom:1.5rem">
       <a href="/">الرئيسية</a><span class="crumbs__sep" aria-hidden="true">/</span>
-      <a href="/ideas.html">الأفكار</a><span class="crumbs__sep" aria-hidden="true">/</span>
+      <a href="/ideas">الأفكار</a><span class="crumbs__sep" aria-hidden="true">/</span>
       <span aria-current="page" id="crumb-title">…</span>
     </nav>
 
@@ -731,13 +601,13 @@ export function articlePage() {
 ${ctaBand({
   title: "الفكرة تهمّك؟ ناقشها.",
   text: "المقالات مفتوحة للنقاش. إن كان لديك اعتراض أو إضافة أو مثال من عيادتك، الباب مفتوح.",
-  primary: { href: "/contact.html", label: "اكتب ردّك" },
-  secondary: { href: "/ideas.html", label: "كل المقالات" },
+  primary: { href: "/contact", label: "اكتب ردّك" },
+  secondary: { href: "/ideas", label: "كل المقالات" },
 })}`;
 
   return layout({
-    active: "/ideas.html",
-    path: "/article.html",
+    active: "/ideas",
+    path: "/article",
     noIndex: true,
     title: "مقال",
     desc: "قراءة مقال من أرشيف التفكير الطبي للدكتور ياسر حسن: فكرة كاملة، بأقسامها ومراجعها، قابلة للمناقشة والتصحيح.",
@@ -806,7 +676,7 @@ export function projectsPage() {
           ${cards}
     </div>
 
-    <p class="empty-note" id="proj-empty" hidden>لا توجد مشاريع في هذه الحالة بعد.</p>
+    <p class="empty-note" id="proj-empty" hidden>لا توجد مشاريع منشورة بعد. المشاريع ستُضاف لاحقًا.</p>
 
     <p class="form-note" style="margin-top:2rem">
       ${icon("pen")} حالة كل مشروع (منشور / قيد التطوير / فكرة) وروابطه تُعدَّل في
@@ -844,13 +714,13 @@ export function projectsPage() {
 ${ctaBand({
   title: "لديك مشروع يخرج من فكرة؟",
   text: "أرسل وصف المشكلة في سطرين. أبجث عن المشاريع التي تختصر خطوة مكررة، لا عن أفكار جديدة كليًا.",
-  primary: { href: "/contact.html", label: "ناقش مشروعك" },
-  secondary: { href: "/ideas.html", label: "اقرأ الأفكار" },
+  primary: { href: "/contact", label: "ناقش مشروعك" },
+  secondary: { href: "/ideas", label: "اقرأ الأفكار" },
 })}`;
 
   return layout({
-    active: "/projects.html",
-    path: "/projects.html",
+    active: "/projects",
+    path: "/projects",
     title: "المشاريع الشخصية",
     desc: "أدوات وخدمات ومشاريع شخصية يبنّيها الدكتور ياسر حسن في التفكير الطبي والتوثيق وقراءة الأدلة.",
     body,
@@ -887,7 +757,7 @@ export function talksPage() {
               ${
                 t.video
                   ? `<a class="post-card__read" href="${esc(t.video)}" target="_blank" rel="noopener">مشاهدة${icon("play")}</a>`
-                  : `<span class="post-card__read" style="opacity:.55">${icon("video")} TODO — أضف الرابط</span>`
+                  : `<span class="post-card__read" style="opacity:.55">${icon("video")} أضف الرابط</span>`
               }
             </div>
             ${
@@ -916,7 +786,7 @@ export function talksPage() {
     <div class="grid grid--3" id="talk-grid" style="margin-top:1.8rem">
           ${cards}
     </div>
-    <p class="empty-note" id="talk-empty" hidden>لا توجد جلسات في هذا النوع بعد.</p>
+    <p class="empty-note" id="talk-empty" hidden>لا توجد جلسات منشورة بعد. المحاضرات ستُضاف لاحقًا.</p>
     <p class="form-note" style="margin-top:2rem">${icon("video")} روابط الفيديو والمواد تُضاف من <span class="latin">tools/content.mjs</span>.</p>
   </div>
 </section>
@@ -930,16 +800,16 @@ export function talksPage() {
         أستقبل دعوات المحاضرات وورش العمل في التفكير السريري،특히 في كليات الطب وبرامج تدريب المقيمين.
       </p>
       <div class="cta-band__actions">
-        <a class="btn btn--primary btn--lg" href="/contact.html?type=talk">${icon("send")}<span>أرسل دعوة</span></a>
-        <a class="btn btn--ghost btn--lg" href="/contact.html">${icon("message")}<span>تواصل عام</span></a>
+        <a class="btn btn--primary btn--lg" href="/contact?type=talk">${icon("send")}<span>أرسل دعوة</span></a>
+        <a class="btn btn--ghost btn--lg" href="/contact">${icon("message")}<span>تواصل عام</span></a>
       </div>
     </div>
   </div>
 </section>`;
 
   return layout({
-    active: "/talks.html",
-    path: "/talks.html",
+    active: "/talks",
+    path: "/talks",
     title: "المحاضرات والحوارات",
     desc: "محاضرات وورش وحوارات الدكتور ياسر حسن في التفكير السريري وقراءة الأدلة وتدوين الحالات.",
     body,
@@ -971,7 +841,7 @@ export function linksPage() {
             <div class="hub__acts">
               ${
                 dead
-                  ? `<span class="tag" title="TODO">${icon("pen")} يُضاف لاحقًا</span>`
+                  ? `<span class="tag" title="قيد الإضافة">${icon("pen")} يُضاف لاحقًا</span>`
                   : `<a class="hub__act" href="${href}" aria-label="فتح ${esc(l.name)}"${/^https?:/i.test(href) ? ' target="_blank" rel="noopener"' : ""}>${icon("external")}</a>
                  <button class="hub__act" type="button" ${copy} aria-label="نسخ رابط ${esc(l.name)}">${icon("copy")}</button>`
               }
@@ -1011,7 +881,7 @@ export function linksPage() {
         إن كان هناك كتاب، أو إرشاد، أو أداة، أو موقع يستحق أن يكون في هذه القائمة — أرسله لي.
       </p>
       <div class="cta-band__actions">
-        <a class="btn btn--primary btn--lg" href="/contact.html?type=resource">${icon("send")}<span>اقترح مصدرًا</span></a>
+        <a class="btn btn--primary btn--lg" href="/contact?type=resource">${icon("send")}<span>اقترح مصدرًا</span></a>
         <a class="btn btn--ghost btn--lg" href="/sitemap.xml">${icon("layers")}<span>خريطة الموقع</span></a>
       </div>
     </div>
@@ -1019,8 +889,8 @@ export function linksPage() {
 </section>`;
 
   return layout({
-    active: "/links.html",
-    path: "/links.html",
+    active: "/links",
+    path: "/links",
     title: "كل الروابط",
     desc: "صفحة مركزية تجمع روابط الموقع وحسابات الدكتور ياسر حسن ومصادره الموصى بها.",
     body,
@@ -1117,7 +987,7 @@ export function contactPage() {
           <div class="field" data-field="consent" data-invalid="false">
             <label style="display:flex;gap:.65rem;align-items:flex-start;cursor:pointer;font-size:.92rem;color:var(--text-soft)">
               <input type="checkbox" id="cf-consent" name="consent" required style="margin-top:.35rem;accent-color:var(--teal-500);width:17px;height:17px;flex:none">
-              <span>أوافق على معالجة هذه البيانات للرد على طلبي، وفق <a href="/privacy.html" class="tlink">سياسة الخصوصية</a>. <span class="req">*</span></span>
+              <span>أوافق على معالجة هذه البيانات للرد على طلبي، وفق <a href="/privacy" class="tlink">سياسة الخصوصية</a>. <span class="req">*</span></span>
             </label>
             <span class="field__err">الموافقة مطلوبة لإرسال الرسالة.</span>
           </div>
@@ -1217,8 +1087,8 @@ export function contactPage() {
 </section>`;
 
   return layout({
-    active: "/contact.html",
-    path: "/contact.html",
+    active: "/contact",
+    path: "/contact",
     title: "اتصل بنا",
     desc: "تواصل مع الدكتور ياسر حسن: طلبات محاضرات، مناقشة أفكار، اقتراح مصادر، أو أي سؤال حول المحتوى.",
     body,
@@ -1254,14 +1124,14 @@ export function thankYouPage() {
     </p>
     <div class="err__actions">
       <a class="btn btn--primary btn--lg" href="/">${icon("arrowRight")}<span>العودة للرئيسية</span></a>
-      <a class="btn btn--ghost btn--lg" href="/ideas.html">${icon("book")}<span>تصفّح الأفكار</span></a>
+      <a class="btn btn--ghost btn--lg" href="/ideas">${icon("book")}<span>تصفّح الأفكار</span></a>
     </div>
   </div>
 </section>`;
 
   return layout({
-    active: "/contact.html",
-    path: "/thank-you.html",
+    active: "/contact",
+    path: "/thank-you",
     noIndex: true,
     title: "تم إرسال رسالتك",
     desc: "شكرًا لتواصلك مع الدكتور ياسر حسن. وصلت رسالتك وسيُردّ عليها خلال يومين إلى سبعة أيام عمل.",
@@ -1275,11 +1145,11 @@ export function thankYouPage() {
 export function notFoundPage() {
   const quick = [
     { href: "/", label: "الرئيسية", icon: "arrowRight" },
-    { href: "/about.html", label: "عن الدكتور", icon: "user" },
-    { href: "/ideas.html", label: "الأفكار", icon: "book" },
-    { href: "/projects.html", label: "المشاريع", icon: "spark" },
-    { href: "/links.html", label: "الروابط", icon: "link" },
-    { href: "/contact.html", label: "اتصل بنا", icon: "message" },
+    { href: "/about", label: "عن الدكتور", icon: "user" },
+    { href: "/ideas", label: "الأفكار", icon: "book" },
+    { href: "/projects", label: "المشاريع", icon: "spark" },
+    { href: "/links", label: "الروابط", icon: "link" },
+    { href: "/contact", label: "اتصل بنا", icon: "message" },
   ]
     .map(
       (q) =>
@@ -1299,14 +1169,14 @@ export function notFoundPage() {
         ${quick}
     </div>
     <p class="form-note" style="margin-top:2.5rem">
-      ${icon("search")} جرّب البحث في <a href="/ideas.html" class="tlink">الأرشيف</a>، أو انتقل مباشرة إلى
-      <a href="/links.html" class="tlink">صفحة الروابط</a>.
+      ${icon("search")} جرّب البحث في <a href="/ideas" class="tlink">الأرشيف</a>، أو انتقل مباشرة إلى
+      <a href="/links" class="tlink">صفحة الروابط</a>.
     </p>
   </div>
 </section>`;
 
   return layout({
-    path: "/404.html",
+    path: "/404",
     noIndex: true,
     title: "الصفحة غير موجودة",
     desc: "الصفحة المطلوبة غير موجودة على tfkir.net.",
@@ -1359,7 +1229,7 @@ export function privacyPage() {
 
       <h2>5. أدوات التحليل</h2>
       <p>
-        TODO — في حال إضافة أدوات تحليل (مثل Cloudflare Web Analytics) ستُوضَّح هنا nature البيانات
+        في حال إضافة أدوات تحليل (مثل Cloudflare Web Analytics) ستُوضَّح هنا طبيعة البيانات المجمَّعة.
         المجمَّعة وهويتها.
       </p>
 
@@ -1390,8 +1260,8 @@ export function privacyPage() {
 </section>`;
 
   return layout({
-    active: "/privacy.html",
-    path: "/privacy.html",
+    active: "/privacy",
+    path: "/privacy",
     title: "سياسة الخصوصية",
     desc: "سياسة خصوصية موقع tfkir.net: البيانات المرسلة عبر نموذج التواصل، وملفات الارتباط، والخطوط الخارجية.",
     body,

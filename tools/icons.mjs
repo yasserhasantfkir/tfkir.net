@@ -69,6 +69,7 @@ export const icons = {
   youtube: P('<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="M10.3 9.6l4.6 2.4-4.6 2.4V9.6Z" fill="currentColor" stroke="none"/>'),
   telegram: P('<path d="M21 5.2 2.8 11.5c-.9.35-.88 1.63.03 1.95l4.3 1.4 1.6 4.9c.26.8 1.3 1.02 1.86.4l2.3-2.6 4.3 3.2c.72.53 1.74.13 1.9-.75L22.6 6.5c.18-1-.8-1.75-1.6-1.3Z"/><path d="M7.1 14.9 19.3 7.4l-8.6 9.4"/>'),
   whatsapp: P('<path d="M3.5 20.5 5 16.4A8 8 0 1 1 8.2 19.4l-4.7 1.1Z"/><path d="M9.2 8.4c.3 0 .5.1.7.5l.7 1.4c.1.3 0 .5-.1.7l-.5.6c.5 1 1.4 1.8 2.4 2.2l.6-.6c.2-.2.4-.2.7-.1l1.4.7c.3.1.4.3.4.6 0 .9-.8 1.5-1.7 1.5-3.4 0-6.5-3.1-6.5-6.4 0-.9.6-1.6 1.5-1.6h.4Z"/>'),
+  facebook: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 8.5V6.5c0-1.1.9-2 2-2h2V1.5h-3c-2.8 0-4.5 1.7-4.5 4.5v2.5h-2.5v3h2.5V22.5h3V11.5h2.5l.5-3h-3Z"/></svg>',
   github: P('<path d="M9.2 20.5c-4 1.2-4-2.2-5.6-2.7m11.2 5.2v-3.3c0-.9.1-1.3-.4-1.8 2.7-.3 5.5-1.3 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.3 4.3 0 0 0-.1-3.3s-1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 5.1 5.5 5.4 5.5 5.4a4.3 4.3 0 0 0-.1 3.3A4.6 4.6 0 0 0 4 11.9c0 4.7 2.8 5.7 5.5 6-.4.4-.4 1-.4 1.6v4"/>'),
   telegramX: '',
 };
@@ -80,5 +81,5 @@ export function icon(name, cls = "") {
 }
 
 export function socialIcon(key) {
-  return icon(key in icons ? key : "link");
+  return icon(key in icons ? key : (key==="facebook"?"facebook":"link"));
 }
