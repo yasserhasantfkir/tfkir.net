@@ -12,6 +12,9 @@ import { esc, layout, pageHero, ctaBand, portrait, pulseSvg, personLd } from "./
 const D = doctor;
 const articleHref = (slug) => `/article?id=${encodeURIComponent(slug)}`;
 
+/* الوصف التعريفي: كل جملة في سطر مستقل */
+const leadHtml = (d = D) => d.leadLines.map((l) => esc(l)).join("<br>\n        ");
+
 /* ============================================================
    1) الرئيسية
    ============================================================ */
@@ -53,7 +56,7 @@ export function homePage() {
         <span class="tag tag--teal">${esc(D.roleLine)}</span>
       </div>
 
-      <p class="lead hero__lead" data-reveal style="--d:260ms" data-i18n="hero.lead">${esc(D.subtitle)}</p>
+      <p class="lead hero__lead" data-reveal style="--d:260ms" data-i18n="hero.lead">${leadHtml()}</p>
     </div>
 
           ${portrait()}
@@ -84,7 +87,7 @@ export function homePage() {
       <div>
         <span class="chip-num" data-i18n="intro.chip">01 — عن المنصة</span>
         <h2 style="margin-top:1rem" data-i18n="intro.title">${esc(D.title)}</h2>
-        <p class="lead" style="margin-top:1.1rem" data-i18n="intro.lead">${esc(D.subtitle)}</p>
+        <p class="lead" style="margin-top:1.1rem" data-i18n="intro.lead">${leadHtml()}</p>
         <p style="margin-top:1rem;color:var(--muted)">
           هذه منصة فكرية وتدريبية: نظريات ومنهجيات ودورات في الطب والمنطق والحِجاج
           واللغة والنهضة والتحقيق والتجديد — يجمعها خيط واحد. كل ميدان يبدأ من
@@ -200,7 +203,7 @@ export function aboutPage() {
       <div class="sect-head" style="margin-bottom:0">
         <span class="kicker" data-reveal>${icon("quote")} نبذة</span>
         <h2 style="margin-top:.9rem" data-reveal>${esc(D.title)}</h2>
-        <p class="lead" data-reveal style="--d:120ms">${esc(D.subtitle)}</p>
+        <p class="lead" data-reveal style="--d:120ms">${leadHtml()}</p>
       </div>
 
       <div class="grid grid--2">
