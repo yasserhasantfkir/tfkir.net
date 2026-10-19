@@ -84,11 +84,6 @@ export function homePage() {
 
           ${portrait()}
 
-    <aside class="hero__note" data-reveal="scale" style="--d:260ms">
-      <h2 class="hero__note-title">فلسفة المنصة</h2>
-      <p class="hero__note-text">مشكلة الفرد والمجتمع والأمة والعالم تُحلّ حين يُصلَح التفكير وتُقوّى مهاراته.</p>
-    </aside>
-
     <div class="hero__cta hero__grid-actions" data-reveal style="--d:340ms">
       <a class="btn btn--primary btn--lg" href="/thinking">${icon("compass")}<span>ابدأ من الميادين</span></a>
       <a class="btn btn--ghost btn--lg" href="/about">${icon("user")}<span>من هو الدكتور؟</span></a>
@@ -113,8 +108,8 @@ export function homePage() {
   <div class="shell">
     <div class="grid grid--2" style="gap:clamp(1.5rem,1rem+3vw,3.5rem);align-items:start">
       <div>
-        <span class="chip-num" data-i18n="intro.chip">02 — ميادين المنصة</span>
-        <h2 style="margin-top:1rem" data-i18n="intro.title">ميادين المنصة</h2>
+        <span class="chip-num" data-i18n="intro.chip">01 — عن المنصة</span>
+        <h2 style="margin-top:1rem" data-i18n="intro.title">فلسفة المنصة</h2>
         <p class="lead" style="margin-top:1.1rem" data-i18n="intro.lead">${leadHtml()}</p>
         <p style="margin-top:1rem;color:var(--muted)">
           ميادين المنصة، نظريات ومنهجيات، ودورات في الطب والمنطق والحوار والحِجاج
