@@ -3,12 +3,13 @@
    POST /api/auth/login   { username, password }
    ============================================================ */
 import {
-  json, ok, fail, readJson, verifyPassword, createSession,
-  clientIp, isLocked, logAttempt, sameOrigin, clamp,
+  json, ok, fail, readJson, checkPassword, createSession,
+  clientIp, isLocked, logAttempt, sameOrigin, clamp, tooLarge,
 } from "../../_lib.js";
 
 export async function onRequestPost({ request, env }) {
   if (!sameOrigin(request)) return fail("bad_origin", 403);
+  if (tooLarge(request)) return fail("payload_too_large", 413);
 
   const body = await readJson(request);
   if (!body) return fail("bad_json", 400);
@@ -29,10 +30,11 @@ export async function onRequestPost({ request, env }) {
     .bind(username.toLowerCase())
     .first();
 
-  const valid = user ? await verifyPassword(password, user.password_hash) : false;
+  /* نُشغّل KDF دائمًا (حتى بلا مستخدم) حتى لا يُكشف وجودُ الاسم بالتأخير */
+  const valid = await checkPassword(password, user?.password_hash);
   await logAttempt(env, ip, username, valid);
 
-  if (!valid) return fail("invalid_credentials", 401);
+  if (!valid || !user) return fail("invalid_credentials", 401);
 
   const { cookie } = await createSession(env, user.id, request);
   await env.DB.prepare(`UPDATE users SET last_login_at = datetime('now') WHERE id = ?`)

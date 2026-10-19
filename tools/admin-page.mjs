@@ -185,15 +185,15 @@ export function adminPage() {
     </div>
 
     <div class="adm-stats" id="adm-stats">
-      <button class="stat-card is-active" type="button" data-tab="drafts">
+      <button class="stat-card is-active" type="button" data-tab="drafts" aria-pressed="true">
         <span class="stat-card__n" id="c-drafts">0</span>
         <span class="stat-card__l">مسودة</span>
       </button>
-      <button class="stat-card" type="button" data-tab="published">
+      <button class="stat-card" type="button" data-tab="published" aria-pressed="false">
         <span class="stat-card__n" id="c-published">0</span>
         <span class="stat-card__l">منشور</span>
       </button>
-      <button class="stat-card" type="button" data-tab="all">
+      <button class="stat-card" type="button" data-tab="all" aria-pressed="false">
         <span class="stat-card__n" id="c-total">0</span>
         <span class="stat-card__l">الكل</span>
       </button>
@@ -212,14 +212,14 @@ export function adminPage() {
     </div>
 
     <div class="adm-list" id="adm-list"></div>
-    <p class="adm-empty" id="adm-empty" hidden></p>
+    <p class="adm-empty" id="adm-empty" role="status" aria-live="polite" hidden></p>
   </section>
 
   <!-- ============ المحرّر ============ -->
   <section class="adm-editor" id="view-editor" hidden>
     <header class="ed-top">
       <button class="icon-btn" id="ed-back" type="button" aria-label="رجوع إلى القائمة" title="رجوع">${icon("arrowLeft")}</button>
-      <span class="ed-status" id="ed-status" data-state="idle">مسودة جديدة</span>
+      <span class="ed-status" id="ed-status" data-state="idle" role="status" aria-live="polite">مسودة جديدة</span>
       <div class="ed-top__actions">
         <button class="btn btn--ghost btn--sm" id="ed-preview" type="button">${icon("eye")}<span>معاينة</span></button>
         <button class="btn btn--ghost btn--sm" id="ed-draft" type="button">${icon("save")}<span>حفظ كمسودة</span></button>
@@ -257,7 +257,7 @@ export function adminPage() {
     <footer class="ed-foot">
       <span id="ed-counts">٠ كلمة · ٠ دقيقة</span>
       <span class="ed-foot__sep" aria-hidden="true">·</span>
-      <span id="ed-autosave">الحفظ التلقائي مفعّل</span>
+      <span id="ed-autosave">الحفظ التلقائي مفعّل كل ٣٠٠ حرف</span>
     </footer>
   </section>
 </main>
@@ -338,7 +338,7 @@ export function adminPage() {
 <html lang="ar" dir="rtl" data-theme="dark">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>لوحة التحرير | ${esc(site.shortName)}</title>
 <meta name="description" content="لوحة تحرير المقالات">
 <meta name="robots" content="noindex, nofollow, noarchive">

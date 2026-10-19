@@ -10,8 +10,11 @@
 import {
   ok, fail, readJson, currentUser, verifyPassword, hashPassword,
   createSession, destroySession, isLocked, logAttempt, sameOrigin,
-  clamp, clientIp,
+  clamp, clientIp, tooLarge,
 } from "../../_lib.js";
+
+/* كلمات مرفوضة مهما كانت مطابقة لنمط كلمة المرور */
+const WEAK = /^(1234|12345678|password|passw0rd|qwerty123|letmein|admin1234|welcome1|iloveyou|123456789|abc12345)$/i;
 
 const RESERVED = new Set([
   "api", "admin", "assets", "en", "tr", "static", "www", "root",
@@ -20,6 +23,7 @@ const RESERVED = new Set([
 
 export async function onRequestPost({ request, env }) {
   if (!sameOrigin(request)) return fail("bad_origin", 403);
+  if (tooLarge(request)) return fail("payload_too_large", 413);
 
   const me = await currentUser(env, request);
   if (!me) return fail("unauthorized", 401);
@@ -38,23 +42,22 @@ export async function onRequestPost({ request, env }) {
   else if (!/^[\p{L}\p{N}._-]{3,32}$/u.test(newUsername)) errors.push("newUsername");
   else if (RESERVED.has(newUsername.toLowerCase())) errors.push("newUsername");
 
-  if (newPassword.length < 8) errors.push("newPassword");
+  if (newPassword.length < 10) errors.push("newPassword");
+  if (!/[A-Za-z\u0600-\u06FF]/.test(newPassword) || !/\d/.test(newPassword)) errors.push("newPassword");
   if (newPassword !== confirmPassword) errors.push("confirmPassword");
-  if (/^1234$/.test(newPassword) || newUsername.toLowerCase() === "yas") {
-    if (newPassword === "1234") errors.push("weakPassword");
-  }
+  if (WEAK.test(newPassword)) errors.push("weakPassword");
 
   const row = await env.DB.prepare(`SELECT id, username, password_hash FROM users WHERE id = ?`)
     .bind(me.id)
     .first();
 
   const ip = clientIp(request);
-  if (await isLocked(env, ip, newUsername || me.username)) {
+  if (await isLocked(env, ip, me.username) || await isLocked(env, ip, newUsername)) {
     return fail("locked", 429, { fields: errors });
   }
 
   const okCurrent = await verifyPassword(currentPassword, row.password_hash);
-  await logAttempt(env, ip, newUsername || me.username, okCurrent);
+  await logAttempt(env, ip, me.username, okCurrent);
   if (!okCurrent) errors.push("currentPassword");
 
   if (errors.length) return fail("validation", 422, { fields: errors });

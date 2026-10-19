@@ -1,52 +1,57 @@
 /* ============================================================
    functions/api/posts/index.js
    ------------------------------------------------------------
-   GET  /api/posts?scope=published|all|search=…&category=…&limit=…
-        • بلا جلسة → المنشور فقط (محتوى مختصر للقوائم)
-        • مع جلسة  → الكل + المسودات + المحتوى الكامل للتحرير
-   POST /api/posts   (يتطلب جلسة)  → إنشاء مقال جديد
+   GET  /api/posts?scope=published|all&q=…&category=…&limit=…
+        • بلا جلسة → المنشور فقط، ودون متن المقالات إطلاقًا
+        • مع جلسة  → الكل + المسودات + المتن الكامل للتحرير
+   POST /api/posts   (يتطلب جلسة، ويُمنع قبل تغيير بيانات الدخول)
    ============================================================ */
 import {
-  ok, fail, readJson, currentUser, sameOrigin, clamp, idOf,
+  ok, fail, readJson, requireEditor, sameOrigin, clamp, tooLarge,
   sanitizeHtml, toPlainText, readMinutes, slugify, uniqueSlug,
-  parseTags, rowToPost, bumpPublishedCount, isoDate,
+  parseTags, rowToPost, bumpPublishedCount, isoDate, idOf,
+  LIST_COLS, LIST_COLS_FULL, MAX_CONTENT,
 } from "../../_lib.js";
 
-const CATEGORIES = [
+export const CATEGORIES = [
   "التفكير الطبي", "الأدلة", "التعليم", "الكتابة",
   "الممارسة", "المشاريع", "تأملات", "الصحة العامة", "أخرى",
 ];
 
-const MAX = { title: 200, excerpt: 600, content: 300000, cover: 400 };
-
 /* ---------------- GET ---------------- */
 export async function onRequestGet({ request, env }) {
   const url = new URL(request.url);
-  const me = await currentUser(env, request);
-  const wantAll = url.searchParams.get("scope") === "all";
+  const gate = await requireEditor(env, request);
+  const me = gate.user;                      // غير مسجّل = منشور فقط
+  const wantAll = me && url.searchParams.get("scope") === "all";
+
   const q = clamp(url.searchParams.get("q"), 80);
   const category = clamp(url.searchParams.get("category"), 60);
-  const limit = Math.min(parseInt(url.searchParams.get("limit") || "100", 10) || 100, 300);
+  const max = me ? 300 : 60;
+  const limit = Math.max(1, Math.min(parseInt(url.searchParams.get("limit"), 10) || max, max));
 
   const where = [];
   const params = [];
 
-  if (!me || !wantAll) {
-    where.push("status = 'published'");
-  }
+  if (!wantAll) where.push("status = 'published'");
   if (category && category !== "*" && category !== "الكل") {
     where.push("category = ?");
     params.push(category);
   }
   if (q) {
-    where.push("(title LIKE ? OR excerpt LIKE ? OR content_text LIKE ?)");
-    const like = `%${q}%`;
-    params.push(like, like, like);
+    const like = `%${q.replace(/[\\%_]/g, "\\$&")}%`;
+    /* البحث في المتن متاح للمحرِّر فقط — يوفّر قراءة الأعمدة الثقيلة */
+    if (me) {
+      where.push("(title LIKE ? ESCAPE '\\' OR excerpt LIKE ? ESCAPE '\\' OR content_text LIKE ? ESCAPE '\\')");
+      params.push(like, like, like);
+    } else {
+      where.push("(title LIKE ? ESCAPE '\\' OR excerpt LIKE ? ESCAPE '\\')");
+      params.push(like, like);
+    }
   }
 
   const sql =
-    `SELECT id, slug, title, excerpt, category, tags, cover, status, featured,
-            read_minutes, created_at, updated_at, published_at, content, content_text
+    `SELECT ${me ? LIST_COLS_FULL : LIST_COLS}
        FROM posts
       ${where.length ? "WHERE " + where.join(" AND ") : ""}
       ORDER BY (status = 'published') DESC, COALESCE(published_at, updated_at) DESC
@@ -54,53 +59,53 @@ export async function onRequestGet({ request, env }) {
   params.push(limit);
 
   const res = await env.DB.prepare(sql).bind(...params).all();
-  const rows = res.results || [];
-  const posts = rows.map(rowToPost);
+  const posts = (res.results || []).map(rowToPost);
 
-  const counts = await env.DB.prepare(
-    `SELECT
-       SUM(status = 'published') AS published,
-       SUM(status = 'draft')     AS drafts,
-       COUNT(*)                  AS total
-     FROM posts`
-  ).first();
+  /* العدّادات:.no تُكشف إلا للمحرِّر */
+  const counts = me
+    ? await env.DB.prepare(
+        `SELECT SUM(status = 'published') AS published, SUM(status = 'draft') AS drafts,
+                COUNT(*) AS total FROM posts`
+      ).first()
+    : await env.DB.prepare(`SELECT COUNT(*) AS published FROM posts WHERE status = 'published'`).first();
 
   return ok({
-    posts: posts.map((p) => (me ? p : { ...p, content: undefined })),
-    counts: {
-      published: counts?.published || 0,
-      drafts: counts?.drafts || 0,
-      total: counts?.total || 0,
-    },
+    posts,
+    counts: me
+      ? { published: counts?.published || 0, drafts: counts?.drafts || 0, total: counts?.total || 0 }
+      : { published: counts?.published || 0 },
     categories: CATEGORIES,
-    scope: me && wantAll ? "all" : "published",
+    scope: wantAll ? "all" : "published",
   });
 }
 
 /* ---------------- POST: إنشاء ---------------- */
 export async function onRequestPost({ request, env }) {
   if (!sameOrigin(request)) return fail("bad_origin", 403);
-  const me = await currentUser(env, request);
-  if (!me) return fail("unauthorized", 401);
+  if (tooLarge(request)) return fail("payload_too_large", 413);
+
+  const gate = await requireEditor(env, request);
+  if (gate.response) return gate.response;
+  const me = gate.user;
 
   const body = await readJson(request);
   if (!body) return fail("bad_json", 400);
 
-  const title = clamp(body.title, MAX.title);
-  const rawContent = String(body.content || "");
-  const clean = await sanitizeHtml(rawContent);
+  const title = clamp(body.title, 200);
+  const clean = sanitizeHtml(body.content);
   const text = toPlainText(clean);
-  const id = idOf();
-  const slug = await uniqueSlug(env, clamp(body.slug, 100) || slugify(title, `post-${id.slice(0, 6)}`));
-  const publish = body.status === "published";
 
   if (!title && !clean.trim()) {
     return fail("validation", 422, { fields: ["title"], message: "اكتب عنوانًا أو نصًّا أولًا" });
   }
 
+  const id = idOf();
+  const slug = await uniqueSlug(env, clamp(body.slug, 100) || slugify(title, `post-${id.slice(0, 6)}`));
+  const publish = body.status === "published";
+
   const category = CATEGORIES.includes(body.category) ? body.category : "تأملات";
-  const excerpt = clamp(body.excerpt, MAX.excerpt) || text.slice(0, 240);
-  const cover = clamp(body.cover, MAX.cover) || null;
+  const excerpt = clamp(body.excerpt, 600) || text.slice(0, 240);
+  const cover = clamp(body.cover, 400) || null;
   const minutes = readMinutes(text);
   const tags = JSON.stringify(parseTags(body.tags));
 
@@ -121,9 +126,7 @@ export async function onRequestPost({ request, env }) {
   if (publish) await bumpPublishedCount(env);
 
   const row = await env.DB.prepare(
-    `SELECT id, slug, title, excerpt, content, content_text, category, tags, cover,
-            status, featured, read_minutes, created_at, updated_at, published_at
-       FROM posts WHERE id = ?`
+    `SELECT ${LIST_COLS_FULL} FROM posts WHERE id = ?`
   )
     .bind(id)
     .first();
@@ -135,4 +138,4 @@ export async function onRequest() {
   return fail("method_not_allowed", 405);
 }
 
-export { CATEGORIES, MAX };
+export { MAX_CONTENT };

@@ -71,6 +71,14 @@ const dicts = Object.fromEntries(
 );
 const i18nStats = { missing: new Set(), badPh: new Set() };
 const jsStrings = JSON.parse(fs.readFileSync(path.join(ROOT, "tools/locales/js.json"), "utf8"));
+/* JSON آمن للحقن داخل <script> */
+const jsonSafe = (v) =>
+  JSON.stringify(v)
+    .replace(/</g, "\\u003c")
+    .replace(/>/g, "\\u003e")
+    .replace(/&/g, "\\u0026")
+    .replace(/\u2028/g, "\\u2028")
+    .replace(/\u2029/g, "\\u2029");
 const jsFor = (lang) =>
   Object.fromEntries(Object.entries(jsStrings).map(([k, v]) => [k, v[lang]]).filter(([, v]) => v));
 const stripI18nAttrs = (html) => html.replace(/\s+data-i18n(?:-placeholder)?="[^"]*"/g, "");
@@ -96,7 +104,7 @@ const emitPage = (file, rawHtml, urlPath) => {
     h = patchHead(h, lang, urlPath, dicts[lang], site.origin);
     h = h.replace(
       '<script src="/assets/js/app.js" defer></script>',
-      `<script>window.TFKIR_STR=${JSON.stringify(jsFor(lang))};</script>
+      `<script>window.TFKIR_STR=${jsonSafe(jsFor(lang))};</script>
 <script src="/assets/js/app.js" defer></script>`
     );
     done(write(`${lang}/${file}`, versionAssets(h)));

@@ -221,7 +221,7 @@
       var params = new URLSearchParams(location.search);
       var want = params.get("cat");
       if (want) {
-        var hit = $('[data-filter="' + want.replace(/"/g, "") + '"]', bar);
+        var hit = $$("[data-filter]", bar).filter(function (b) { return b.dataset.filter === want; })[0];
         if (hit) hit.click();
       }
     });
@@ -468,14 +468,19 @@
     }
 
     /* ٣) مقالات قاعدة البيانات (احتياطي بلا SSR) */
-    if (!slug) return;
+    if (!slug) {
+      if (loading) loading.hidden = true;
+      showArticleMissing();
+      return;
+    }
     fetch("/api/posts/" + encodeURIComponent(slug), { headers: { Accept: "application/json" } })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) {
         if (loading) loading.hidden = true;
         if (!d || !d.ok || !d.post) { showArticleMissing(); return; }
-        renderArticleBody(body, d.post);
-        decorateArticle(d.post);
+        var p = normalisePost(d.post);
+        renderArticleBody(body, p);
+        decorateArticle(p);
       })
       .catch(function () { if (loading) loading.hidden = true; showArticleMissing(); });
 
@@ -487,14 +492,24 @@
     }
   }
 
+  var esc = function (s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  };
+
   function renderArticleBody(body, post) {
     var html = "";
     if (post.excerpt) html += '<p class="lead">' + esc(post.excerpt) + "</p>";
-    if (post.html) html += post.html;
-    else (post.body || []).forEach(function (sec, i) {
-      html += "<h2 id='h" + i + "'>" + esc(sec.h) + "</h2>";
-      (sec.p || []).forEach(function (par) { html += "<p>" + esc(par) + "</p>"; });
-    });
+    /* مقالات D1: المحتوى جاهز ومنقّى على الخادم */
+    if (post.content) {
+      html += post.content;
+    } else {
+      (post.body || []).forEach(function (sec, i) {
+        html += "<h2 id='h" + i + "'>" + esc(sec.h) + "</h2>";
+        (sec.p || []).forEach(function (par) { html += "<p>" + esc(par) + "</p>"; });
+      });
+    }
     if (post.quote) {
       html += '<blockquote><p>' + esc(post.quote.text) + "</p><cite>" + esc(post.quote.cite) + "</cite></blockquote>";
     }
@@ -504,14 +519,12 @@
   function decorateArticle(post) {
     var head = $("#article-head");
     var body = $("#article-body");
-    var esc = function (s) {
-      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    };
+    var siteName = S("siteShortName", "تفكير.نت");
 
-    document.title = post.title + " | tfkir.net";
+    document.title = post.title + " | " + siteName;
     var desc = $('meta[name="description"]');
     if (desc && post.excerpt) desc.setAttribute("content", post.excerpt);
-    var ogT = $('meta[property="og:title"]'); if (ogT) ogT.setAttribute("content", post.title);
+    var ogT = $('meta[property="og:title"]'); if (ogT) ogT.setAttribute("content", post.title + " | " + siteName);
     var ogD = $('meta[property="og:description"]'); if (ogD && post.excerpt) ogD.setAttribute("content", post.excerpt);
     var crumb = $("#crumb-title"); if (crumb) crumb.textContent = post.title;
     var url = location.href;
@@ -534,27 +547,12 @@
     var toc = $("#toc"), tocList = $("#toc-list");
     if (toc && tocList && body) {
       var heads = $$("h2[id], h3[id]", body);
-      if (!heads.length) {
-        var secs = (post.body || []);
-        if (secs.length > 1) {
-          tocList.innerHTML = secs.map(function (s, i) {
-            return '<li><a href="#h' + i + '">' + esc(s.h) + "</a></li>";
-          }).join("");
-          if ("IntersectionObserver" in window) {
-            var links = $$("a", tocList);
-            var obs = new IntersectionObserver(function (ents) {
-              ents.forEach(function (en) {
-                if (!en.isIntersecting) return;
-                links.forEach(function (a) { a.classList.toggle("is-active", a.getAttribute("href") === "#" + en.target.id); });
-              });
-            }, { rootMargin: "-20% 0px -70% 0px" });
-            secs.forEach(function (_, i) { var el = document.getElementById("h" + i); if (el) obs.observe(el); });
-          }
-        } else return;
-      } else {
+      var secs = post.body || [];
+      if (heads.length) {
         tocList.innerHTML = heads.map(function (h) {
           return '<li><a href="#' + h.id + '">' + esc(h.textContent) + "</a></li>";
         }).join("");
+        toc.hidden = false;
         if ("IntersectionObserver" in window) {
           var links2 = $$("a", tocList);
           var obs2 = new IntersectionObserver(function (ents) {
@@ -565,8 +563,22 @@
           }, { rootMargin: "-20% 0px -70% 0px" });
           heads.forEach(function (h) { obs2.observe(h); });
         }
+      } else if (secs.length > 1) {
+        tocList.innerHTML = secs.map(function (s, i) {
+          return '<li><a href="#h' + i + '">' + esc(s.h) + "</a></li>";
+        }).join("");
+        toc.hidden = false;
+        if ("IntersectionObserver" in window) {
+          var links = $$("a", tocList);
+          var obs = new IntersectionObserver(function (ents) {
+            ents.forEach(function (en) {
+              if (!en.isIntersecting) return;
+              links.forEach(function (a) { a.classList.toggle("is-active", a.getAttribute("href") === "#" + en.target.id); });
+            });
+          }, { rootMargin: "-20% 0px -70% 0px" });
+          secs.forEach(function (_, i) { var el = document.getElementById("h" + i); if (el) obs.observe(el); });
+        }
       }
-      toc.hidden = false;
     }
 
     /* المشاركة */
@@ -593,7 +605,8 @@
       }
     }
 
-    /* JSON-LD للمقال */
+    /* JSON-LD للمقال (تخطّيه إن حقّنه الخادم أصلًا) */
+    if (window.TFKIR_SSR_POST) return;
     var ld = document.createElement("script");
     ld.type = "application/ld+json";
     ld.textContent = JSON.stringify({
@@ -619,22 +632,53 @@
       .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   };
 
-  var AR_MONTHS = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
-  var arDigits = function (n) { return String(n).replace(/\d/g, function (d) { return "٠١٢٣٤٥٦٧٨٩"[d]; }); };
+  var MONTHS = {
+    ar: ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"],
+    tr: ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"],
+    en: ["January","February","March","April","May","June","July","August","September","October","November","December"],
+  };
+
+  function langKey() {
+    var l = (document.documentElement.getAttribute("lang") || "ar").toLowerCase();
+    return l === "en" || l === "tr" ? l : "ar";
+  }
+
+  /* الأرقام العربية-الهندية في النسخة العربية فقط */
+  var arDigits = function (n, lang) {
+    var v = String(n);
+    return (lang || "ar") === "ar" ? v.replace(/\d/g, function (d) { return "٠١٢٣٤٥٦٧٨٩"[d]; }) : v;
+  };
+
   var postDateAr = function (iso) {
+    var lang = langKey();
     var s = String(iso || "");
     var d = new Date(s.length <= 10 ? s + "T12:00:00Z" : s.replace(" ", "T") + "Z");
     if (isNaN(d.getTime())) return "";
-    return arDigits(d.getUTCDate()) + " " + AR_MONTHS[d.getUTCMonth()] + " " + arDigits(d.getUTCFullYear());
+    return arDigits(d.getUTCDate(), lang) + " " + MONTHS[lang][d.getUTCMonth()] + " " + arDigits(d.getUTCFullYear(), lang);
   };
 
-  function ideaCardHtml(p, cls) {
-    return '<a class="post-card ' + (cls || "") + '" href="/article?id=' + encodeURIComponent(p.slug) + '" data-cat="' +
-      escCard(p.category) + '" data-reveal>' +
+  /* يوحّد شكل المقال القادم من D1 مع شكل مقالات البناء الثابت */
+  function normalisePost(p) {
+    var iso = p.publishedAt || p.updatedAt || "";
+    var mins = Math.max(1, Number(p.readMinutes) || 1);
+    return {
+      slug: p.slug, title: p.title, excerpt: p.excerpt, content: p.content,
+      category: p.category, tags: p.tags || [], status: p.status,
+      date: iso.slice(0, 10),
+      dateAr: postDateAr(iso),
+      read: arDigits(mins, langKey()) + " " + S("readMinutesUnit", "دقائق قراءة"),
+    };
+  }
+
+  function ideaCardHtml(p) {
+    /* لا data-reveal هنا: المراقب يعمل قبل الإدراج، والبطاقة الجديدة
+       كانت ستبقى بشفافية صفرية إلى الأبد */
+    return '<a class="post-card is-in" href="' + articleHref(p.slug) + '" data-cat="' +
+      escCard(p.category) + '">' +
       '<div class="post-card__meta">' +
         '<span class="post-card__cat">' + escCard(p.category) + "</span>" +
         "<span>" + escCard(postDateAr(p.publishedAt || p.updatedAt)) + "</span>" +
-        "<span>" + arDigits(Math.max(1, p.readMinutes || 1)) + " دقائق قراءة</span>" +
+        "<span>" + arDigits(Math.max(1, p.readMinutes || 1), langKey()) + " " + escCard(S("readMinutesUnit", "دقائق قراءة")) + "</span>" +
       "</div>" +
       '<h2 class="post-card__title">' + escCard(p.title) + "</h2>" +
       '<p class="post-card__excerpt">' + escCard(p.excerpt) + "</p>" +
@@ -643,25 +687,51 @@
       "</span></div></a>";
   }
 
+  /* روابط JS ليست مُعالَجة ببادئة اللغة وقت البناء — نضيفها هنا */
+  var langPrefix = (function () {
+    var seg = (location.pathname.split("/")[1] || "").toLowerCase();
+    return seg === "tr" || seg === "en" ? "/" + seg : "";
+  })();
+
+  function articleHref(slug) {
+    return langPrefix + "/article?id=" + encodeURIComponent(slug);
+  }
+
   function fetchPosts(query) {
-    return fetch("/api/posts?limit=60" + (query || ""), { headers: { Accept: "application/json" } })
+    if (!window.fetch || !window.AbortController) return Promise.resolve([]);
+    var ctl = new AbortController();
+    var timer = setTimeout(function () { ctl.abort(); }, 7000);
+    return fetch("/api/posts?limit=60" + (query || ""), {
+      headers: { Accept: "application/json" },
+      signal: ctl.signal,
+    })
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (d) { return d && d.ok ? d.posts : []; })
-      .catch(function () { return []; });
+      .catch(function () { return []; })
+      .then(function (v) { clearTimeout(timer); return v; });
   }
 
   function initDynamicIdeas() {
     var grid = $("#idea-grid");
     if (!grid) return;
+    /* الخادم已经把 البطاقات في الصفحة — لا داعي لجلبها مرتين */
+    if (grid.querySelector(".post-card")) return;
+
     fetchPosts().then(function (posts) {
       if (!posts.length) return;
-      var seen = {};
-      $$(".post-card", grid).forEach(function (c) { seen[c.getAttribute("href")] = true; });
-      var fresh = posts.filter(function (p) { return !seen["/article?id=" + encodeURIComponent(p.slug)]; });
-      if (!fresh.length) return;
-      grid.insertAdjacentHTML("beforeend", fresh.map(function (p) { return ideaCardHtml(p, "is-in"); }).join(""));
+      grid.insertAdjacentHTML("beforeend", posts.map(function (p) { return ideaCardHtml(p); }).join(""));
+
+      /* إعادة تطبيق التصفية النشطة (?cat= أو زر مضغوط) على البطاقات الجديدة */
+      var bar = $("#idea-filters");
+      var on = bar && $('[data-filter][aria-pressed="true"]', bar);
+      var val = on ? on.dataset.filter : "*";
+      var shown = 0;
+      $$("[data-cat]", grid).forEach(function (c) {
+        c.hidden = !(val === "*" || c.dataset.cat === val);
+        if (!c.hidden) shown++;
+      });
       var empty = $("#idea-empty");
-      if (empty) empty.hidden = true;
+      if (empty) empty.hidden = shown > 0;
     });
   }
 
@@ -676,18 +746,42 @@
     var track = $("[data-rail-track]", section);
     if (!track) return;
 
+    /* زر إيقاف/تشغيل الحركة — يُتاح لكل المستخدمين لا لمن يتhover فقط */
+    var toggle = $("[data-rail-toggle]", section);
+    if (toggle) {
+      var lblOn = toggle.dataset.labelResume || S("pauseMotion", "إيقاف الحركة");
+      var lblOff = toggle.dataset.labelPause || S("resumeMotion", "تشغيل الحركة");
+      var lbl = $("[data-rail-label]", toggle);
+      if (REDUCED) toggle.hidden = true;         /* لا حركة أصلًا: الزر بلا معنى */
+      toggle.addEventListener("click", function () {
+        var paused = section.dataset.paused === "true";
+        section.dataset.paused = paused ? "false" : "true";
+        toggle.setAttribute("aria-pressed", String(!paused));
+        if (lbl) lbl.textContent = paused ? lblOn : lblOff;
+      });
+    }
+
     fetchPosts().then(function (posts) {
       if (posts.length < RAIL_MIN) return;
       var items = posts.slice(0, 18).map(function (p) {
-        return '<a class="rail__item" href="/article?id=' + encodeURIComponent(p.slug) + '">' +
+        return '<a class="rail__item" href="' + articleHref(p.slug) + '">' +
           '<span class="rail__cat">' + escCard(p.category) + "</span>" +
           '<span class="rail__title">' + escCard(p.title) + "</span>" +
-          '<span class="rail__meta">' + escCard(postDateAr(p.publishedAt || p.updatedAt)) + "</span>" +
+          '<span class="rail__meta">' + escCard(postDateAr(p.publishedAt || p.updatedAt)) +
+          " · " + escCard(S("readMinutesUnit", "دقائق قراءة")) + "</span>" +
           "</a>";
       }).join("");
-      track.innerHTML = items + items; /* تكرار سلس للحركة */
+      var half = document.createElement("div");
+      half.className = "rail__half";
+      half.innerHTML = items;
+      var clone = half.cloneNode(true);
+      clone.setAttribute("aria-hidden", "true");
+      $$(".rail__item", clone).forEach(function (a) { a.tabIndex = -1; });
+      track.appendChild(half);
+      track.appendChild(clone);
       section.hidden = false;
       $$("[data-reveal]", section).forEach(function (el) { el.classList.add("is-in"); });
+      if (REDUCED) section.dataset.paused = "true";
     });
   }
 

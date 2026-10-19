@@ -412,9 +412,9 @@
   animation: slide 46s linear infinite;
 }
 .marquee:hover .marquee__track { animation-play-state: paused; }
-@keyframes slide { to { transform: translateX(50%); } }
+@keyframes slide { to { transform: translateX(-50%); } }   /* LTR هو الافتراضي هنا */
 [dir="rtl"] .marquee__track { animation-name: slide-rtl; }
-@keyframes slide-rtl { to { transform: translateX(-50%); } }
+@keyframes slide-rtl { to { transform: translateX(50%); } }
 .marquee__item {
   display: inline-flex;
   align-items: center;
@@ -433,6 +433,7 @@
 }
 
 /* ---------- شريط المقالات المتحرك ---------- */
+#articles-rail { padding-block: clamp(2.25rem, 1.4rem + 3vw, 4.25rem) 0; border-block: 1px solid var(--line); }
 .rail__head {
   display: flex;
   align-items: flex-end;
@@ -441,39 +442,74 @@
   flex-wrap: wrap;
   margin-bottom: clamp(1.2rem, 0.9rem + 1.2vw, 2rem);
 }
+.rail__tools { display: flex; align-items: center; gap: 0.9rem; flex-wrap: wrap; }
+.rail__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  padding: 0.4rem 0.85rem;
+  cursor: pointer;
+  background: var(--surface);
+  font-family: inherit;
+}
+.rail__toggle:hover { color: var(--text); border-color: var(--line-strong); }
+.rail__toggle .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal-400); }
+[data-paused="true"] .rail__toggle .dot { background: var(--muted); }
 .rail__head-text { min-width: 0; }
 .rail__title { margin-top: 0.6rem; font-size: var(--fs-h3); }
 .rail {
+  /* حشو يوائم حشو .shell على كل المقاسات */
+  --rail-pad: max(var(--gut), calc((100% - var(--shell)) / 2 + var(--gut)));
   position: relative;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   padding-block: 0.35rem 1.1rem;
-  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  padding-inline: var(--rail-pad);
+  scroll-padding-inline: var(--rail-pad);
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  overscroll-behavior-inline: contain;
+  mask-image: linear-gradient(90deg, transparent 0, #000 calc(var(--rail-pad) - 14px),
+    #000 calc(100% - var(--rail-pad) + 14px), transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 calc(var(--rail-pad) - 14px),
+    #000 calc(100% - var(--rail-pad) + 14px), transparent 100%);
 }
+.rail::-webkit-scrollbar { display: none; }
 .rail__track {
   display: flex;
-  gap: 1rem;
+  gap: 0;
   width: max-content;
   animation: rail-scroll 64s linear infinite;
 }
+/* يتوقّف عند التمرير أو عند دخول التركيز بالكيبورد (WCAG 2.2.2) */
 .rail:hover .rail__track,
-.rail:focus-visible .rail__track { animation-play-state: paused; }
-@keyframes rail-scroll { to { transform: translateX(-50%); } }
+.rail:focus-within .rail__track,
+[data-rail][data-paused="true"] .rail__track { animation-play-state: paused; }
+@keyframes rail-scroll { to { transform: translateX(50%); } }        /* RTL هو الافتراضي */
 [dir="ltr"] .rail__track { animation-name: rail-scroll-ltr; }
-@keyframes rail-scroll-ltr { to { transform: translateX(50%); } }
+@keyframes rail-scroll-ltr { to { transform: translateX(-50%); } }
+.rail__half { display: flex; gap: 1rem; }
+.rail__half + .rail__half { margin-inline-start: 1rem; }
 
 .rail__item {
   position: relative;
+  flex: none;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   width: min(80vw, 310px);
+  scroll-snap-align: start;
   padding: 1.05rem 1.15rem 1.15rem;
   border-radius: var(--r-md);
   border: 1px solid var(--line);
   background: var(--surface);
   transition: border-color 0.35s, background 0.35s, transform 0.35s var(--ease-out);
 }
+[data-theme="light"] .rail__item { background: #fff; border-color: var(--line-strong); box-shadow: var(--sh-sm); }
 .rail__item:hover { border-color: var(--line-strong); background: var(--surface-2); transform: translateY(-3px); }
 .rail__item::after {
   content: "";
@@ -492,9 +528,9 @@
 .rail__meta { font-size: var(--fs-xs); color: var(--faint); display: flex; gap: 0.45rem; align-items: center; }
 
 @media (prefers-reduced-motion: reduce) {
-  .rail__track { animation: none; overflow-x: auto; scroll-snap-type: x mandatory; padding-inline: var(--gut); width: 100%; }
-  .rail { mask-image: none; -webkit-mask-image: none; overflow-x: auto; }
-  .rail__item { scroll-snap-align: start; }
+  .rail__track { animation: none; }
+  .rail__track > [aria-hidden="true"] { display: none; }   /* النسخة المكرَّرة للتكرار السلس فقط */
+  .rail { mask-image: none; -webkit-mask-image: none; scroll-snap-type: x mandatory; }
 }
 
 /* ---------- Feature / pillar rows ---------- */
@@ -579,6 +615,7 @@
 [data-theme="light"] .post-card__read { color: var(--teal-600); }
 .post-card__read svg { width: 14px; height: 14px; transition: transform 0.3s var(--ease-out); }
 .post-card:hover .post-card__read svg { transform: translateX(-4px); }
+[dir="ltr"] .post-card:hover .post-card__read svg { transform: translateX(4px); }
 
 .post-card--feature {
   grid-column: 1 / -1;

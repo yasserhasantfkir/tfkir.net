@@ -8,29 +8,29 @@
    • يُرجع: { post, chars, words, readMinutes, savedAt }
    ============================================================ */
 import {
-  ok, fail, readJson, currentUser, sameOrigin, clamp, idOf,
-  sanitizeHtml, toPlainText, readMinutes, uniqueSlug, slugify,
-  parseTags, rowToPost,
+  ok, fail, readJson, requireEditor, sameOrigin, clamp, tooLarge, idOf,
+  sanitizeHtml, wasHtmlTruncated, toPlainText, readMinutes, uniqueSlug, slugify,
+  parseTags, rowToPost, LIST_COLS_FULL,
 } from "../../_lib.js";
 
-const MAX = { title: 200, excerpt: 600, content: 300000 };
 const KEEP_REVISIONS = 30;
 
-const SELECT = `SELECT id, slug, title, excerpt, content, content_text, category, tags, cover,
-                       status, featured, read_minutes, created_at, updated_at, published_at
-                  FROM posts WHERE id = ?`;
+const SELECT = `SELECT ${LIST_COLS_FULL} FROM posts WHERE id = ?`;
 
 export async function onRequestPost({ request, env }) {
   if (!sameOrigin(request)) return fail("bad_origin", 403);
-  const me = await currentUser(env, request);
-  if (!me) return fail("unauthorized", 401);
+  if (tooLarge(request)) return fail("payload_too_large", 413);
+
+  const gate = await requireEditor(env, request);
+  if (gate.response) return gate.response;
+  const me = gate.user;
 
   const body = await readJson(request);
   if (!body) return fail("bad_json", 400);
 
-  const title = clamp(body.title, MAX.title);
+  const title = clamp(body.title, 200);
   const raw = String(body.content || "");
-  const clean = await sanitizeHtml(raw);
+  const clean = sanitizeHtml(raw);
   const text = toPlainText(clean);
   const chars = raw.length;
 
@@ -39,7 +39,7 @@ export async function onRequestPost({ request, env }) {
     return ok({ skipped: true, chars, reason: "empty" });
   }
 
-  const excerpt = clamp(body.excerpt, MAX.excerpt) || text.slice(0, 240);
+  const excerpt = clamp(body.excerpt, 600) || text.slice(0, 240);
   const minutes = readMinutes(text);
   const tags = JSON.stringify(parseTags(body.tags));
   const category = clamp(body.category, 60) || "تأملات";
@@ -89,6 +89,8 @@ export async function onRequestPost({ request, env }) {
     chars,
     words: text ? text.split(/\s+/).filter(Boolean).length : 0,
     readMinutes: minutes,
+    truncated: wasHtmlTruncated(),
+    maxChars: 300000,
     savedAt: new Date().toISOString(),
   });
 }

@@ -37,10 +37,11 @@ export async function onRequestGet({ request, env }) {
     );
 
   const headers = new Headers(asset.headers);
-  headers.set("Cache-Control", "public, max-age=0, s-maxage=60, stale-while-revalidate=600");
+  headers.set("Cache-Control", "public, max-age=0, s-maxage=60, stale-while-revalidate=120");
   headers.delete("Content-Length");
   headers.delete("ETag");
   headers.delete("Last-Modified");
+  headers.delete("Content-Encoding");
 
   return new Response(out, { status: 200, headers });
 }

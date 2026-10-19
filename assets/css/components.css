@@ -610,7 +610,6 @@
   padding-inline-start: 2.6rem;
 }
 [dir="ltr"] .select { background-position: right 0.95rem center; padding-inline-start: 1em; padding-inline-end: 2.6rem; }
-}
 .field[data-invalid="true"] .input,
 .field[data-invalid="true"] .textarea,
 .field[data-invalid="true"] .select { border-color: #e0645c; }

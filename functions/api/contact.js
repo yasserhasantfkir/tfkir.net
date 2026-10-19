@@ -43,6 +43,23 @@ function clean(v, max) {
 }
 
 export async function onRequestPost({ request, env }) {
+  /* نموذج التواصل لا يُرسَل عبر المواقع الأخرى */
+  const site = request.headers.get("Sec-Fetch-Site");
+  if (site && site !== "same-origin" && site !== "none") {
+    return json({ ok: false, error: "bad_origin" }, 403);
+  }
+  const origin = request.headers.get("Origin");
+  if (origin && origin !== "null") {
+    try {
+      if (new URL(origin).host !== new URL(request.url).host) return json({ ok: false, error: "bad_origin" }, 403);
+    } catch {
+      return json({ ok: false, error: "bad_origin" }, 403);
+    }
+  }
+  if (Number(request.headers.get("Content-Length") || 0) > 40000) {
+    return json({ ok: false, error: "payload_too_large" }, 413);
+  }
+
   const ip = request.headers.get("CF-Connecting-IP") || "0.0.0.0";
 
   if (rateLimited(ip)) {

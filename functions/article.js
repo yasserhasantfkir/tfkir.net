@@ -7,6 +7,7 @@
    • غير ذلك: نمرّر الطلب إلى أصل الصفحة الساكنة بلا تغيير.
    ============================================================ */
 import { esc, dateAr, readLabel, setMeta, articleHref, fetchAsset } from "./_render.js";
+import { jsonSafe, sanitizeHtml } from "./_lib.js";
 
 /** يُعيد استجابة الأصل كما هي */
 const passthrough = (env, request) => fetchAsset(env, request, "/article.html");
@@ -43,6 +44,11 @@ export async function onRequestGet({ request, env }) {
   const canonical = new URL(articleHref(post.slug), origin).toString();
 
   html = setMeta(html, { title, description, url: canonical });
+  /* الصفحة الثابتة تُوسم noindex (قالب فارغ) — نرفعها هنا لمقال حقيقي */
+  html = html.replace(
+    /<meta name="robots" content="noindex, follow">/,
+    '<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">'
+  );
 
   const tags = (() => {
     try {
@@ -69,10 +75,11 @@ export async function onRequestGet({ request, env }) {
     isAccessibleForFree: true,
   };
 
+  /* jsonSafe يمنع إغلاق وسم <script> عبر </script> في العنوان أو الوصف */
   const headExtra =
     `<link rel="alternate" type="application/rss+xml" title="${esc(title)}" href="/feed.xml">\n` +
-    `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n` +
-    `<script>window.TFKIR_SSR_POST=${JSON.stringify({
+    `<script type="application/ld+json">${jsonSafe(jsonLd)}</script>\n` +
+    `<script>window.TFKIR_SSR_POST=${jsonSafe({
       id: post.slug,
       slug: post.slug,
       title: post.title,
@@ -115,7 +122,7 @@ export async function onRequestGet({ request, env }) {
   /* حقن المحتوى + إخفاء مؤشّر التحميل */
   html = html.replace(
     /<div class="prose" id="article-body" hidden>\s*<\/div>/,
-    `<div class="prose" id="article-body">${post.content || ""}</div>`
+    `<div class="prose" id="article-body">${sanitizeHtml(post.content || "")}</div>`
   );
   html = html.replace(
     /<div class="prose" id="article-loading"[\s\S]*?<\/div>\s*<\/section>/,
@@ -123,11 +130,12 @@ export async function onRequestGet({ request, env }) {
   );
 
   const headers = new Headers(base.headers);
-  headers.set("Cache-Control", "public, max-age=0, s-maxage=60, stale-while-revalidate=600");
+  headers.set("Cache-Control", "public, max-age=0, s-maxage=60, stale-while-revalidate=120");
   headers.set("X-Robots-Tag", "index, follow, max-image-preview:large");
   headers.delete("Content-Length");
   headers.delete("ETag");
   headers.delete("Last-Modified");
+  headers.delete("Content-Encoding");
 
   return new Response(html, { status: 200, headers });
 }

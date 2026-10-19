@@ -1,92 +1,107 @@
 {
-  "themeOn": {
-    "ar": "تفعيل السمة الفاتحة",
-    "tr": "Açık temayı etkinleştir",
-    "en": "Switch to light theme"
-  },
-  "themeOff": {
-    "ar": "تفعيل السمة الداكنة",
-    "tr": "Koyu temayı etkinleştir",
-    "en": "Switch to dark theme"
-  },
-  "copiedPrefix": {
-    "ar": "نُسخ: ",
-    "tr": "Kopyalandı: ",
-    "en": "Copied: "
-  },
-  "copyFailed": {
-    "ar": "تعذّر النسخ — انسخ يدويًا: ",
-    "tr": "Kopyalanamadı — elle kopyalayın: ",
-    "en": "Copy failed — copy manually: "
-  },
-  "mailFrom": {
-    "ar": "من",
-    "tr": "Gönderen",
-    "en": "from"
-  },
-  "labelName": {
-    "ar": "الاسم",
-    "tr": "Ad",
-    "en": "Name"
-  },
-  "labelEmail": {
-    "ar": "البريد",
-    "tr": "E-posta",
-    "en": "Email"
-  },
-  "labelPhone": {
-    "ar": "الهاتف",
-    "tr": "Telefon",
-    "en": "Phone"
-  },
-  "fixFields": {
-    "ar": "الرجاء تصحيح الحقول المعلَّمة بالأحمر قبل الإرسال.",
-    "tr": "Lütfen göndermeden önce kırmızı işaretli alanları düzeltin.",
-    "en": "Please correct the fields marked in red before sending."
-  },
-  "thanksSpam": {
-    "ar": "شكرًا لك، تم استلام رسالتك.",
-    "tr": "Teşekkürler, mesajınız alındı.",
-    "en": "Thank you, your message has been received."
-  },
-  "sending": {
-    "ar": "جارٍ الإرسال…",
-    "tr": "Gönderiliyor…",
-    "en": "Sending…"
-  },
-  "sentOk": {
-    "ar": "وصلت رسالتك بنجاح. سيُردّ عليها خلال ٢–٧ أيام عمل. شكرًا لك.",
-    "tr": "Mesajınız başarıyla ulaştı. 2–7 iş günü içinde yanıtlanacaktır. Teşekkürler.",
-    "en": "Your message arrived successfully. It will be answered within 2–7 business days. Thank you."
-  },
-  "mailtoAuto": {
-    "ar": "لم يتوفّر الإرسال التلقائي، فُتح برنامج البريد برسالتك جاهزة. اضغط <b>إرسال</b> لإتمامها.",
-    "tr": "Otomatik gönderim kullanılamadı; e-posta uygulamanız mesajınızla birlikte açıldı. Tamamlamak için <b>Gönder</b>'e basın.",
-    "en": "Automatic sending was unavailable, so your email app opened with the message ready. Press <b>Send</b> to complete it."
-  },
-  "mailtoDirect": {
-    "ar": "تعذّر الاتصال المباشر، فُتح برنامج البريد برسالتك جاهزة. اضغط <b>إرسال</b> لإتمامها.",
-    "tr": "Doğrudan bağlantı kurulamadı; e-posta uygulamanız mesajınızla birlikte açıldı. Tamamlamak için <b>Gönder</b>'e basın.",
-    "en": "The direct connection failed, so your email app opened with the message ready. Press <b>Send</b> to complete it."
-  },
-  "articleNotFound": {
-    "ar": "المقال غير موجود",
-    "tr": "Yazı bulunamadı",
-    "en": "Article not found"
-  },
-  "shareCopied": {
-    "ar": "تم النسخ ✓",
-    "tr": "Kopyalandı ✓",
-    "en": "Copied ✓"
-  },
-  "shareCopyAgain": {
-    "ar": "نُسخ الرابط",
-    "tr": "Bağlantı kopyalandı",
-    "en": "Link copied"
-  },
-  "personName": {
-    "ar": "الدكتور ياسر حسن",
-    "tr": "Dr. Yasser Hassan",
-    "en": "Dr. Yasser Hassan"
-  }
+ "themeOn": {
+  "ar": "تفعيل السمة الفاتحة",
+  "tr": "Açık temayı etkinleştir",
+  "en": "Switch to light theme"
+ },
+ "themeOff": {
+  "ar": "تفعيل السمة الداكنة",
+  "tr": "Koyu temayı etkinleştir",
+  "en": "Switch to dark theme"
+ },
+ "copiedPrefix": {
+  "ar": "نُسخ: ",
+  "tr": "Kopyalandı: ",
+  "en": "Copied: "
+ },
+ "copyFailed": {
+  "ar": "تعذّر النسخ — انسخ يدويًا: ",
+  "tr": "Kopyalanamadı — elle kopyalayın: ",
+  "en": "Copy failed — copy manually: "
+ },
+ "mailFrom": {
+  "ar": "من",
+  "tr": "Gönderen",
+  "en": "from"
+ },
+ "labelName": {
+  "ar": "الاسم",
+  "tr": "Ad",
+  "en": "Name"
+ },
+ "labelEmail": {
+  "ar": "البريد",
+  "tr": "E-posta",
+  "en": "Email"
+ },
+ "labelPhone": {
+  "ar": "الهاتف",
+  "tr": "Telefon",
+  "en": "Phone"
+ },
+ "fixFields": {
+  "ar": "الرجاء تصحيح الحقول المعلَّمة بالأحمر قبل الإرسال.",
+  "tr": "Lütfen göndermeden önce kırmızı işaretli alanları düzeltin.",
+  "en": "Please correct the fields marked in red before sending."
+ },
+ "thanksSpam": {
+  "ar": "شكرًا لك، تم استلام رسالتك.",
+  "tr": "Teşekkürler, mesajınız alındı.",
+  "en": "Thank you, your message has been received."
+ },
+ "sending": {
+  "ar": "جارٍ الإرسال…",
+  "tr": "Gönderiliyor…",
+  "en": "Sending…"
+ },
+ "sentOk": {
+  "ar": "وصلت رسالتك بنجاح. سيُردّ عليها خلال ٢–٧ أيام عمل. شكرًا لك.",
+  "tr": "Mesajınız başarıyla ulaştı. 2–7 iş günü içinde yanıtlanacaktır. Teşekkürler.",
+  "en": "Your message arrived successfully. It will be answered within 2–7 business days. Thank you."
+ },
+ "mailtoAuto": {
+  "ar": "لم يتوفّر الإرسال التلقائي، فُتح برنامج البريد برسالتك جاهزة. اضغط <b>إرسال</b> لإتمامها.",
+  "tr": "Otomatik gönderim kullanılamadı; e-posta uygulamanız mesajınızla birlikte açıldı. Tamamlamak için <b>Gönder</b>'e basın.",
+  "en": "Automatic sending was unavailable, so your email app opened with the message ready. Press <b>Send</b> to complete it."
+ },
+ "mailtoDirect": {
+  "ar": "تعذّر الاتصال المباشر، فُتح برنامج البريد برسالتك جاهزة. اضغط <b>إرسال</b> لإتمامها.",
+  "tr": "Doğrudan bağlantı kurulamadı; e-posta uygulamanız mesajınızla birlikte açıldı. Tamamlamak için <b>Gönder</b>'e basın.",
+  "en": "The direct connection failed, so your email app opened with the message ready. Press <b>Send</b> to complete it."
+ },
+ "articleNotFound": {
+  "ar": "المقال غير موجود",
+  "tr": "Yazı bulunamadı",
+  "en": "Article not found"
+ },
+ "shareCopied": {
+  "ar": "تم النسخ ✓",
+  "tr": "Kopyalandı ✓",
+  "en": "Copied ✓"
+ },
+ "shareCopyAgain": {
+  "ar": "نُسخ الرابط",
+  "tr": "Bağlantı kopyalandı",
+  "en": "Link copied"
+ },
+ "personName": {
+  "ar": "الدكتور ياسر حسن",
+  "tr": "Dr. Yasser Hassan",
+  "en": "Dr. Yasser Hassan"
+ },
+ "readMore": {
+  "ar": "اقرأ المقال",
+  "tr": "Makaleyi oku",
+  "en": "Read article"
+ },
+ "readMinutesUnit": {
+  "ar": "دقائق قراءة",
+  "tr": "dk okuma",
+  "en": "min read"
+ },
+ "siteShortName": {
+  "ar": "تفكير.نت",
+  "tr": "tfkir.net",
+  "en": "tfkir.net"
+ }
 }

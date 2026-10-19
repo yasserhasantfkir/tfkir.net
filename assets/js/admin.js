@@ -59,15 +59,23 @@
     return ar(d.getUTCDate()) + " " + AR_MONTHS[d.getUTCMonth()] + " " + ar(d.getUTCFullYear());
   }
 
+  /** جمع عربي سليم: ١ دقيقة، ٢ دقيقتان، ٣–١٠ دقائق، ١١+ دقيقة */
+  function plural(n, one, two, few, many) {
+    if (n === 1) return ar(n) + " " + one;
+    if (n === 2) return ar(n) + " " + two;
+    if (n >= 3 && n <= 10) return ar(n) + " " + few;
+    return ar(n) + " " + many;
+  }
+
   function agoLabel(v) {
     var d = parseDate(v);
     if (!d) return "";
     var diff = Math.floor((Date.now() - d.getTime()) / 1000);
     if (diff < 0) diff = 0;
     if (diff < 60) return "الآن";
-    if (diff < 3600) return "منذ " + ar(Math.floor(diff / 60)) + " دقيقة";
-    if (diff < 86400) return "منذ " + ar(Math.floor(diff / 3600)) + " ساعة";
-    if (diff < 86400 * 30) return "منذ " + ar(Math.floor(diff / 86400)) + " يوم";
+    if (diff < 3600) return "منذ " + plural(Math.floor(diff / 60), "دقيقة", "دقيقتان", "دقائق", "دقيقة");
+    if (diff < 86400) return "منذ " + plural(Math.floor(diff / 3600), "ساعة", "ساعتان", "ساعات", "ساعة");
+    if (diff < 86400 * 30) return "منذ " + plural(Math.floor(diff / 86400), "يوم", "يومان", "أيام", "يومًا");
     return dateLabel(v);
   }
 
@@ -102,6 +110,7 @@
         if (res.status === 401 && path.indexOf("/api/auth/session") === -1) {
           state.user = null;
           showView("login");
+          toast(ERROR_TEXT.unauthorized, "err");
         }
         if (!res.ok || !data || data.ok === false) {
           var e = new Error((data && data.error) || "network_error");
@@ -158,8 +167,13 @@
     });
     var top = $("#adm-top");
     if (top) top.hidden = name === "login" || name === "force";
-    var body = document.body;
-    body.classList.toggle("adm-editing", name === "editor");
+    var editing = name === "editor";
+    document.body.classList.toggle("adm-editing", editing);
+    [top, $("#view-app")].forEach(function (el) {
+      if (!el) return;
+      if (editing) el.setAttribute("inert", "");
+      else el.removeAttribute("inert");
+    });
     window.scrollTo({ top: 0, behavior: "auto" });
     if (name === "login") setTimeout(function () { var i = $("#lg-user"); if (i) i.focus(); }, 60);
     if (name === "force") setTimeout(function () { var i = $("#fc-old"); if (i) i.focus(); }, 60);
@@ -306,14 +320,36 @@
   /* ---------------------------------------------------------
      6) النوافذ والتأكيد
      --------------------------------------------------------- */
+  var FOCUSABLE = 'input,button,select,textarea,a[href],[tabindex]:not([tabindex="-1"])';
+
+  function trapTab(e) {
+    if (e.key !== "Tab") return;
+    var f = $$(FOCUSABLE, this).filter(function (el) {
+      return !el.disabled && el.offsetParent !== null;
+    });
+    if (!f.length) return;
+    var first = f[0];
+    var last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
   function openModal(sel) {
     var m = $(sel);
     if (!m) return;
+    m._opener = document.activeElement;
     m.hidden = false;
-    var first = $("input,button", m);
-    if (first) setTimeout(function () { first.focus(); }, 60);
+    m.addEventListener("keydown", trapTab);
+    setTimeout(function () { var f = $$(FOCUSABLE, m)[0]; if (f) f.focus(); }, 60);
   }
-  function closeModal(sel) { var m = $(sel); if (m) m.hidden = true; }
+
+  function closeModal(sel) {
+    var m = $(sel);
+    if (!m) return;
+    m.hidden = true;
+    m.removeEventListener("keydown", trapTab);
+    if (m._opener && m._opener.focus) m._opener.focus();
+  }
 
   function askConfirm(text, title, yesLabel) {
     return new Promise(function (resolve) {
@@ -322,15 +358,19 @@
       $("#confirm-text").textContent = text;
       $("#confirm-title").textContent = title || "تأكيد";
       $("#confirm-yes").textContent = yesLabel || "تأكيد";
+      var opener = document.activeElement;
       box.hidden = false;
       $("#confirm-yes").focus();
 
       function done(v) {
         box.hidden = true;
         box.removeEventListener("click", onClick);
+        box.removeEventListener("keydown", onTab);
         document.removeEventListener("keydown", onKey);
+        if (opener && opener.focus) opener.focus();
         resolve(v);
       }
+      function onTab(e) { trapTab.call(box, e); }
       function onClick(e) {
         var t = e.target.closest("[data-close-confirm]");
         if (t) return done(false);
@@ -340,6 +380,7 @@
         if (e.key === "Escape") done(false);
       }
       box.addEventListener("click", onClick);
+      box.addEventListener("keydown", onTab);
       document.addEventListener("keydown", onKey);
     });
   }
@@ -348,6 +389,10 @@
      7) قائمة المقالات
      --------------------------------------------------------- */
   function enterApp() {
+    var list = $("#adm-list");
+    var empty = $("#adm-empty");
+    if (list) list.innerHTML = '<p class="adm-empty">جارٍ التحميل…</p>';
+    if (empty) empty.hidden = true;
     showView("app");
     loadPosts();
   }
@@ -362,8 +407,6 @@
         $("#c-total").textContent = ar(d.counts.total || 0);
       }
       renderList();
-    }).catch(function (e) {
-      toast(errText(e), "err");
     });
   }
 
@@ -386,12 +429,15 @@
     var items = filtered();
 
     $$("[data-tab]").forEach(function (b) {
-      b.classList.toggle("is-active", b.dataset.tab === state.tab);
+      var on = b.dataset.tab === state.tab;
+      b.classList.toggle("is-active", on);
+      b.setAttribute("aria-pressed", String(on));
     });
 
     if (!items.length) {
       list.innerHTML = "";
       empty.hidden = false;
+      empty.setAttribute("aria-live", "polite");
       if (state.q || state.cat !== "*") {
         empty.textContent = "لا توجد مقالات مطابقة للبحث أو التصفية الحالية.";
       } else if (state.tab === "drafts") {
@@ -405,24 +451,25 @@
     }
 
     empty.hidden = true;
+    empty.removeAttribute("aria-live");
     list.innerHTML = items.map(function (p) {
       var pub = p.status === "published";
       return '<div class="adm-row" data-id="' + esc(p.id) + '">' +
-        '<div class="adm-row__main" data-edit="' + esc(p.id) + '">' +
-          '<div class="adm-row__title">' + esc(p.title || "بلا عنوان") + "</div>" +
+        '<div class="adm-row__main" role="button" tabindex="0" data-edit="' + esc(p.id) + '">' +
+          '<div class="adm-row__title" title="' + esc(p.title || "بلا عنوان") + '">' + esc(p.title || "بلا عنوان") + "</div>" +
           '<div class="adm-row__meta">' +
             '<span class="badge ' + (pub ? "badge--pub" : "badge--draft") + '">' + (pub ? "منشور" : "مسودة") + "</span>" +
             '<span class="badge badge--cat">' + esc(p.category || "—") + "</span>" +
             "<span>" + esc(dateLabel(p.publishedAt || p.updatedAt)) + "</span>" +
             "<span>" + esc(agoLabel(p.updatedAt)) + "</span>" +
-            "<span>" + ar(p.readMinutes || 1) + " دقيقة</span>" +
+            "<span>" + plural(Math.max(1, p.readMinutes || 1), "دقيقة", "دقيقتان", "دقائق", "دقيقة") + "</span>" +
           "</div>" +
         "</div>" +
         '<div class="adm-row__actions">' +
           '<button class="btn btn--ghost btn--sm" data-edit="' + esc(p.id) + '">تحرير</button>' +
           '<button class="btn btn--quiet btn--sm" data-toggle="' + esc(p.id) + '">' + (pub ? "إلى مسودة" : "نشر") + "</button>" +
           (pub ? '<a class="btn btn--quiet btn--sm" href="/article?id=' + encodeURIComponent(p.slug) + '" target="_blank" rel="noopener">عرض</a>' : "") +
-          '<button class="icon-btn icon-btn--danger" data-del="' + esc(p.id) + '" aria-label="حذف" title="حذف">' +
+          '<button class="icon-btn icon-btn--danger" data-del="' + esc(p.id) + '" aria-label="حذف: ' + esc(p.title || "بلا عنوان") + '" title="حذف">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 6.5h15M9.5 6.5V4.8a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1.7"/><path d="M6.5 6.5 7.4 19a1.5 1.5 0 0 0 1.5 1.4h6.2a1.5 1.5 0 0 0 1.5-1.4l.9-12.5"/></svg>' +
           "</button>" +
         "</div>" +
@@ -448,48 +495,66 @@
     if (cat) cat.addEventListener("change", function () { state.cat = cat.value; renderList(); });
 
     var refresh = $("#adm-refresh");
-    if (refresh) refresh.addEventListener("click", function () { loadPosts(); toast("تم التحديث"); });
+    if (refresh) {
+      refresh.addEventListener("click", function () {
+        refresh.disabled = true;
+        refresh.setAttribute("aria-busy", "true");
+        loadPosts()
+          .then(function () { toast("تم التحديث"); })
+          .catch(function (e) { toast(errText(e), "err"); })
+          .then(function () { refresh.disabled = false; refresh.removeAttribute("aria-busy"); });
+      });
+    }
+    var newBtn = $("#adm-new");
+    if (newBtn) newBtn.addEventListener("click", function () { openPost(null); });
 
     var list = $("#adm-list");
     if (list) {
+      list.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        var hit = e.target.closest(".adm-row__main[data-edit]");
+        if (!hit) return;
+        e.preventDefault();
+        openPost(hit.dataset.edit);
+      });
       list.addEventListener("click", function (e) {
         var edit = e.target.closest("[data-edit]");
         if (edit) return openPost(edit.dataset.edit);
         var toggle = e.target.closest("[data-toggle]");
-        if (toggle) return toggleStatus(toggle.dataset.toggle);
+        if (toggle) return toggleStatus(toggle.dataset.toggle, toggle);
         var del = e.target.closest("[data-del]");
-        if (del) return deletePost(del.dataset.del);
+        if (del) return deletePost(del.dataset.del, del);
       });
     }
 
-    var newBtn = $("#adm-new");
-    if (newBtn) newBtn.addEventListener("click", function () { openPost(null); });
   }
 
-  function toggleStatus(id) {
+  function toggleStatus(id, btn) {
     var p = state.posts.filter(function (x) { return x.id === id; })[0];
     if (!p) return;
+    if (btn) btn.disabled = true;
     var next = p.status === "published" ? "draft" : "published";
     api("/api/posts/" + id, { method: "PATCH", body: { status: next } })
       .then(function () { toast(next === "published" ? "نُشر المقال" : "أُعيد إلى المسودات"); return loadPosts(); })
-      .catch(function (e) { toast(errText(e), "err"); });
+      .catch(function (e) { toast(errText(e), "err"); if (btn) btn.disabled = false; });
   }
 
-  function deletePost(id) {
+  function deletePost(id, btn) {
     var p = state.posts.filter(function (x) { return x.id === id; })[0];
+    if (btn) btn.disabled = true;
     askConfirm(
       "سيُحذف «" + (p ? p.title : "هذا المقال") + "» نهائيًا ولا يمكن التراجع.",
       "حذف المقال",
       "حذف نهائي"
     ).then(function (yes) {
-      if (!yes) return;
+      if (!yes) { if (btn) btn.disabled = false; return; }
       api("/api/posts/" + id, { method: "DELETE" })
         .then(function () {
           try { localStorage.removeItem(LS_PREFIX + id); } catch (e) {}
           toast("حُذف المقال");
           return loadPosts();
         })
-        .catch(function (e) { toast(errText(e), "err"); });
+        .catch(function (e) { toast(errText(e), "err"); if (btn) btn.disabled = false; });
     });
   }
 
@@ -537,9 +602,13 @@
 
   function setStatus(kind, text) {
     var el = $("#ed-status");
-    if (!el) return;
-    el.dataset.state = kind;
-    el.textContent = text;
+    if (el) { el.dataset.state = kind; el.textContent = text; }
+    var au = $("#ed-autosave");
+    if (au) {
+      au.textContent = kind === "error" ? "الحفظ التلقائي متوقّف — ستُعاد المحاولة"
+        : kind === "saving" ? "جارٍ الحفظ على الخادم…"
+        : "الحفظ التلقائي مفعّل كل ٣٠٠ حرف";
+    }
   }
 
   function updateCounts() {
@@ -547,7 +616,10 @@
     var words = text ? text.split(" ").filter(Boolean).length : 0;
     var chars = editor.innerHTML.length;
     var minutes = Math.max(1, Math.round(words / 190));
-    $("#ed-counts").textContent = ar(words) + " كلمة · " + ar(minutes) + " دقيقة · " + ar(chars) + " حرف";
+    $("#ed-counts").textContent =
+      plural(words, "كلمة", "كلمتان", "كلمات", "كلمة") + " · " +
+      plural(minutes, "دقيقة", "دقيقتان", "دقائق", "دقيقة") + " · " +
+      plural(chars, "حرف", "حرفان", "أحرف", "حرفًا");
     editor.dataset.empty = editor.innerHTML === "" || editor.innerHTML === "<br>" ? "true" : "false";
   }
 
@@ -561,6 +633,7 @@
     state.dirty = false;
     state.lastPush = 0;
     state.lastPushChars = 0;
+    savedRange = null;
 
     $("#ed-title").value = p ? p.title : "";
     $("#ed-excerpt").value = p ? p.excerpt : "";
@@ -579,10 +652,28 @@
     showView("editor");
     setTimeout(function () { $("#ed-title").focus(); }, 80);
 
-    /* نسخة محلية أحدث من الخادم؟ */
+    /* نسخة محلية أحدث من الخادم؟ نعرضها ونستعيدها فعليًا */
     var local = readLocal(state.current.id);
     if (local && local.at && (!p || local.at > new Date(String(p.updatedAt).replace(" ", "T") + "Z").getTime())) {
-      toast("وُجدت نسخة محفوظة محليًا أحدث — استُعيدت. احفظها لتثبيتها.");
+      askConfirm(
+        "وُجدت نسخة محفوظة على هذا الجهاز أحدث من المحفوظة على الخادم. هل تستعيدها؟",
+        "نسخة غير محفوظة",
+        "استعادة"
+      ).then(function (yes) {
+        if (!yes) return;
+        $("#ed-title").value = local.title || "";
+        $("#ed-excerpt").value = local.excerpt || "";
+        $("#ed-category").value = local.category || "تأملات";
+        $("#ed-tags").value = local.tags || "";
+        $("#ed-slug").value = local.slug || "";
+        editor.innerHTML = local.html || "<p><br></p>";
+        savedRange = null;
+        state.dirty = true;
+        setStatus("idle", "نسخة محلية مستعادة — احفظها");
+        updateCounts();
+        saveLocal();
+        toast("استُعيدت النسخة المحلية");
+      });
     }
   }
 
@@ -637,12 +728,14 @@
         state.pushing = false;
         var time = new Date(d.savedAt).toLocaleTimeString("ar", { hour: "2-digit", minute: "2-digit" });
         setStatus(d.post.status === "published" ? "published" : "saved", "حُفظ " + time);
+        if (d.truncated) toast("تنبيه: تجاوز المقال الحد الأقصى (" + ar(d.maxChars) + " حرف) فاقتُطع ذيله.", "err");
         return d.post;
       })
       .catch(function (e) {
         state.pushing = false;
         setStatus("error", "تعذّر الحفظ على الخادم");
         toast(errText(e) + " (محفوظ محليًا)", "err");
+        schedulePush();       /* إعادة المحاولة تلقائيًا */
         return null;
       });
   }
@@ -708,10 +801,16 @@
 
   function restoreSelection() {
     if (!savedRange) return;
-    var sel = window.getSelection();
-    if (!sel) return;
-    sel.removeAllRanges();
-    sel.addRange(savedRange);
+    var node = savedRange.commonAncestorContainer;
+    if (!node || (node.isConnected === false) || !editor.contains(node)) { savedRange = null; return; }
+    try {
+      var sel = window.getSelection();
+      if (!sel) return;
+      sel.removeAllRanges();
+      sel.addRange(savedRange);
+    } catch (e) {
+      savedRange = null;
+    }
   }
 
   function exec(cmd, val) {
@@ -824,7 +923,7 @@
 
   function markDirty() {
     state.dirty = true;
-    if ($("#ed-status").dataset.state !== "error") setStatus("idle", "تغييرات غير محفوظة");
+    if ($("#ed-status").dataset.state !== "saving") setStatus("idle", "تغييرات غير محفوظة");
     saveLocal();
     schedulePush();
   }
@@ -901,8 +1000,26 @@
       exec("hiliteColor", back.value);
     });
 
+    var STATE_CMDS = ["bold", "italic", "underline", "strikeThrough"];
+    function syncToolbar() {
+      STATE_CMDS.forEach(function (c) {
+        var b = $('[data-cmd="' + c + '"]', bar);
+        if (!b) return;
+        var on = false;
+        try { on = document.queryCommandState(c); } catch (e) {}
+        b.classList.toggle("is-active", !!on);
+      });
+      var blk = $("#tb-block");
+      if (blk && savedRange) {
+        try {
+          var cur = document.queryCommandValue("formatBlock");
+          if (cur) blk.value = cur.toLowerCase().replace(/[<>]/g, "");
+        } catch (e) {}
+      }
+    }
     document.addEventListener("selectionchange", function () {
       saveSelection();
+      syncToolbar();
     });
   }
 
@@ -913,15 +1030,6 @@
     if (!url) return;
     if (!/^(https?:\/\/|mailto:|tel:|\/|#)/i.test(url)) url = "https://" + url;
     if (!text) {
-      var span = document.createElement("span");
-      span.setAttribute("style", "color: var(--teal-300)");
-      span.textContent = url;
-      try {
-        var r = document.createRange();
-        r.setStart(editor, editor.childNodes.length);
-        r.collapse(false);
-        r.insertNode(span);
-      } catch (e) {}
       toast("حدّد النص أولًا ثم أضف الرابط.", "err");
       return;
     }
@@ -965,7 +1073,7 @@
     $("#pv-cat").textContent = $("#ed-category").value;
     var text = (editor.innerText || "").replace(/\s+/g, " ").trim();
     var words = text ? text.split(" ").filter(Boolean).length : 0;
-    $("#pv-read").textContent = ar(Math.max(1, Math.round(words / 190))) + " دقائق قراءة";
+    $("#pv-read").textContent = plural(Math.max(1, Math.round(words / 190)), "دقيقة", "دقيقتان", "دقائق", "دقيقة") + " قراءة";
     var html = sanitizeForPreview(editor.innerHTML);
     $("#pv-body").innerHTML = html || '<p style="color:var(--faint)">لا يوجد نص بعد.</p>';
     openModal("#preview");
@@ -1018,19 +1126,13 @@
     });
     editor.addEventListener("blur", function () { if (state.dirty) push(false); });
     editor.addEventListener("paste", function (e) {
-      var items = (e.clipboardData || {}).items || [];
-      for (var i = 0; i < items.length; i++) {
-        if (items[i].type.indexOf("text/html") === 0) {
-          e.preventDefault();
-          var html = items[i].getAsFile
-            ? ""
-            : (e.clipboardData.getData("text/html") || "");
-          if (!html) return;
-          document.execCommand("insertHTML", false, sanitizeForPreview(html));
-          afterCommand();
-          return;
-        }
-      }
+      var cd = e.clipboardData;
+      if (!cd) return;
+      var html = cd.getData("text/html") || "";
+      if (!html.trim()) return;                    /* نص صِرف: نُبقي السلوك الافتراضي */
+      e.preventDefault();
+      document.execCommand("insertHTML", false, sanitizeForPreview(html));
+      afterCommand();
     });
 
     /* اختصارات */
@@ -1038,7 +1140,11 @@
       if (state.current && $("#view-editor").hidden === false) {
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") {
           e.preventDefault();
-          saveAs(state.current.status === "published" ? "draft" : "draft");
+          if (state.current.status === "published") {
+            toast("المقال منشور بالفعل: Ctrl+S لا يلغي النشر. استعمل Ctrl+Enter للتحديث، أو «حفظ كمسودة» للتراجع عن النشر.");
+          } else {
+            saveAs("draft");
+          }
         }
         if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
           e.preventDefault();

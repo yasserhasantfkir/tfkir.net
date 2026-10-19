@@ -80,20 +80,6 @@ export function homePage() {
   </div>
 </div>
 
-<!-- ===================== شريط المقالات المتحرك ===================== -->
-<section class="section section--tight" id="articles-rail" data-rail hidden>
-  <div class="shell rail__head">
-    <div class="rail__head-text">
-      <span class="kicker" data-reveal>${icon("book")} المقالات</span>
-      <h2 class="rail__title" data-reveal style="--d:80ms">آخر ما كُتب على المنصة</h2>
-    </div>
-    <a class="tlink" href="/ideas" data-reveal style="--d:160ms">كل المقالات${icon("arrowLeft", "btn__arrow")}</a>
-  </div>
-  <div class="rail" data-rail-viewport tabindex="0" role="region" aria-label="أحدث المقالات">
-    <div class="rail__track" data-rail-track></div>
-  </div>
-</section>
-
 <!-- ===================== من أنا ===================== -->
 <section class="section" id="intro">
   <div class="shell">
@@ -154,6 +140,26 @@ export function homePage() {
     <div class="grid grid--3">
           ${domainCards}
     </div>
+  </div>
+</section>
+
+<!-- ===================== شريط المقالات المتحرك ===================== -->
+<section class="section" id="articles-rail" data-rail hidden>
+  <div class="shell rail__head">
+    <div class="rail__head-text">
+      <span class="kicker" data-reveal>${icon("book")} المقالات</span>
+      <h2 class="rail__title" data-reveal style="--d:80ms">آخر ما كُتب على المنصة</h2>
+    </div>
+    <div class="rail__tools">
+      <button class="rail__toggle" type="button" data-rail-toggle aria-pressed="false"
+              data-label-resume="إيقاف الحركة" data-label-pause="تشغيل الحركة">
+        <span class="dot" aria-hidden="true"></span><span data-rail-label>إيقاف الحركة</span>
+      </button>
+      <a class="tlink" href="/ideas" data-reveal style="--d:160ms">كل المقالات${icon("arrowLeft", "btn__arrow")}</a>
+    </div>
+  </div>
+  <div class="rail" data-rail-viewport role="region" aria-label="أحدث المقالات">
+    <div class="rail__track" data-rail-track></div>
   </div>
 </section>
 
@@ -506,7 +512,8 @@ ${ctaBand({
     title: "مقال",
     desc: "قراءة مقال من أرشيف التفكير الطبي للدكتور ياسر حسن: فكرة كاملة، بأقسامها ومراجعها، قابلة للمناقشة والتصحيح.",
     body,
-    scripts: "",
+    /* بيانات المقالات الثابتة (window.TFKIR_IDEAS) — تسبق app.js لأنها تُقرأ عند الإقلاع */
+    scripts: '<script src="/assets/js/ideas.data.js" defer></script>',
   });
 }
 

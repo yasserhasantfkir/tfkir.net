@@ -245,8 +245,8 @@ ${p.body}
 
 ${siteFooter()}
 
-<script src="/assets/js/app.js" defer></script>
 ${p.scripts || ""}
+<script src="/assets/js/app.js" defer></script>
 </body>
 </html>`;
 }

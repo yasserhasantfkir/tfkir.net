@@ -66,8 +66,9 @@ export async function fetchAsset(env, request, path) {
     if (res.status < 300 || res.status >= 400) return res;
     const loc = res.headers.get("location");
     if (!loc) return res;
-    const next = new URL(loc, url).toString();
-    if (next === url) return res;
+    let next;
+    try { next = new URL(loc, url).toString(); } catch { return res; }
+    if (next === url || !next.startsWith(origin)) return res;   /* نلتزم بنفس الأصل */
     url = next;
   }
   return new Response("", { status: 404 });
@@ -76,7 +77,8 @@ export async function fetchAsset(env, request, path) {
 /** تحديث وسوم <head> لصفحة المقال */
 export function setMeta(html, patch) {
   let out = html;
-  out = out.replace(/<title>[\s\S]*?<\/title>/, `<title>${esc(patch.title)}</title>`);
+  /* نستعمل دالة استبدال دائمًا: $& و $` داخل النص لهما معنى خاص */
+  out = out.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(patch.title)}</title>`);
   out = out.replace(
     /(<meta name="description" content=")[^"]*(")/,
     (m, a, b) => a + esc(patch.description || "") + b
