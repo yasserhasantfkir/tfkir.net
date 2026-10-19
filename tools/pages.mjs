@@ -110,9 +110,8 @@ export function homePage() {
       <div>
         <span class="chip-num" data-i18n="intro.chip">01 — عن المنصة</span>
         <h2 style="margin-top:1rem" data-i18n="intro.title">فلسفة المنصة</h2>
-        <p class="lead" style="margin-top:1.1rem" data-i18n="intro.lead">${leadHtml()}</p>
-        <p style="margin-top:1rem;color:var(--muted)">
-          ميادين المنصة، نظريات ومنهجيات، ودورات في الطب والمنطق والحوار والحِجاج
+        <p class="lead" style="margin-top:1.1rem;color:var(--muted)">
+          نظريات ومنهجيات، ودورات في الطب والمنطق والحوار والحِجاج
           واللغة والنهضة والتحقيق والابتكار والتجديد يجمعها خيط واحد إذ يبدأ كل ميدان
           منها بسؤال جوهري ثلاثي الأضلاع يمثل روح التفكير النهضوي الذي نشتغل عليه
           حاليًا وهذا السؤال هو: كيف نفكر في هذا الميدان وكيف نستثمره وكيف ننقله
