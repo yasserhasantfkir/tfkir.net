@@ -344,7 +344,10 @@
  "الجلسات قيد التوثيق": "Belgelenen oturumlar",
  "المواد والعروض تُضاف هنا بعد كل محاضرة أو حوار، مع رابط مباشر للمادة كلما نُشرت بإذن.": "Materyaller ve slaytlar her ders veya söyleşi sonrası eklenir; izin verildiğinde doğrudan bağlantı verilir.",
  "لا توجد مشاريع بعد. ستُضاف هنا أولًا بأول.": "Henüz proje yok. Hazır oldukça buraya eklenecek.",
- "نظريات ومنهجيات، ودورات في الطب والمنطق والحوار والحِجاج واللغة والنهضة والتحقيق والابتكار والتجديد يجمعها خيط واحد إذ يبدأ كل ميدان منها بسؤال جوهري ثلاثي الأضلاع يمثل روح التفكير النهضوي الذي نشتغل عليه حاليًا وهذا السؤال هو: كيف نفكر في هذا الميدان وكيف نستثمره وكيف ننقله للآخرين.": "Teoriler ve yöntemler; tıp, mantık, diyalog, argümantasyon, dil, renaissance, doğrulama, yenilik ve tazeleme kursları tek bir iplikle bağlıdır: her alan, üzerinde çalıştığımız yenilenmeci düşüncenin ruhunu yansıtan temel, üç yönlü bir soruyla başlar; bu soru şudur: bu alanda nasıl düşünürüz, onu nasıl kullanırız, ve başkalarına nasıl aktarırız?",
+ "نظريات ومنهجيات، ودورات في الطب والمنطق والحوار والحِجاج واللغة والنهضة والتحقيق والابتكار والتجديد يجمعها خيط واحد إذ يبدأ كل ميدان منها بسؤال جوهري ثلاثي الأضلاع يمثل روح التفكير النهضوي الذي نشتغل عليه حاليًا، وهذا السؤال هو:": "Teoriler ve yöntemler; tıp, mantık, diyalog, argümantasyon, dil, renaissance, doğrulama, yenilik ve tazeleme kursları tek bir iplikle bağlıdır: her alan, üzerinde çalıştığımız yenilenmeci düşüncenin ruhunu yansıtan temel, üç yönlü bir soruyla başlar; bu soru şudur:",
+  "كيف نفكر في هذا الميدان": "bu alanda nasıl düşünürüz?",
+  "كيف نستثمره": "onu nasıl kullanırız?",
+  "كيف ننقله للآخرين": "başkalarına nasıl aktarırız?",
  "01 — ميادين المنصة": "01 — Platformun alanları",
  "ميادين المنصة": "Platformun alanları"
 }
