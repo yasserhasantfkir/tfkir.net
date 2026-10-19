@@ -78,8 +78,6 @@ export function homePage() {
       <div class="hero__role" data-reveal style="--d:180ms">
         <span class="tag tag--teal">${esc(D.roleLine)}</span>
       </div>
-
-      <p class="lead hero__lead" data-reveal style="--d:260ms" data-i18n="hero.lead">${leadHtml()}</p>
     </div>
 
           ${portrait()}

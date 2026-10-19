@@ -181,7 +181,6 @@
 }
 .hero__role .dot { color: var(--faint); }
 
-.hero__lead { margin-top: 1.6rem; max-width: 56ch; }
 .hero__cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.2rem; }
 
 .hero__meta {
@@ -422,15 +421,13 @@
   }
   .hero__text { display: contents; }
   .hero__title,
-  .hero__role,
-  .hero__lead { margin-top: 0; }
+  .hero__role { margin-top: 0; }
   .hero__text > .kicker { order: 1; }
   .hero__title { order: 2; }
   .hero__role { order: 3; }
   .hero__portrait { order: 4; width: min(76%, 300px); margin-inline: auto; }
   .hero__role .tag { white-space: normal; text-align: start; }
   .hero__note { order: 5; width: min(100%, 34rem); margin-inline: auto; }
-  .hero__lead { order: 6; }
   .hero__grid-actions { order: 7; margin-top: 0; }
 }
 
