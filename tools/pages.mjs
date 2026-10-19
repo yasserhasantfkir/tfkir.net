@@ -10,6 +10,29 @@ import { icon, socialIcon } from "./icons.mjs";
 import { esc, layout, pageHero, ctaBand, portrait, pulseSvg, personLd } from "./render.mjs";
 
 const D = doctor;
+
+/* قسم قائمة: يعرض الشبكة، أو بطاقة «قيد الإعداد» إن لم يوجد محتوى بعد */
+const listSection = ({ id, chips, cards, empty, title, desc }) => `
+<section class="section section--tight">
+  <div class="shell">
+    ${
+      chips
+        ? `<div class="chips" id="${id}-filters" role="group" aria-label="التصفية">
+            ${chips}
+          </div>
+
+          <div class="grid grid--3" id="${id}-grid" style="margin-top:1.8rem">
+            ${cards}
+          </div>
+
+          <p class="empty-note" id="${id}-empty" hidden>${empty}</p>`
+        : `<div class="empty-note empty-note--tall">
+            <p class="empty-note__t">${title}</p>
+            <p class="empty-note__d">${desc}</p>
+          </div>`
+    }
+  </div>
+</section>`;
 const articleHref = (slug) => `/article?id=${encodeURIComponent(slug)}`;
 
 /* الوصف التعريفي: كل جملة في سطر مستقل */
@@ -328,7 +351,7 @@ export function thinkingPage() {
 </section>
 
 ${ctaBand({
-  title: "لديك idea أو طلب؟".replace("idea","فكرة"),
+  title: "لديك فكرة أو طلب؟",
   text: "أرسل طلبك أو نبذة عن فكرتك، وسأقرأها بتمعّن.",
   primary: { href: "/contact", label: "أرسل طلبك" },
   secondary: { href: "/links", label: "كل الروابط" },
@@ -383,7 +406,10 @@ export function ideasPage() {
       `مقالات في التفكير الطبي وقراءة الأدلة وتعليم الطب والكتابة، مكتوبة على مهل ومفتوحة للنقاش: ` +
       "كل مقال رأي شخصي قابل للتصحيح.",
     crumbs: [{ label: "الرئيسية", href: "/" }, { label: "الأفكار" }],
-    meta: [`<span data-posts-count>${ideas.length}</span> مقالات منشورة`, `${ideaCategories.length - 1} تصنيفات`],
+    meta: [
+      `<span data-posts-count>${ideas.length}</span> مقالات منشورة`,
+      `${ideaCategories.length - 1} تصنيفات`,
+    ],
   })}
 
 <section class="section section--tight">
@@ -473,10 +499,14 @@ export function articlePage() {
           <div class="empty-note" style="margin-bottom:1.5rem">
             <p>تعذّر العثور على هذا المقال.</p>
           </div>
-          <h2 style="font-size:var(--fs-h3);margin-bottom:1rem">مقالات أخرى</h2>
+          ${
+            fallbackCards.trim()
+              ? `<h2 style="font-size:var(--fs-h3);margin-bottom:1rem">مقالات أخرى</h2>
           <div class="grid grid--3">
             ${fallbackCards}
-          </div>
+          </div>`
+              : ""
+          }
         </section>
 
         <div class="article__share" id="article-share" hidden>
@@ -564,23 +594,19 @@ export function projectsPage() {
     lead:
       "كل مشروع هنا بدأ كإزعاج حقيقي يتكرر — عملية يدوية، أو سؤال لا إجابة له، أو أداة ناقصة. البناء الصغير المحدد يتفوّق على الطموح الكبير.",
     crumbs: [{ label: "الرئيسية", href: "/" }, { label: "المشاريع" }],
-    meta: [`${projects.length} مشروعًا`, `${counts.live} منشور`, `${counts.wip} قيد التطوير`, `${counts.idea} فكرة`],
+    meta: projects.length
+      ? [`${projects.length} مشروعًا`, `${counts.live} منشور`, `${counts.wip} قيد التطوير`, `${counts.idea} فكرة`]
+      : ["قيد الإعداد"],
   })}
 
-<section class="section section--tight">
-  <div class="shell">
-    <div class="chips" id="proj-filters" role="group" aria-label="تصفية المشاريع">
-            ${chips}
-    </div>
-
-    <div class="grid grid--3" id="proj-grid" style="margin-top:1.8rem">
-          ${cards}
-    </div>
-
-    <p class="empty-note" id="proj-empty" hidden>لا توجد مشاريع منشورة بعد. المشاريع ستُضاف لاحقًا.</p>
-
-  </div>
-</section>
+${listSection({
+    id: "proj",
+    chips: projects.length ? chips : null,
+    cards,
+    empty: "لا توجد مشاريع بعد. ستُضاف هنا أولًا بأول.",
+    title: "المشاريع قيد الإعداد",
+    desc: "هذه المساحة مخصّصة للمشاريع التي يطبّقها الدكتور بنفسه — أدوات ومنهجيات ودورات. أول مشروع سيُنشر هنا فور اكتماله.",
+  })}
 
 <section class="section section--tight">
   <div class="shell">
@@ -672,21 +698,17 @@ export function talksPage() {
     lead:
       "جلسات في التفكير السريري وقراءة الأدلة وتدوين الحالات، وحوارات في الطب والفلسفة. مواد العرض متاحة حيثما رُخّص.",
     crumbs: [{ label: "الرئيسية", href: "/" }, { label: "المحاضرات" }],
-    meta: [`${talks.length} جلسة`],
+    meta: talks.length ? [`${talks.length} جلسة`] : ["قيد التوثيق"],
   })}
 
-<section class="section section--tight">
-  <div class="shell">
-    <div class="chips" id="talk-filters" role="group" aria-label="تصفية الجلسات">
-            ${chips}
-    </div>
-    <div class="grid grid--3" id="talk-grid" style="margin-top:1.8rem">
-          ${cards}
-    </div>
-    <p class="empty-note" id="talk-empty" hidden>لا توجد جلسات منشورة بعد. المحاضرات ستُضاف لاحقًا.</p>
-
-  </div>
-</section>
+${listSection({
+    id: "talk",
+    chips: talks.length ? chips : null,
+    cards,
+    empty: "لا توجد جلسات منشورة بعد. المحاضرات ستُضاف لاحقًا.",
+    title: "الجلسات قيد التوثيق",
+    desc: "المواد والعروض تُضاف هنا بعد كل محاضرة أو حوار، مع رابط مباشر للمادة كلما نُشرت بإذن.",
+  })}
 
 <section class="section section--tight">
   <div class="shell">
@@ -935,13 +957,17 @@ export function contactPage() {
             <button class="hub__act" type="button" data-copy="${esc(D.emailPress)}" aria-label="نسخ البريد">${icon("copy")}</button>
           </div>
 
-          <div class="contact-method">
+          ${
+            D.city || D.country
+              ? `<div class="contact-method">
             <span class="contact-method__ico">${icon("location")}</span>
             <div style="flex:1;min-width:0">
               <p class="contact-method__t">الموقع</p>
-              <p class="contact-method__v">${esc(D.city)} — ${esc(D.country)}</p>
+              <p class="contact-method__v">${[D.city, D.country].filter(Boolean).map(esc).join(" — ")}</p>
             </div>
-          </div>
+          </div>`
+              : ""
+          }
 
           <div class="contact-method">
             <span class="contact-method__ico">${icon("clock")}</span>

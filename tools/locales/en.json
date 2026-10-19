@@ -337,5 +337,12 @@
  "{0} مقالات منشورة": "{0} published articles",
  "مقالات في التفكير الطبي وقراءة الأدلة وتعليم الطب والكتابة، مكتوبة على مهل ومفتوحة للنقاش: كل مقال رأي شخصي قابل للتصحيح.": "Articles on medical thinking, reading evidence, medical education and writing — written slowly and open to discussion: every article is a personal opinion open to correction.",
  "إيقاف الحركة": "Pause motion",
- "تشغيل الحركة": "Resume motion"
+ "تشغيل الحركة": "Resume motion",
+ "قيد الإعداد": "In progress",
+ "المشاريع قيد الإعداد": "Projects in progress",
+ "هذه المساحة مخصّصة للمشاريع التي يطبّقها الدكتور بنفسه — أدوات ومنهجيات ودورات. أول مشروع سيُنشر هنا فور اكتماله.": "This space is reserved for projects the doctor builds himself — tools, methods and courses. The first project will appear here as soon as it is complete.",
+ "قيد التوثيق": "Being documented",
+ "الجلسات قيد التوثيق": "Sessions being documented",
+ "المواد والعروض تُضاف هنا بعد كل محاضرة أو حوار، مع رابط مباشر للمادة كلما نُشرت بإذن.": "Materials and slides are added after every lecture or dialogue, with a direct link whenever they are published with permission.",
+ "لا توجد مشاريع بعد. ستُضاف هنا أولًا بأول.": "No projects yet. They will be added here as they are ready."
 }

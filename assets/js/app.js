@@ -48,6 +48,13 @@
 
       if (toTop) toTop.dataset.show = String(y > 620);
 
+      /* وقف حلقات الخلفية عندما يغادر البطل الشاشة */
+      var hero = document.getElementById("hero");
+      if (hero) {
+        var inView = String(y < window.innerHeight * 0.9);
+        if (inView !== root.dataset.heroInView) root.dataset.heroInView = inView;
+      }
+
       // active nav item
       var path = location.pathname.replace(/\/index\.html$/, "/");
       if (path === "" || path === "/index.html") path = "/";
@@ -224,6 +231,14 @@
         var hit = $$("[data-filter]", bar).filter(function (b) { return b.dataset.filter === want; })[0];
         if (hit) hit.click();
       }
+    });
+
+    /* شبكة بلا بطاقات تُظهر حالة الفراغ فور الإقلاع */
+    sets.forEach(function (cfg) {
+      var grid = $(cfg.grid);
+      if (!grid || $$("[data-cat]", grid).length) return;
+      var empty = cfg.empty && $(cfg.empty);
+      if (empty) empty.hidden = false;
     });
   }
 
@@ -732,6 +747,8 @@
       });
       var empty = $("#idea-empty");
       if (empty) empty.hidden = shown > 0;
+      var counter = $("[data-posts-count]");
+      if (counter) counter.textContent = String(shown);
     });
   }
 
