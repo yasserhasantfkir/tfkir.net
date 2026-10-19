@@ -185,6 +185,7 @@ export const footer = {
       title: "معلومات",
       links: [
         { label: "سياسة الخصوصية", href: "/privacy" },
+        { label: "لوحة التحرير", href: "/admin" },
         { label: "خريطة الموقع", href: "/sitemap.xml" },
       ],
     },

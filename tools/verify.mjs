@@ -22,7 +22,7 @@ const exists = (rel) => fs.existsSync(path.join(ROOT, rel));
 
 /* أدوات مساعدة */
 const stripTags = (h) => h.replace(/<svg[\s\S]*?<\/svg>/g, " ").replace(/<[^>]*>/g, "\u0000");
-const ALLOWED_ROOT = /^\/(assets\/|api\/|functions\/|feed\.xml|robots\.txt|sitemap\.xml|site\.webmanifest|favicon)/;
+const ALLOWED_ROOT = /^\/(assets\/|api\/|functions\/|admin|feed\.xml|robots\.txt|sitemap\.xml|site\.webmanifest|favicon)/;
 
 for (const lang of LANGS) {
   for (const p of PAGES) {
@@ -175,6 +175,44 @@ if (urls !== 33) warnings.push(`sitemap.xml: ${urls} رابطًا (المتوق�
 if (!exists("feed.xml")) errors.push("feed.xml مفقود");
 if (!exists("_headers")) errors.push("_headers مفقود");
 if (!exists("_redirects")) warnings.push("_redirects مفقود");
+
+/* ---- لوحة التحرير ---- */
+if (!exists("admin.html")) {
+  errors.push("admin.html مفقود");
+} else {
+  const ah = read("admin.html");
+  const atag = "admin.html";
+  if (!/lang="ar"/.test(ah) || !/dir="rtl"/.test(ah)) errors.push(`${atag}: <html> يجب أن تكون ar/rtl`);
+  if (!/<meta name="robots" content="noindex/.test(ah)) errors.push(`${atag}: لا بد من noindex للوحة التحرير`);
+  if (/<title>[^<]*<\/title>/.test(ah) === false) errors.push(`${atag}: العنوان مفقود`);
+  for (const id of ["view-login", "view-force", "view-app", "view-editor", "ed-content", "ed-toolbar", "login-form", "cred-form"]) {
+    if (!ah.includes(`id="${id}"`)) errors.push(`${atag}: عنصر مفقود → #${id}`);
+  }
+  for (const m of ah.matchAll(/(?:href|src)="(\/assets\/[^"]+)"/g)) {
+    if (!exists(m[1].split("?")[0])) errors.push(`${atag}: ملف مفقود → ${m[1]}`);
+  }
+  if (!/\?v=[0-9a-f]{8}"/.test(ah)) errors.push(`${atag}: الأصول بلا بصمة ?v=`);
+  const aOpens = (ah.match(/<(?:div|section|nav|header|footer|main|article|aside|form|label|button)\b/g) || []).length;
+  const aCloses = (ah.match(/<\/(?:div|section|nav|header|footer|main|article|aside|form|label|button)>/g) || []).length;
+  if (aOpens !== aCloses) errors.push(`${atag}: وسوم كتلية غير متوازنة (${aOpens}/${aCloses})`);
+}
+
+/* ---- _routes.json ---- */
+if (!exists("_routes.json")) {
+  warnings.push("_routes.json مفقود — كل طلبات الصفحات ستستدعي الدوال");
+} else {
+  try {
+    const rj = JSON.parse(read("_routes.json"));
+    if (rj.version !== 1 || !Array.isArray(rj.include) || !rj.include.length) errors.push("_routes.json: include غير صالح");
+  } catch (e) {
+    errors.push(`_routes.json: JSON غير صالح (${e.message})`);
+  }
+}
+
+/* ---- دوال الخادم ---- */
+for (const fn of ["functions/api/auth/login.js", "functions/api/posts/index.js", "functions/article.js", "functions/ideas.js", "functions/_lib.js"]) {
+  if (!exists(fn)) errors.push(`دالة مفقودة → ${fn}`);
+}
 
 /* ---- التقرير ---- */
 console.log(`\n  فُحص ${LANGS.length * PAGES.length} صفحة + الخريطة والملفات العامة`);

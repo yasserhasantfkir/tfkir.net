@@ -47,7 +47,10 @@ cp IMG-20251209-WA0052.jpg assets/img/doctor-yasser.jpg
 
 ## ٥) الأفكار — `ideas`
 
-٧ مقالات مكتوبة كنماذج. لكل مقالة `body` مقسّم إلى أقسام. لإضافة مقالة:
+> **ملاحظة:** حقول المقالات الآن يكتبها الدكتور مباشرة من `/admin` وتُحفظ في D1،
+> وتظهر في `/ideas` و`/article` بلا أي بناء. استخدم `tools/content.mjs` فقط
+> للمقالات التي تريد إدراجها ضمن مصدر البناء (مثل المقالات النموذجية).
+> لإضافة مقالة ثابتة:
 
 ```js
 {
@@ -107,7 +110,17 @@ cp IMG-20251209-WA0052.jpg assets/img/doctor-yasser.jpg
 | `assets/img/icon-512.png` | أيقونة PWA | بديل |
 | `assets/img/apple-touch-icon.png` | أيقونة iOS | بديل |
 
-## ١٣) SEO
+## ١٣) لوحة التحرير — `/admin`
+
+- أول دخول: `yas` / `1234` ← **إجباري** تغيير اسم المستخدم وكلمة المرور.
+- المقالات في D1 لا تحتاج أي بناء أو رفع بعد كتابتها.
+- لتغيير البيانات يدويًا (نسيت كلمة المرور):
+  ```bash
+  ADMIN_USERNAME=my-user ADMIN_PASSWORD='NewPass123!' node tools/seed.mjs
+  ```
+- عند تعديل المخطط في `db/schema.sql` نفّذ `node tools/seed.mjs` (آمن، يُطبّق `IF NOT EXISTS`).
+
+## ١٤) SEO
 
 - `site.origin` — اضبطه إن تغيّر الدومين.
 - `sitemap.xml` و`feed.xml` — تُولَّدان تلقائيًا من المحتوى.

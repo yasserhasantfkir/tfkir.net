@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>لوحة التحرير | تفكير.نت</title>
+<meta name="description" content="لوحة تحرير المقالات">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="site-version" content="d362f730a1f8">
+<meta name="theme-color" content="#0a0f15">
+<link rel="icon" href="/favicon.svg?v=d36e781a" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="/assets/css/base.css?v=76545292">
+<link rel="stylesheet" href="/assets/css/components.css?v=e62f67da">
+<link rel="stylesheet" href="/assets/css/pages.css?v=8ed3215e">
+<link rel="stylesheet" href="/assets/css/admin.css?v=d2c46fbb">
+<script>
+(function(){try{var t=localStorage.getItem('tfkir-theme');if(t){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();
+</script>
+</head>
+<body class="adm-body">
+
+<div class="adm-bg" aria-hidden="true"><span class="adm-bg__glow"></span><span class="adm-bg__grid"></span></div>
+
+<header class="adm-top" id="adm-top" hidden>
+  <div class="adm-top__bar">
+    <a class="brand" href="/" aria-label="الصفحة الرئيسية">
+      <span class="brand__mark" aria-hidden="true">ت</span>
+      <span class="brand__text">
+        <span class="brand__name">تفكير.نت</span>
+        <span class="brand__sub">لوحة التحرير</span>
+      </span>
+    </a>
+    <div class="adm-top__actions">
+      <span class="adm-user" id="adm-user" hidden></span>
+      <button class="icon-btn" id="adm-settings" type="button" aria-label="إدارة الحساب" title="إدارة الحساب"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M20.5 12h-2.2M5.7 12H3.5M18 6l-1.6 1.6M7.6 16.4 6 18M18 18l-1.6-1.6M7.6 7.6 6 6"/></svg></button>
+      <button class="icon-btn" id="adm-theme" type="button" aria-label="تبديل السمة" title="تبديل السمة"><svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.6A8.5 8.5 0 1 1 9.4 3.5a6.8 6.8 0 0 0 11.1 11.1Z"/></svg><svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+      <button class="btn btn--ghost btn--sm" id="adm-logout" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4.5h4a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-4"/><path d="M10 8.5 6 12l4 3.5"/><path d="M6 12h9"/></svg><span>خروج</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="adm-main" id="adm-main">
+
+  <!-- ============ تسجيل الدخول ============ -->
+  <section class="adm-view adm-view--center" id="view-login" hidden>
+    <div class="adm-card adm-card--auth">
+      <span class="kicker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg> لوحة التحرير</span>
+      <h1 class="adm-h1">تسجيل الدخول</h1>
+      <p class="adm-sub">ادخل باسم المستخدم وكلمة المرور للوصول إلى مقالاتك.</p>
+
+      <form class="adm-form" id="login-form" novalidate>
+        <label class="adm-field" data-field="username">
+          <span class="adm-label">اسم المستخدم</span>
+          <input class="adm-input" id="lg-user" name="username" type="text" autocomplete="username"
+                 autocapitalize="none" spellcheck="false" required dir="ltr">
+        </label>
+        <label class="adm-field" data-field="password">
+          <span class="adm-label">كلمة المرور</span>
+          <input class="adm-input" id="lg-pass" name="password" type="password" autocomplete="current-password" required dir="ltr">
+        </label>
+        <p class="adm-alert" id="login-error" hidden role="alert"></p>
+        <button class="btn btn--primary btn--block btn--lg" id="login-submit" type="submit">دخول</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ تغيير إجباري ============ -->
+  <section class="adm-view adm-view--center" id="view-force" hidden>
+    <div class="adm-card adm-card--auth">
+      <span class="kicker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.2 5 5.8v5.6c0 4.2 2.9 7.6 7 9.4 4.1-1.8 7-5.2 7-9.4V5.8L12 3.2Z"/><path d="M9 12.2l2.2 2.2 4-4.2"/></svg> خطوة إلزامية</span>
+      <h1 class="adm-h1">غيّر بيانات الدخول أولًا</h1>
+      <p class="adm-sub">
+        هذه أول مرة تسجّل فيها الدخول. لأمانك يجب تغيير اسم المستخدم وكلمة المرور
+        الافتراضية قبل أن تتمكّن من كتابة أي مقال.
+      </p>
+
+      <form class="adm-form" id="force-form" novalidate>
+        <label class="adm-field" data-field="currentPassword">
+          <span class="adm-label">كلمة المرور الحالية</span>
+          <input class="adm-input" id="fc-old" type="password" autocomplete="current-password" required dir="ltr">
+        </label>
+        <label class="adm-field" data-field="newUsername">
+          <span class="adm-label">اسم المستخدم الجديد</span>
+          <input class="adm-input" id="fc-user" type="text" autocomplete="username" dir="ltr"
+                 autocapitalize="none" spellcheck="false" required minlength="3">
+          <span class="adm-hint">حروف وأرقام فقط، ٣ خانات فأكثر.</span>
+        </label>
+        <label class="adm-field" data-field="newPassword">
+          <span class="adm-label">كلمة المرور الجديدة</span>
+          <input class="adm-input" id="fc-pass" type="password" autocomplete="new-password" required minlength="8" dir="ltr">
+          <span class="adm-hint">٨ خانات فأكثر. لا تستخدم كلمة المرور الافتراضية.</span>
+        </label>
+        <label class="adm-field" data-field="confirmPassword">
+          <span class="adm-label">تأكيد كلمة المرور</span>
+          <input class="adm-input" id="fc-pass2" type="password" autocomplete="new-password" required dir="ltr">
+        </label>
+        <p class="adm-alert" id="force-error" hidden role="alert"></p>
+        <button class="btn btn--primary btn--block btn--lg" id="force-submit" type="submit">حفظ ودخول</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ اللوحة ============ -->
+  <section class="adm-view adm-view--wide" id="view-app" hidden>
+    <div class="adm-hero">
+      <div class="adm-hero__text">
+        <span class="kicker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4.5h5.2a2.8 2.8 0 0 1 2.8 2.8v12.2a2.2 2.2 0 0 0-2.2-2.2H5V4.5Z"/><path d="M19 4.5h-5.2A2.8 2.8 0 0 0 11 7.3v12.2a2.2 2.2 0 0 1 2.2-2.2H19V4.5Z"/></svg> المقالات</span>
+        <h1 class="adm-h1">مكتبة المقالات</h1>
+        <p class="adm-sub">اكتب، احفظ كمسودة، ثم انشر عندما يجهز. كل حفظ تلقائي يُنقذ مسودتك على الخادم.</p>
+      </div>
+      <button class="btn btn--primary btn--lg" id="adm-new" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>مقال جديد</span></button>
+    </div>
+
+    <div class="adm-stats" id="adm-stats">
+      <button class="stat-card is-active" type="button" data-tab="drafts">
+        <span class="stat-card__n" id="c-drafts">0</span>
+        <span class="stat-card__l">مسودة</span>
+      </button>
+      <button class="stat-card" type="button" data-tab="published">
+        <span class="stat-card__n" id="c-published">0</span>
+        <span class="stat-card__l">منشور</span>
+      </button>
+      <button class="stat-card" type="button" data-tab="all">
+        <span class="stat-card__n" id="c-total">0</span>
+        <span class="stat-card__l">الكل</span>
+      </button>
+    </div>
+
+    <div class="adm-tools">
+      <label class="adm-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>
+        <input id="adm-search" type="search" placeholder="ابحث في العناوين والمتن…" aria-label="بحث">
+      </label>
+      <select class="adm-select" id="adm-cat" aria-label="تصفية حسب التصنيف">
+        <option value="*">كل التصنيفات</option>
+        <option value="التفكير الطبي">التفكير الطبي</option><option value="الأدلة">الأدلة</option><option value="التعليم">التعليم</option><option value="الكتابة">الكتابة</option><option value="الممارسة">الممارسة</option><option value="المشاريع">المشاريع</option><option value="تأملات">تأملات</option><option value="الصحة العامة">الصحة العامة</option><option value="أخرى">أخرى</option>
+      </select>
+      <button class="icon-btn" id="adm-refresh" type="button" aria-label="تحديث" title="تحديث"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a8 8 0 0 0-14-4.4L4 9.5"/><path d="M4 4.5v5h5M4 12.5a8 8 0 0 0 14 4.4l2-2.4"/><path d="M20 19.5v-5h-5"/></svg></button>
+    </div>
+
+    <div class="adm-list" id="adm-list"></div>
+    <p class="adm-empty" id="adm-empty" hidden></p>
+  </section>
+
+  <!-- ============ المحرّر ============ -->
+  <section class="adm-editor" id="view-editor" hidden>
+    <header class="ed-top">
+      <button class="icon-btn" id="ed-back" type="button" aria-label="رجوع إلى القائمة" title="رجوع"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <span class="ed-status" id="ed-status" data-state="idle">مسودة جديدة</span>
+      <div class="ed-top__actions">
+        <button class="btn btn--ghost btn--sm" id="ed-preview" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.8 12 5.8 21.5 12 21.5 12 18 18.2 12 18.2 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></svg><span>معاينة</span></button>
+        <button class="btn btn--ghost btn--sm" id="ed-draft" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4.5h11L20 8.5v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-14a1 1 0 0 1 1-1Z"/><path d="M8 4.5v5h7v-5M8 20.5v-5.7h8v5.7"/></svg><span>حفظ كمسودة</span></button>
+        <button class="btn btn--primary btn--sm" id="ed-publish" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 3.5 10.8 13.2"/><path d="M20.5 3.5 14 20.5l-3.2-7.3L3.5 10l17-6.5Z"/></svg><span>نشر</span></button>
+        <button class="icon-btn icon-btn--danger" id="ed-delete" type="button" aria-label="حذف المقال" title="حذف المقال"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 6.5h15M9.5 6.5V4.8a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1.7"/><path d="M6.5 6.5 7.4 19a1.5 1.5 0 0 0 1.5 1.4h6.2a1.5 1.5 0 0 0 1.5-1.4l.9-12.5"/><path d="M10.5 10v6.5M13.5 10v6.5"/></svg></button>
+      </div>
+    </header>
+
+    <div class="ed-fields">
+      <input class="ed-title" id="ed-title" type="text" placeholder="عنوان المقال…" aria-label="عنوان المقال" autocomplete="off">
+      <input class="ed-excerpt" id="ed-excerpt" type="text" placeholder="ملخّص المقال — يظهر في البطاقات ومحركات البحث (سيُولَّد تلقائيًا إن تُرك فارغًا)" aria-label="ملخّص المقال" autocomplete="off">
+      <div class="ed-fields__row">
+        <label class="ed-sel">
+          <span>التصنيف</span>
+          <select class="adm-select" id="ed-category"><option value="التفكير الطبي">التفكير الطبي</option><option value="الأدلة">الأدلة</option><option value="التعليم">التعليم</option><option value="الكتابة">الكتابة</option><option value="الممارسة">الممارسة</option><option value="المشاريع">المشاريع</option><option value="تأملات">تأملات</option><option value="الصحة العامة">الصحة العامة</option><option value="أخرى">أخرى</option></select>
+        </label>
+        <label class="ed-sel ed-sel--grow">
+          <span>الوسوم</span>
+          <input class="adm-input" id="ed-tags" type="text" placeholder="طبي، تفكير، أدلة" aria-label="الوسوم">
+        </label>
+        <label class="ed-sel ed-sel--grow">
+          <span>الرابط</span>
+          <input class="adm-input" id="ed-slug" type="text" dir="ltr" placeholder="article-slug" aria-label="الرابط">
+        </label>
+      </div>
+    </div>
+
+    
+  <div class="tb" role="toolbar" aria-label="أدوات التنسيق" id="ed-toolbar">
+    <div class="tb__group">
+      <select class="tb-sel" id="tb-block" aria-label="نمط الفقرة" title="نمط الفقرة">
+        <option value="p">نص عادي</option>
+        <option value="h2">عنوان كبير</option>
+        <option value="h3">عنوان متوسط</option>
+        <option value="h4">عنوان صغير</option>
+        <option value="blockquote">اقتباس</option>
+        <option value="pre">شيفرة</option>
+      </select>
+      <select class="tb-sel" id="tb-font" aria-label="الخط" title="نوع الخط">
+        <option value="">الخط</option>
+        <option value="IBM Plex Sans Arabic">عصري</option>
+        <option value="Noto Naskh Arabic">نسخ تقليدي</option>
+        <option value="Georgia, serif">لاتيني كلاسيكي</option>
+        <option value="ui-monospace, monospace">أحادي المسافة</option>
+      </select>
+      <select class="tb-sel" id="tb-size" aria-label="حجم الخط" title="حجم الخط">
+        <option value="">الحجم</option>
+        <option value="0.82em">صغير جدًا</option>
+        <option value="0.95em">صغير</option>
+        <option value="1.15em">كبير</option>
+        <option value="1.4em">كبير جدًا</option>
+        <option value="1.9em">عنوان</option>
+      </select>
+    </div>
+
+    <div class="tb__group">
+      <button class="tb-btn tb-btn--latin" type="button" data-cmd="bold" title="عريض (Ctrl+B)" aria-label="عريض (Ctrl+B)"><b style="font-size:1.05em">B</b></button>
+      <button class="tb-btn tb-btn--latin" type="button" data-cmd="italic" title="مائل (Ctrl+I)" aria-label="مائل (Ctrl+I)"><i style="font-family:Georgia,serif;font-size:1.05em">I</i></button>
+      <button class="tb-btn tb-btn--latin" type="button" data-cmd="underline" title="تحته خط (Ctrl+U)" aria-label="تحته خط (Ctrl+U)"><u style="font-size:1.05em">U</u></button>
+      <button class="tb-btn tb-btn--latin" type="button" data-cmd="strikeThrough" title="يتوسطه خط" aria-label="يتوسطه خط"><s style="font-size:1.05em">S</s></button>
+      <span class="tb-sep" aria-hidden="true"></span>
+      <label class="tb-color" title="لون النص">
+        <span class="tb-color__a" aria-hidden="true">A</span>
+        <input type="color" id="tb-fore" value="#6fe3d0" aria-label="لون النص">
+      </label>
+      <label class="tb-color tb-color--hl" title="لون التمييز">
+        <span class="tb-color__a" aria-hidden="true">■</span>
+        <input type="color" id="tb-back" value="#f8eecd" aria-label="لون التمييز">
+      </label>
+    </div>
+
+    <div class="tb__group">
+      <select class="tb-sel" id="tb-align" aria-label="المحاذاة" title="المحاذاة">
+        <option value="">المحاذاة</option>
+        <option value="right">يمين</option>
+        <option value="center">وسط</option>
+        <option value="left">يسار</option>
+        <option value="justify">ضبط</option>
+      </select>
+      <button class="tb-btn " type="button" data-cmd="insertUnorderedList" title="قائمة نقطية" aria-label="قائمة نقطية"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.6" cy="6.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="4.6" cy="17.5" r="1.1" fill="currentColor" stroke="none"/></svg></button>
+      <button class="tb-btn " type="button" data-cmd="insertOrderedList" title="قائمة مرقّمة" aria-label="قائمة مرقّمة"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6.5h11M9 12h11M9 17.5h11"/><path d="M3.6 5.2h1.3v3.1M3.3 8.4h2.4M3.4 10.7h2.2l-2.2 2.4h2.3M3.4 15.9h1.9a.9.9 0 0 1 0 1.8H3.4h1.9a.9.9 0 0 1 0 1.8H3.4"/></svg></button>
+      <button class="tb-btn " type="button" data-cmd="outdent" title="إنقاص المسافة البادئة" aria-label="إنقاص المسافة البادئة"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 6.5h10M10 12h10M10 17.5h10M6 9.5 4 12l2 2.5"/></svg></button>
+      <button class="tb-btn " type="button" data-cmd="indent" title="زيادة المسافة البادئة" aria-label="زيادة المسافة البادئة"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 6.5h10M10 12h10M10 17.5h10M4 9.5l2 2.5-2 2.5"/></svg></button>
+    </div>
+
+    <div class="tb__group">
+      <button class="tb-btn " type="button" data-cmd="createLink" title="إدراج رابط" aria-label="إدراج رابط"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 13.5a4 4 0 0 0 5.7 0l2.6-2.6a4 4 0 0 0-5.7-5.7l-1.3 1.3"/><path d="M13.5 10.5a4 4 0 0 0-5.7 0l-2.6 2.6a4 4 0 0 0 5.7 5.7l1.3-1.3"/></svg></button>
+      <button class="tb-btn " type="button" data-cmd="insertImage" title="إدراج صورة" aria-label="إدراج صورة"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.7"/><path d="M4 17l4.8-4.6a1.5 1.5 0 0 1 2.1 0L20 20"/></svg></button>
+      <button class="tb-btn " type="button" data-cmd="insertHorizontalRule" title="فاصل" aria-label="فاصل"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12h17"/></svg></button>
+      <button class="tb-btn " type="button" data-cmd="removeFormat" title="إزالة التنسيق" aria-label="إزالة التنسيق"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 20.5 3.9 15.9a1.8 1.8 0 0 1 0-2.6l8.2-8.2a1.8 1.8 0 0 1 2.6 0l5.1 5.1a1.8 1.8 0 0 1 0 2.6l-8.2 8.2"/><path d="M20.5 20.5h-12M8.5 11.5l6 6"/></svg></button>
+    </div>
+
+    <div class="tb__group tb__group--end">
+      <button class="tb-btn " type="button" data-cmd="undo" title="تراجع (Ctrl+Z)" aria-label="تراجع (Ctrl+Z)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h9.5a5.5 5.5 0 0 1 0 11H8"/><path d="M7.5 5 3.5 9l4 4"/></svg></button>
+      <button class="tb-btn " type="button" data-cmd="redo" title="إعادة (Ctrl+Y)" aria-label="إعادة (Ctrl+Y)"><svg class="tb-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 9h-9.5a5.5 5.5 0 0 0 0 11H16"/><path d="M16.5 5l4 4-4 4"/></svg></button>
+    </div>
+  </div>
+
+    <div class="ed-paper">
+      <div class="prose ed-prose" id="ed-content" contenteditable="true" spellcheck="true"
+           role="textbox" aria-multiline="true" aria-label="متن المقال"></div>
+    </div>
+
+    <footer class="ed-foot">
+      <span id="ed-counts">٠ كلمة · ٠ دقيقة</span>
+      <span class="ed-foot__sep" aria-hidden="true">·</span>
+      <span id="ed-autosave">الحفظ التلقائي مفعّل</span>
+    </footer>
+  </section>
+</main>
+
+<!-- ============ نافذة إدارة الحساب ============ -->
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal__scrim" data-close-modal></div>
+  <div class="adm-card adm-card--auth modal__box">
+    <h2 class="adm-h2" id="modal-title">إدارة الحساب</h2>
+    <p class="adm-sub">غيّر اسم المستخدم أو كلمة المرور في أي وقت.</p>
+    <form class="adm-form" id="cred-form" novalidate>
+      <label class="adm-field" data-field="currentPassword">
+        <span class="adm-label">كلمة المرور الحالية</span>
+        <input class="adm-input" id="cc-old" type="password" autocomplete="current-password" required dir="ltr">
+      </label>
+      <label class="adm-field" data-field="newUsername">
+        <span class="adm-label">اسم المستخدم</span>
+        <input class="adm-input" id="cc-user" type="text" autocomplete="username" dir="ltr" required minlength="3">
+      </label>
+      <label class="adm-field" data-field="newPassword">
+        <span class="adm-label">كلمة المرور الجديدة</span>
+        <input class="adm-input" id="cc-pass" type="password" autocomplete="new-password" minlength="8" dir="ltr"
+               placeholder="اتركها فارغة للإبقاء على الحالية">
+        <span class="adm-hint">٨ خانات فأكثر.</span>
+      </label>
+      <label class="adm-field" data-field="confirmPassword">
+        <span class="adm-label">تأكيد كلمة المرور</span>
+        <input class="adm-input" id="cc-pass2" type="password" autocomplete="new-password" dir="ltr">
+      </label>
+      <p class="adm-alert" id="cred-error" hidden role="alert"></p>
+      <div class="adm-row">
+        <button class="btn btn--primary" id="cred-submit" type="submit">حفظ التغييرات</button>
+        <button class="btn btn--ghost" type="button" data-close-modal>إلغاء</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============ نافذة المعاينة ============ -->
+<div class="modal" id="preview" hidden role="dialog" aria-modal="true" aria-label="معاينة المقال">
+  <div class="modal__scrim" data-close-preview></div>
+  <article class="pv" id="pv">
+    <header class="pv__bar">
+      <span class="pv__label">معاينة</span>
+      <button class="icon-btn" type="button" data-close-preview aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </header>
+    <div class="pv__scroll">
+      <div class="article__head pv__head">
+        <span class="kicker" id="pv-cat">—</span>
+        <h1 class="article__title" id="pv-title">بلا عنوان</h1>
+        <div class="article__meta">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.2" r="3.7"/><path d="M4.8 20c0-3.6 3.2-6.2 7.2-6.2s7.2 2.6 7.2 6.2"/></svg> الدكتور ياسر حسن</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.6V12l3 1.8"/></svg> <span id="pv-read">—</span></span>
+        </div>
+      </div>
+      <div class="prose" id="pv-body"></div>
+    </div>
+  </article>
+</div>
+
+<!-- ============ تأكيد ============ -->
+<div class="modal" id="confirm" hidden role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+  <div class="modal__scrim" data-close-confirm></div>
+  <div class="adm-card adm-card--auth modal__box">
+    <h2 class="adm-h2" id="confirm-title">تأكيد</h2>
+    <p class="adm-sub" id="confirm-text"></p>
+    <div class="adm-row">
+      <button class="btn btn--primary" id="confirm-yes" type="button">تأكيد</button>
+      <button class="btn btn--ghost" type="button" data-close-confirm>إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.4l2.6 2.6L16 9.5"/></svg><span id="toast-text"></span></div>
+
+<script src="/assets/js/admin.js?v=f0aeb54f" defer></script>
+</body>
+</html>

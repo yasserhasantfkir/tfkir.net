@@ -444,94 +444,156 @@
     var body = $("#article-body");
     if (!head || !body) return;
 
-    var data = window.TFKIR_IDEAS || [];
-    var slug = new URLSearchParams(location.search).get("id");
-    var post = data.filter(function (p) { return p.slug === slug; })[0];
-
     var loading = $("#article-loading");
     var notFound = $("#article-404");
 
-    if (!post) {
+    var slug = new URLSearchParams(location.search).get("id");
+
+    /* ١) مقال محرَّم على الخادم (SSR) */
+    var ssr = window.TFKIR_SSR_POST;
+    if (ssr && ssr.slug) {
+      decorateArticle(ssr);
       if (loading) loading.hidden = true;
-      if (notFound) notFound.hidden = false;
-      document.title = S("articleNotFound", "المقال غير موجود") + " | " + document.title;
       return;
     }
 
+    /* ٢) مقالات البناء الثابت */
+    var data = window.TFKIR_IDEAS || [];
+    var post = data.filter(function (p) { return p.slug === slug; })[0];
+    if (post) {
+      renderArticleBody(body, post);
+      decorateArticle(post);
+      if (loading) loading.hidden = true;
+      return;
+    }
+
+    /* ٣) مقالات قاعدة البيانات (احتياطي بلا SSR) */
+    if (!slug) return;
+    fetch("/api/posts/" + encodeURIComponent(slug), { headers: { Accept: "application/json" } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (loading) loading.hidden = true;
+        if (!d || !d.ok || !d.post) { showArticleMissing(); return; }
+        renderArticleBody(body, d.post);
+        decorateArticle(d.post);
+      })
+      .catch(function () { if (loading) loading.hidden = true; showArticleMissing(); });
+
+    function showArticleMissing() {
+      if (notFound) notFound.hidden = false;
+      if (head) head.hidden = true;
+      if (body) body.hidden = true;
+      document.title = S("articleNotFound", "المقال غير موجود") + " | " + document.title;
+    }
+  }
+
+  function renderArticleBody(body, post) {
+    var html = "";
+    if (post.excerpt) html += '<p class="lead">' + esc(post.excerpt) + "</p>";
+    if (post.html) html += post.html;
+    else (post.body || []).forEach(function (sec, i) {
+      html += "<h2 id='h" + i + "'>" + esc(sec.h) + "</h2>";
+      (sec.p || []).forEach(function (par) { html += "<p>" + esc(par) + "</p>"; });
+    });
+    if (post.quote) {
+      html += '<blockquote><p>' + esc(post.quote.text) + "</p><cite>" + esc(post.quote.cite) + "</cite></blockquote>";
+    }
+    body.innerHTML = html;
+  }
+
+  function decorateArticle(post) {
+    var head = $("#article-head");
+    var body = $("#article-body");
     var esc = function (s) {
       return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     };
 
     document.title = post.title + " | tfkir.net";
     var desc = $('meta[name="description"]');
-    if (desc) desc.setAttribute("content", post.excerpt);
+    if (desc && post.excerpt) desc.setAttribute("content", post.excerpt);
     var ogT = $('meta[property="og:title"]'); if (ogT) ogT.setAttribute("content", post.title);
-    var ogD = $('meta[property="og:description"]'); if (ogD) ogD.setAttribute("content", post.excerpt);
+    var ogD = $('meta[property="og:description"]'); if (ogD && post.excerpt) ogD.setAttribute("content", post.excerpt);
     var crumb = $("#crumb-title"); if (crumb) crumb.textContent = post.title;
     var url = location.href;
 
-    // المحتوى
-    var html = '<p class="lead">' + esc(post.excerpt) + "</p>";
-    post.body.forEach(function (sec, i) {
-      html += "<h2 id='h" + i + "'>" + esc(sec.h) + "</h2>";
-      sec.p.forEach(function (par) { html += "<p>" + esc(par) + "</p>"; });
-    });
-    if (post.quote) {
-      html += '<blockquote><p>' + esc(post.quote.text) + "</p><cite>" + esc(post.quote.cite) + "</cite></blockquote>";
-    }
-    body.innerHTML = html;
+    var set = function (id, value, attr) {
+      var el = $(id);
+      if (!el || !value) return;
+      el.textContent = value;
+      if (attr) el.setAttribute(attr, attr === "datetime" ? String(post.date || "") : "");
+    };
+    set("#article-cat", post.category);
+    set("#article-title", post.title);
+    set("#article-date", post.dateAr, "datetime");
+    set("#article-read", post.read || post.readLabel);
 
-    $("#article-cat").textContent = post.category;
-    $("#article-title").textContent = post.title;
-    $("#article-date").textContent = post.dateAr;
-    $("#article-date").setAttribute("datetime", post.date);
-    $("#article-read").textContent = post.read;
+    if (head) head.hidden = false;
+    if (body) body.hidden = false;
 
-    head.hidden = false;
-    body.hidden = false;
-    if (loading) loading.hidden = true;
-
-    // فهرس المحتويات
+    /* فهرس المحتويات */
     var toc = $("#toc"), tocList = $("#toc-list");
-    var secs = post.body;
-    if (toc && tocList && secs.length > 1) {
-      tocList.innerHTML = secs.map(function (s, i) {
-        return '<li><a href="#h' + i + '">' + esc(s.h) + "</a></li>";
-      }).join("");
-      toc.hidden = false;
-      if ("IntersectionObserver" in window) {
-        var links = $$("a", tocList);
-        var obs = new IntersectionObserver(function (ents) {
-          ents.forEach(function (en) {
-            if (!en.isIntersecting) return;
-            links.forEach(function (a) { a.classList.toggle("is-active", a.getAttribute("href") === "#" + en.target.id); });
-          });
-        }, { rootMargin: "-20% 0px -70% 0px" });
-        secs.forEach(function (_, i) { var el = document.getElementById("h" + i); if (el) obs.observe(el); });
+    if (toc && tocList && body) {
+      var heads = $$("h2[id], h3[id]", body);
+      if (!heads.length) {
+        var secs = (post.body || []);
+        if (secs.length > 1) {
+          tocList.innerHTML = secs.map(function (s, i) {
+            return '<li><a href="#h' + i + '">' + esc(s.h) + "</a></li>";
+          }).join("");
+          if ("IntersectionObserver" in window) {
+            var links = $$("a", tocList);
+            var obs = new IntersectionObserver(function (ents) {
+              ents.forEach(function (en) {
+                if (!en.isIntersecting) return;
+                links.forEach(function (a) { a.classList.toggle("is-active", a.getAttribute("href") === "#" + en.target.id); });
+              });
+            }, { rootMargin: "-20% 0px -70% 0px" });
+            secs.forEach(function (_, i) { var el = document.getElementById("h" + i); if (el) obs.observe(el); });
+          }
+        } else return;
+      } else {
+        tocList.innerHTML = heads.map(function (h) {
+          return '<li><a href="#' + h.id + '">' + esc(h.textContent) + "</a></li>";
+        }).join("");
+        if ("IntersectionObserver" in window) {
+          var links2 = $$("a", tocList);
+          var obs2 = new IntersectionObserver(function (ents) {
+            ents.forEach(function (en) {
+              if (!en.isIntersecting) return;
+              links2.forEach(function (a) { a.classList.toggle("is-active", a.getAttribute("href") === "#" + en.target.id); });
+            });
+          }, { rootMargin: "-20% 0px -70% 0px" });
+          heads.forEach(function (h) { obs2.observe(h); });
+        }
       }
+      toc.hidden = false;
     }
 
-    // المشاركة
+    /* المشاركة */
     var share = $("#article-share");
     if (share) {
       share.hidden = false;
       var enc = encodeURIComponent(url);
       var t = encodeURIComponent(post.title);
-      $("#share-x").href = "https://twitter.com/intent/tweet?url=" + enc + "&text=" + t;
-      $("#share-in").href = "https://www.linkedin.com/sharing/share-offsite/?url=" + enc;
-      $("#share-wa").href = "https://wa.me/?text=" + t + "%20" + enc;
-      $("#share-copy").addEventListener("click", function () {
-        var btn = this;
-        navigator.clipboard && window.isSecureContext
-          ? navigator.clipboard.writeText(url).then(function () {
-              btn.innerHTML = '<span>' + S("shareCopied", "تم النسخ ✓") + '</span>';
-              setTimeout(function () { btn.innerHTML = S("shareCopyAgain", "نُسخ الرابط"); }, 2000);
-            })
-          : null;
-      });
+      var sx = $("#share-x"); if (sx) sx.href = "https://twitter.com/intent/tweet?url=" + enc + "&text=" + t;
+      var si = $("#share-in"); if (si) si.href = "https://www.linkedin.com/sharing/share-offsite/?url=" + enc;
+      var sw = $("#share-wa"); if (sw) sw.href = "https://wa.me/?text=" + t + "%20" + enc;
+      var sc = $("#share-copy");
+      if (sc && !sc.dataset.bound) {
+        sc.dataset.bound = "1";
+        sc.addEventListener("click", function () {
+          var btn = this;
+          navigator.clipboard && window.isSecureContext
+            ? navigator.clipboard.writeText(url).then(function () {
+                btn.innerHTML = '<span>' + S("shareCopied", "تم النسخ ✓") + '</span>';
+                setTimeout(function () { btn.innerHTML = S("shareCopyAgain", "نُسخ الرابط"); }, 2000);
+              })
+            : null;
+        });
+      }
     }
 
-    // JSON-LD للمقال
+    /* JSON-LD للمقال */
     var ld = document.createElement("script");
     ld.type = "application/ld+json";
     ld.textContent = JSON.stringify({
@@ -540,11 +602,93 @@
       headline: post.title,
       description: post.excerpt,
       datePublished: post.date,
+      inLanguage: "ar",
       author: { "@type": "Person", name: S("personName", "الدكتور ياسر حسن") },
       publisher: { "@type": "Person", name: S("personName", "الدكتور ياسر حسن") },
       mainEntityOfPage: url,
     });
     document.head.appendChild(ld);
+  }
+
+  /* ---------------------------------------------------------
+     10b) مقالات قاعدة البيانات في صفحة الأفكار
+     --------------------------------------------------------- */
+  var escCard = function (s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  };
+
+  var AR_MONTHS = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+  var arDigits = function (n) { return String(n).replace(/\d/g, function (d) { return "٠١٢٣٤٥٦٧٨٩"[d]; }); };
+  var postDateAr = function (iso) {
+    var s = String(iso || "");
+    var d = new Date(s.length <= 10 ? s + "T12:00:00Z" : s.replace(" ", "T") + "Z");
+    if (isNaN(d.getTime())) return "";
+    return arDigits(d.getUTCDate()) + " " + AR_MONTHS[d.getUTCMonth()] + " " + arDigits(d.getUTCFullYear());
+  };
+
+  function ideaCardHtml(p, cls) {
+    return '<a class="post-card ' + (cls || "") + '" href="/article?id=' + encodeURIComponent(p.slug) + '" data-cat="' +
+      escCard(p.category) + '" data-reveal>' +
+      '<div class="post-card__meta">' +
+        '<span class="post-card__cat">' + escCard(p.category) + "</span>" +
+        "<span>" + escCard(postDateAr(p.publishedAt || p.updatedAt)) + "</span>" +
+        "<span>" + arDigits(Math.max(1, p.readMinutes || 1)) + " دقائق قراءة</span>" +
+      "</div>" +
+      '<h2 class="post-card__title">' + escCard(p.title) + "</h2>" +
+      '<p class="post-card__excerpt">' + escCard(p.excerpt) + "</p>" +
+      '<div class="post-card__foot"><span class="post-card__read">' +
+        S("readMore", "اقرأ المقال") +
+      "</span></div></a>";
+  }
+
+  function fetchPosts(query) {
+    return fetch("/api/posts?limit=60" + (query || ""), { headers: { Accept: "application/json" } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) { return d && d.ok ? d.posts : []; })
+      .catch(function () { return []; });
+  }
+
+  function initDynamicIdeas() {
+    var grid = $("#idea-grid");
+    if (!grid) return;
+    fetchPosts().then(function (posts) {
+      if (!posts.length) return;
+      var seen = {};
+      $$(".post-card", grid).forEach(function (c) { seen[c.getAttribute("href")] = true; });
+      var fresh = posts.filter(function (p) { return !seen["/article?id=" + encodeURIComponent(p.slug)]; });
+      if (!fresh.length) return;
+      grid.insertAdjacentHTML("beforeend", fresh.map(function (p) { return ideaCardHtml(p, "is-in"); }).join(""));
+      var empty = $("#idea-empty");
+      if (empty) empty.hidden = true;
+    });
+  }
+
+  /* ---------------------------------------------------------
+     10c) شريط المقالات المتحرك في الرئيسية
+     --------------------------------------------------------- */
+  var RAIL_MIN = 4;
+
+  function initRail() {
+    var section = $("[data-rail]");
+    if (!section) return;
+    var track = $("[data-rail-track]", section);
+    if (!track) return;
+
+    fetchPosts().then(function (posts) {
+      if (posts.length < RAIL_MIN) return;
+      var items = posts.slice(0, 18).map(function (p) {
+        return '<a class="rail__item" href="/article?id=' + encodeURIComponent(p.slug) + '">' +
+          '<span class="rail__cat">' + escCard(p.category) + "</span>" +
+          '<span class="rail__title">' + escCard(p.title) + "</span>" +
+          '<span class="rail__meta">' + escCard(postDateAr(p.publishedAt || p.updatedAt)) + "</span>" +
+          "</a>";
+      }).join("");
+      track.innerHTML = items + items; /* تكرار سلس للحركة */
+      section.hidden = false;
+      $$("[data-reveal]", section).forEach(function (el) { el.classList.add("is-in"); });
+    });
   }
 
   /* ---------------------------------------------------------
@@ -661,6 +805,8 @@
     initPortrait();
     initContactForm();
     initArticle();
+    initDynamicIdeas();
+    initRail();
     initYear();
     initAutoUpdate();
     document.documentElement.classList.add("js-ready");

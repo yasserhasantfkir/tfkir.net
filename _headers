@@ -16,6 +16,14 @@
   Cache-Control: no-store
   X-Robots-Tag: noindex
 
+/admin
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow
+
+/admin.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow
+
 /version.json
   Cache-Control: no-store
 

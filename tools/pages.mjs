@@ -80,6 +80,20 @@ export function homePage() {
   </div>
 </div>
 
+<!-- ===================== شريط المقالات المتحرك ===================== -->
+<section class="section section--tight" id="articles-rail" data-rail hidden>
+  <div class="shell rail__head">
+    <div class="rail__head-text">
+      <span class="kicker" data-reveal>${icon("book")} المقالات</span>
+      <h2 class="rail__title" data-reveal style="--d:80ms">آخر ما كُتب على المنصة</h2>
+    </div>
+    <a class="tlink" href="/ideas" data-reveal style="--d:160ms">كل المقالات${icon("arrowLeft", "btn__arrow")}</a>
+  </div>
+  <div class="rail" data-rail-viewport tabindex="0" role="region" aria-label="أحدث المقالات">
+    <div class="rail__track" data-rail-track></div>
+  </div>
+</section>
+
 <!-- ===================== من أنا ===================== -->
 <section class="section" id="intro">
   <div class="shell">
@@ -360,10 +374,10 @@ export function ideasPage() {
     kicker: "الأرشيف",
     title: "أفكار <span class=\"gradient-text\">ومقالات</span>",
     lead:
-      `${ideas.length} مقالةً في التفكير الطبي والأدلة والتعليم والكتابة. مكتوبة على مهل، ومفتوحة للنقاش:` +
-      " كل مقال رأي شخصي قابل للتصحيح.",
+      `مقالات في التفكير الطبي وقراءة الأدلة وتعليم الطب والكتابة، مكتوبة على مهل ومفتوحة للنقاش: ` +
+      "كل مقال رأي شخصي قابل للتصحيح.",
     crumbs: [{ label: "الرئيسية", href: "/" }, { label: "الأفكار" }],
-    meta: [`${ideas.length} مقالة`, `${ideaCategories.length - 1} تصنيفات`],
+    meta: [`<span data-posts-count>${ideas.length}</span> مقالات منشورة`, `${ideaCategories.length - 1} تصنيفات`],
   })}
 
 <section class="section section--tight">
@@ -372,13 +386,10 @@ export function ideasPage() {
             ${chips}
     </div>
 
-    <div class="grid grid--3" id="idea-grid" style="margin-top:1.8rem">
-          ${cards}
+    <div class="grid grid--3" id="idea-grid" style="margin-top:1.8rem"><!--#POSTS_GRID-->${cards}
     </div>
 
     <p class="empty-note" id="idea-empty" hidden>لا توجد مقالات منشورة بعد. المقالات ستُضاف لاحقًا.</p>
-
-
   </div>
 </section>
 

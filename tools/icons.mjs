@@ -62,6 +62,24 @@ export const icons = {
   refresh: P('<path d="M20 11.5a8 8 0 0 0-14-4.4L4 9.5"/><path d="M4 4.5v5h5M4 12.5a8 8 0 0 0 14 4.4l2-2.4"/><path d="M20 19.5v-5h-5"/>'),
   building: P('<path d="M4.5 20.5V5.2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v15.3M14.5 10.2h4a1 1 0 0 1 1 1v9.3M3 20.5h18"/><path d="M8 8h3M8 11.5h3M8 15h3"/>'),
 
+  /* ---- المحرّر / اللوحة ---- */
+  plus: P('<path d="M12 5v14M5 12h14"/>'),
+  trash: P('<path d="M4.5 6.5h15M9.5 6.5V4.8a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1.7"/><path d="M6.5 6.5 7.4 19a1.5 1.5 0 0 0 1.5 1.4h6.2a1.5 1.5 0 0 0 1.5-1.4l.9-12.5"/><path d="M10.5 10v6.5M13.5 10v6.5"/>'),
+  image: P('<rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.7"/><path d="M4 17l4.8-4.6a1.5 1.5 0 0 1 2.1 0L20 20"/>'),
+  listUl: P('<path d="M9 6.5h11M9 12h11M9 17.5h11"/><circle cx="4.6" cy="6.5" r="1.1" fill="currentColor" stroke="none"/><circle cx="4.6" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="4.6" cy="17.5" r="1.1" fill="currentColor" stroke="none"/>'),
+  listOl: P('<path d="M9 6.5h11M9 12h11M9 17.5h11"/><path d="M3.6 5.2h1.3v3.1M3.3 8.4h2.4M3.4 10.7h2.2l-2.2 2.4h2.3M3.4 15.9h1.9a.9.9 0 0 1 0 1.8H3.4h1.9a.9.9 0 0 1 0 1.8H3.4"/>'),
+  undo: P('<path d="M4 9h9.5a5.5 5.5 0 0 1 0 11H8"/><path d="M7.5 5 3.5 9l4 4"/>'),
+  redo: P('<path d="M20 9h-9.5a5.5 5.5 0 0 0 0 11H16"/><path d="M16.5 5l4 4-4 4"/>'),
+  save: P('<path d="M5 4.5h11L20 8.5v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-14a1 1 0 0 1 1-1Z"/><path d="M8 4.5v5h7v-5M8 20.5v-5.7h8v5.7"/>'),
+  logout: P('<path d="M14.5 4.5h4a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-4"/><path d="M10 8.5 6 12l4 3.5"/><path d="M6 12h9"/>'),
+  settings: P('<circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M20.5 12h-2.2M5.7 12H3.5M18 6l-1.6 1.6M7.6 16.4 6 18M18 18l-1.6-1.6M7.6 7.6 6 6"/>'),
+  eraser: P('<path d="M8.5 20.5 3.9 15.9a1.8 1.8 0 0 1 0-2.6l8.2-8.2a1.8 1.8 0 0 1 2.6 0l5.1 5.1a1.8 1.8 0 0 1 0 2.6l-8.2 8.2"/><path d="M20.5 20.5h-12M8.5 11.5l6 6"/>'),
+  hr: P('<path d="M3.5 12h17"/>'),
+  indent: P('<path d="M10 6.5h10M10 12h10M10 17.5h10M4 9.5l2 2.5-2 2.5"/>'),
+  outdent: P('<path d="M10 6.5h10M10 12h10M10 17.5h10M6 9.5 4 12l2 2.5"/>'),
+  warning: P('<path d="M12 4.5 3.5 19.5h17L12 4.5Z"/><path d="M12 10v4M12 16.6h.01"/>'),
+  globe2: P('<circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/>'),
+
   /* ---- socials ---- */
   x: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.2 3h3.3l-7.2 8.3 8.5 11.4h-6.7l-5.2-6.9-6 6.9H.6l7.7-8.8L.1 3h6.8l4.7 6.3L17.2 3Zm-1.2 16.7h1.8L7.9 4.6H5.9l10.1 15.1Z"/></svg>',
   linkedin: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM2.9 9.75h4.15V21H2.9V9.75Zm6.85 0h3.98v1.55h.06c.55-1.05 1.9-2.16 3.92-2.16 4.19 0 4.96 2.76 4.96 6.34V21h-4.14v-5.02c0-1.2-.02-2.74-1.67-2.74-1.67 0-1.93 1.3-1.93 2.65V21H9.75V9.75Z"/></svg>',

@@ -9,6 +9,7 @@ import {
   linkGroups, footer, nav,
 } from "./content.mjs";
 import * as P from "./pages.mjs";
+import { adminPage } from "./admin-page.mjs";
 import { applyDict, fillSwitcher, patchHead, prefixLinks } from "./i18n.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -89,6 +90,7 @@ const emitPage = (file, rawHtml, urlPath) => {
   /* TR / EN: شجرة ترجمة كاملة */
   for (const lang of LOCALES) {
     let h = applyDict(html, dicts[lang], i18nStats);
+    h = h.replace(/<!--#[A-Z_]+-->/g, "");
     h = prefixLinks(h, lang, site.origin);
     h = fillSwitcher(h, lang, urlPath, site.origin);
     h = patchHead(h, lang, urlPath, dicts[lang], site.origin);
@@ -117,6 +119,30 @@ const PAGES = [
   ["privacy.html", P.privacyPage(), "/privacy"],
 ];
 for (const [file, html, urlPath] of PAGES) emitPage(file, html, urlPath);
+
+/* ---------------- لوحة التحرير (عربية فقط، بلا ترجمة) ---------------- */
+done(
+  write(
+    "admin.html",
+    versionAssets(adminPage().replace("__SITE_VERSION__", SITE_VERSION))
+  )
+);
+
+/* ---------------- _routes.json — الدوال على المسارات المطلوبة فقط ---------------- */
+done(
+  write(
+    "_routes.json",
+    JSON.stringify(
+      {
+        version: 1,
+        include: ["/api/*", "/article/*", "/ideas/*"],
+        exclude: [],
+      },
+      null,
+      2
+    ) + "\n"
+  )
+);
 
 if (i18nStats.missing.size) {
   console.warn(`\n  ⚠  ترجمات ناقصة: ${i18nStats.missing.size} مفتاحًا بقي بالعربية في tr/en`);
@@ -165,6 +191,7 @@ User-agent: *
 Allow: /
 Disallow: /functions/
 Disallow: /api/
+Disallow: /admin
 
 # Major crawlers
 User-agent: Googlebot
@@ -287,6 +314,14 @@ done(
   Cache-Control: no-store
   X-Robots-Tag: noindex
 
+/admin
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow
+
+/admin.html
+  Cache-Control: no-store
+  X-Robots-Tag: noindex, nofollow
+
 /version.json
   Cache-Control: no-store
 
@@ -403,6 +438,60 @@ tools/icons.mjs         أيقونات SVG
 tools/build.mjs         مُولّد الموقع
 \`\`\`
 
+## نظام المقالات ولوحة التحرير
+
+مقالات الموقع تأتي من مصدرين:
+
+1. **مقالات البناء الثابت** — تُعرَّف في \`tools/content.mjs\` (حقل \`ideas\`)، وتُدمج وقت البناء.
+2. **مقالات قاعدة البيانات** — يكتبها الدكتور من لوحة التحرير \`/admin\` وتُحفظ في **Cloudflare D1**،
+   فتظهر مباشرة في \`/ideas\` و\`/article\` بلا إعادة بناء.
+
+### الدخول إلى اللوحة
+
+\`\`\`
+https://tfkir.net/admin
+المستخدم الافتراضي: yas      كلمة المرور: 1234
+\`\`\`
+
+عند أول دخول **إلزامي** تغيير اسم المستخدم وكلمة المرور (٨ خانات فأكثر).
+يمكن تغييرهما لاحقًا من زر الإعدادات في الشريط العلوي.
+
+### ما تقدّمه اللوحة
+
+- محرّر نصوص غني: عناوين (H2–H4)، عريض/مائل/تحته خط/يتوسطه خط، نوع الخط وحجمه،
+  لون النص ولون التمييز، المحاذاة، قوائم، مسافات بادئة، روابط وصور، فاصل، إزالة التنسيق، تراجع/إعادة.
+- **حفظ تلقائي (Auto-draft)**: يُحفظ النص محليًا فورًا، وعلى الخادم كل ٣٠٠ حرف أو كل ٢٠ ثانية،
+  وعند مغادرة الصفحة (\`sendBeacon\`) — فلا يضيع شيء لو انقطع الإنترنت أو أُغلق المتصفح.
+- قوائم **المسودات** و**المنشورة** مع بحث وتصفية بالتصنيف.
+- نشر مباشر، أو إرجاع لمسودة، أو حذف نهائي، أو معاينة قبل النشر.
+
+### البنية الخلفية
+
+\`\`\`
+db/schema.sql                 مخطط D1 (مستخدمون · جلسات · مقالات · لقطات حفظ)
+functions/_lib.js             مصادقة، جلسات، تنظيف HTML، slug، التواريخ العربية
+functions/_render.js          بناء بطاقات وصفحات المقالات على الخادم
+functions/api/auth/*          تسجيل الدخول · الخروج · الجلسة · تغيير البيانات
+functions/api/posts/*         إنشاء · تعديل · نشر · حذف · حفظ تلقائي
+functions/article.js          SSR لصفحة المقال (لمحركات البحث)
+functions/ideas.js            SSR لقائمة المقالات
+tools/seed.mjs                تهيئة القاعدة + زرع المستخدم الافتراضي
+\`\`\`
+
+**الأمان**: كلمات المرور بـ PBKDF2-SHA256، الجلسات بكوكي \`HttpOnly; Secure; SameSite=Strict\`
+(يُخزَّن SHA-256 من التوكن فقط)، حماية من التخمين (قفل ١٥ دقيقة بعد ٨ محاولات فاشلة)،
+فحص أصل الطلب لكل عملية كتابة، وتنظيف HTML بقائمة سماح صارمة على الخادم
+(لا \`script\` ولا \`on*\` ولا \`javascript:\` ولا \`iframe\` ولا \`style\` خطرة).
+
+**تغيير بيانات الدخول يدويًا** (نسيت كلمة المرور):
+
+\`\`\`bash
+ADMIN_USERNAME=my-user ADMIN_PASSWORD='NewPass123!' node tools/seed.mjs
+\`\`\`
+
+> عدد تكرارات PBKDF2 = ١٠٠٠٠ (في \`functions/_lib.js\`) لأن دوال Pages على الخطة المجانية
+> تُمنح وقت معالج محدود؛ ارفعه إلى ٢١٠٠٠٠ بعد الترقية إلى خطة مدفوعة.
+
 ## تعديل المحتوى
 
 1. عدّل \`tools/content.mjs\` فقط.
@@ -509,7 +598,10 @@ cp IMG-20251209-WA0052.jpg assets/img/doctor-yasser.jpg
 
 ## ٥) الأفكار — \`ideas\`
 
-٧ مقالات مكتوبة كنماذج. لكل مقالة \`body\` مقسّم إلى أقسام. لإضافة مقالة:
+> **ملاحظة:** حقول المقالات الآن يكتبها الدكتور مباشرة من \`/admin\` وتُحفظ في D1،
+> وتظهر في \`/ideas\` و\`/article\` بلا أي بناء. استخدم \`tools/content.mjs\` فقط
+> للمقالات التي تريد إدراجها ضمن مصدر البناء (مثل المقالات النموذجية).
+> لإضافة مقالة ثابتة:
 
 \`\`\`js
 {
@@ -569,7 +661,17 @@ cp IMG-20251209-WA0052.jpg assets/img/doctor-yasser.jpg
 | \`assets/img/icon-512.png\` | أيقونة PWA | بديل |
 | \`assets/img/apple-touch-icon.png\` | أيقونة iOS | بديل |
 
-## ١٣) SEO
+## ١٣) لوحة التحرير — \`/admin\`
+
+- أول دخول: \`yas\` / \`1234\` ← **إجباري** تغيير اسم المستخدم وكلمة المرور.
+- المقالات في D1 لا تحتاج أي بناء أو رفع بعد كتابتها.
+- لتغيير البيانات يدويًا (نسيت كلمة المرور):
+  \`\`\`bash
+  ADMIN_USERNAME=my-user ADMIN_PASSWORD='NewPass123!' node tools/seed.mjs
+  \`\`\`
+- عند تعديل المخطط في \`db/schema.sql\` نفّذ \`node tools/seed.mjs\` (آمن، يُطبّق \`IF NOT EXISTS\`).
+
+## ١٤) SEO
 
 - \`site.origin\` — اضبطه إن تغيّر الدومين.
 - \`sitemap.xml\` و\`feed.xml\` — تُولَّدان تلقائيًا من المحتوى.
