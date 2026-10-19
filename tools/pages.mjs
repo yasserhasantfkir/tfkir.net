@@ -117,13 +117,9 @@ export function homePage() {
           نظريات ومنهجيات، ودورات في الطب والمنطق والحوار والحِجاج
           واللغة والنهضة والتحقيق والابتكار والتجديد يجمعها خيط واحد إذ يبدأ كل ميدان
           منها بسؤال جوهري ثلاثي الأضلاع يمثل روح التفكير النهضوي الذي نشتغل عليه
-          حاليًا، وهذا السؤال هو:
+          حاليًا، وهذا السؤال هو: 1- كيف نفكر في هذا الميدان، 2- كيف نستثمره،
+          3- كيف ننقله للآخرين.
         </p>
-        <ol class="field-list">
-          <li>كيف نفكر في هذا الميدان</li>
-          <li>كيف نستثمره</li>
-          <li>كيف ننقله للآخرين</li>
-        </ol>
         <div class="hero__cta" style="margin-top:1.8rem">
           <a class="btn btn--primary" href="/thinking">${icon("compass")}<span data-i18n="intro.cta1">ابدأ من الميادين</span></a>
           <a class="btn btn--ghost" href="/contact">${icon("message")}<span data-i18n="intro.cta2">تواصل</span></a>
