@@ -28,6 +28,23 @@ const write = (rel, content) => {
   return rel;
 };
 
+/* بصمة النسخة: تتغيّر مع أي تعديل في الأدوات أو الأصول — تخدم التحديث التلقائي */
+const SITE_VERSION = (() => {
+  const hash = createHash("sha1");
+  const walk = (dir) => {
+    const abs = path.join(ROOT, dir);
+    if (!fs.existsSync(abs)) return;
+    for (const ent of fs.readdirSync(abs, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+      const rel = `${dir}/${ent.name}`;
+      if (ent.isDirectory()) walk(rel);
+      else hash.update(rel).update(fs.readFileSync(path.join(ROOT, rel)));
+    }
+  };
+  walk("tools");
+  walk("assets");
+  return hash.digest("hex").slice(0, 12);
+})();
+
 /* بصمة محتوى لكل ملف ثابت: تكسر كاش المتصفح وCloudflare عند كل تغيير */
 const assetHash = (absUrl) => {
   const p = path.join(ROOT, absUrl.replace(/^\//, "").split("?")[0]);
@@ -35,7 +52,10 @@ const assetHash = (absUrl) => {
   return createHash("sha1").update(fs.readFileSync(p)).digest("hex").slice(0, 8);
 };
 const versionAssets = (html) =>
-  html.replace(/(\/assets\/(?:css|js)\/[\w.-]+\.(?:css|js))"/g, (m, url) => `${url}?v=${assetHash(url)}"`);
+  html.replace(
+    /(\/(?:assets\/(?:css\/[\w.-]+\.css|js\/[\w.-]+\.js|img\/[\w.-]+\.(?:png|jpe?g|webp|svg|ico|avif))|favicon\.svg))(?=")/g,
+    (m, url) => `${url}?v=${assetHash(url)}`
+  );
 
 const log = [];
 const done = (rel) => log.push(rel);
@@ -56,7 +76,10 @@ const stripI18nAttrs = (html) => html.replace(/\s+data-i18n(?:-placeholder)?="[^
 
 const emitPage = (file, rawHtml, urlPath) => {
   /* توحيد الروابط (إزالة .html) قبل أي معالجة، حتى تنجح تثبيت البادئة */
-  const html = cleanUrls(rawHtml);
+  const html = cleanUrls(rawHtml).replace(
+    '<meta charset="utf-8">',
+    `<meta charset="utf-8">\n<meta name="site-version" content="${SITE_VERSION}">`
+  );
   /* النسخة العربية: بلا معالجة شجرية — نفس المخرجات السابقة */
   let ar = stripI18nAttrs(html);
   ar = fillSwitcher(ar, "ar", urlPath, site.origin);
@@ -129,6 +152,9 @@ window.TFKIR_IDEAS = ${JSON.stringify(
 `
   )
 );
+
+/* ---------------- version.json — النسخة الحيّة (يتحقق منها app.js) ---------------- */
+done(write("version.json", JSON.stringify({ v: SITE_VERSION })));
 
 /* ---------------- robots.txt ---------------- */
 done(
@@ -260,6 +286,9 @@ done(
 /api/*
   Cache-Control: no-store
   X-Robots-Tag: noindex
+
+/version.json
+  Cache-Control: no-store
 
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
@@ -395,6 +424,12 @@ npm run build
 - النطاق: \`tfkir.net\` مربوط بالمشروع
 - أمر البناء: **فارغ** (المخرجات جاهزة في الجذر)
 - مجلد الإخراج: \`/\`
+
+## التحديث التلقائي بعد النشر
+
+- صفحات HTML تُقدَّم بـ \`Cache-Control: max-age=0, must-revalidate\` — كل زيارة تتحقق من النسخة الجديدة.
+- الأصول (CSS/JS/الصور/الأيقونات) تُحمَّل ببصمة \`?v=<hash>\` فلا تختلط نسخة قديمة بأخرى جديدة في المتصفح.
+- \`version.json\` (بلا تخزين) + فحص دوري في \`app.js\`: إذا كانت الصفحة مفتوحة ونُشرت نسخة جديدة تُعاد تحميلها تلقائيًا، ويتأجّل التحديث مؤقتًا إن كان الزائر يكتب في حقل نصي.
 
 ## نموذج التواصل
 

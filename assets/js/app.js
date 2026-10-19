@@ -602,6 +602,51 @@
   }
 
   /* ---------------------------------------------------------
+     13) التحديث التلقائي: إن نُشرت نسخة جديدة تُعرض فورًا
+     --------------------------------------------------------- */
+  function initAutoUpdate() {
+    var meta = $('meta[name="site-version"]');
+    if (!meta || !window.fetch) return;
+    var current = meta.getAttribute("content");
+    if (!current) return;
+    var checking = false;
+
+    function typing() {
+      return $$("input, textarea").some(function (el) {
+        var t = (el.getAttribute("type") || "text").toLowerCase();
+        if (t === "checkbox" || t === "radio" || t === "hidden" || t === "submit" || t === "button") return false;
+        return String(el.value || "").trim() !== "";
+      });
+    }
+
+    function apply(version) {
+      try {
+        if (sessionStorage.getItem("tfkir-updated") === version) return;
+        sessionStorage.setItem("tfkir-updated", version);
+      } catch (e) {}
+      window.location.reload();
+    }
+
+    function check() {
+      if (checking || document.visibilityState === "hidden" || typing()) return;
+      checking = true;
+      fetch("/version.json?ts=" + Date.now(), { cache: "no-store" })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) {
+          checking = false;
+          if (d && d.v && d.v !== current) apply(d.v);
+        })
+        .catch(function () { checking = false; });
+    }
+
+    setInterval(check, 60000);
+    document.addEventListener("visibilitychange", check);
+    window.addEventListener("focus", check);
+    window.addEventListener("pageshow", function (e) { if (e.persisted) check(); });
+    setTimeout(check, 4000);
+  }
+
+  /* ---------------------------------------------------------
      boot
      --------------------------------------------------------- */
   function boot() {
@@ -617,6 +662,7 @@
     initContactForm();
     initArticle();
     initYear();
+    initAutoUpdate();
     document.documentElement.classList.add("js-ready");
   }
 
