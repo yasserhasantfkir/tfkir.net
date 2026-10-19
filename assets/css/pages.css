@@ -122,11 +122,46 @@
     grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
     grid-template-areas:
       "text    portrait"
-      "actions portrait";
+      "actions portrait"
+      "actions note";
   }
   .hero__text { grid-area: text; }
   .hero__portrait { grid-area: portrait; }
+  .hero__note { grid-area: note; }
   .hero__grid-actions { grid-area: actions; }
+}
+
+/* ---------- فلسفة المنصة: مباشرة تحت صورة الدكتور ---------- */
+.hero__note {
+  align-self: start;
+  text-align: center;
+  padding-top: 0.3rem;
+}
+.hero__note-title {
+  position: relative;
+  padding-top: 1.1rem;
+  font-family: var(--font-display);
+  font-size: var(--fs-h4);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.hero__note-title::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 28%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--teal-400), transparent);
+  opacity: 0.6;
+}
+.hero__note-text {
+  margin-top: 0.7rem;
+  color: var(--muted);
+  font-size: var(--fs-small);
+  line-height: 1.95;
+  max-width: 36ch;
+  margin-inline: auto;
+  text-wrap: pretty;
 }
 
 .hero__title {
@@ -392,10 +427,11 @@
   .hero__text > .kicker { order: 1; }
   .hero__title { order: 2; }
   .hero__role { order: 3; }
-  .hero__portrait { order: 4; width: min(76%, 300px); }
+  .hero__portrait { order: 4; width: min(76%, 300px); margin-inline: auto; }
   .hero__role .tag { white-space: normal; text-align: start; }
-  .hero__lead { order: 5; }
-  .hero__grid-actions { order: 6; margin-top: 0; }
+  .hero__note { order: 5; width: min(100%, 34rem); margin-inline: auto; }
+  .hero__lead { order: 6; }
+  .hero__grid-actions { order: 7; margin-top: 0; }
 }
 
 /* ---------- Marquee ---------- */
