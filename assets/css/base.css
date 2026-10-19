@@ -166,6 +166,45 @@
 .reason__step,
 .field__label { letter-spacing: normal; text-transform: none; }
 
+/* ---------- خط الإضاءة أعلى البطاقات ----------
+   شريط رفيع يتلاشى عند الطرفين (فلا يخرج عن استدارة الزوايا)
+   مع توهّج خفيف تحته — التوقيع البصري الموحّد للبطاقات. */
+.card,
+.adm-card,
+.pv { position: relative; isolation: isolate; }
+.card::before,
+.adm-card::before,
+.pv::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--teal-400) 30%, var(--brass-400) 70%, transparent 100%);
+  opacity: 0.4;
+  pointer-events: none;
+  transition: opacity 0.45s var(--ease), inset-inline 0.45s var(--ease);
+}
+.card::after,
+.adm-card::after {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 26%;
+  height: 30px;
+  background: radial-gradient(58% 100% at 50% 0%, var(--teal-a14), transparent 72%);
+  pointer-events: none;
+  opacity: 0.7;
+  transition: opacity 0.45s var(--ease);
+}
+.card:hover::before,
+.adm-card:hover::before,
+.adm-card:focus-within::before,
+.pv:hover::before { opacity: 1; inset-inline: 6%; }
+.card:hover::after,
+.adm-card:hover::after,
+.adm-card:focus-within::after { opacity: 1; }
+
 /* ---------- Reset ---------- */
 *,
 *::before,

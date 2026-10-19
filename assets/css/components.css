@@ -332,22 +332,11 @@
   background: linear-gradient(165deg, #fff, rgba(255, 255, 255, 0.6));
   box-shadow: var(--sh-sm);
 }
-.card::before {
-  content: "";
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline: 0;
-  height: 1px;
-  background: var(--grad-brand);
-  opacity: 0;
-  transition: opacity 0.45s var(--ease);
-}
 .card:hover {
   transform: translateY(-6px);
   border-color: var(--teal-a30);
   box-shadow: var(--sh-lg);
 }
-.card:hover::before { opacity: 1; }
 .card > * + * { margin-top: 0.75rem; }
 .card__icon {
   width: 46px; height: 46px;

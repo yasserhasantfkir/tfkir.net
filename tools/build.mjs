@@ -737,6 +737,7 @@ done(
         scripts: {
           build: "node tools/build.mjs",
           verify: "node tools/verify.mjs",
+          smoke: "node tools/smoke.mjs",
           dev: "node tools/serve.mjs",
           watch: "node tools/build.mjs --watch",
         },

@@ -197,6 +197,17 @@ if (!exists("admin.html")) {
   if (aOpens !== aCloses) errors.push(`${atag}: وسوم كتلية غير متوازنة (${aOpens}/${aCloses})`);
 }
 
+/* ---- دخان جافاسكربت: يشغّل app.js و admin.js على DOM وهمي ---- */
+{
+  const { execFileSync } = await import("node:child_process");
+  try {
+    execFileSync(process.execPath, [path.join(ROOT, "tools/smoke.mjs")], { stdio: "pipe" });
+  } catch (e) {
+    const out = `${e.stdout || ""}${e.stderr || ""}`.trim();
+    errors.push(`اختبار الدخان فشل:\n     ${out.split("\n").join("\n     ")}`);
+  }
+}
+
 /* ---- _routes.json ---- */
 if (!exists("_routes.json")) {
   warnings.push("_routes.json مفقود — كل طلبات الصفحات ستستدعي الدوال");

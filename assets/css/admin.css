@@ -92,29 +92,26 @@ body.adm-editing { overflow: hidden; }
   padding: clamp(1.35rem, 1rem + 1.2vw, 2rem);
   box-shadow: var(--sh-md);
 }
-/* الشعاع العلوي المتدرّج — نفس توقيع .card في الموقع */
-.adm-card::before {
-  content: "";
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline: 0;
-  height: 1px;
-  background: var(--grad-brand);
-  opacity: 0.5;
-  pointer-events: none;
-}
 [data-theme="light"] .adm-card {
   background: linear-gradient(165deg, #fff, rgba(255, 255, 255, 0.72));
   border-color: var(--line-strong);
   box-shadow: var(--sh-sm);
 }
-.adm-card--auth { width: min(100%, 480px); text-align: start; }
-.adm-h1 { font-size: var(--fs-h1); margin-top: 0.7rem; line-height: 1.3; }
-.adm-h2 { font-size: var(--fs-h3); }
-.adm-sub { color: var(--muted); margin-top: 0.6rem; line-height: 1.95; }
+.adm-card--auth { width: min(100%, 440px); text-align: start; padding-block: clamp(1.75rem, 1.3rem + 2vw, 2.5rem); }
+.adm-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 1.25rem + 0.9vw, 1.9rem);
+  margin-top: 0.85rem;
+  line-height: 1.35;
+}
+.adm-h2 { font-family: var(--font-display); font-size: var(--fs-h3); line-height: 1.35; }
+.adm-sub { color: var(--muted); margin-top: 0.7rem; line-height: 1.9; font-size: var(--fs-small); }
+
+/* بطاقة الدخول: توازن رأسي أفضل داخل اللوحة */
+.adm-view--center { min-height: 78dvh; padding-block: clamp(1.5rem, 1rem + 3vw, 3rem); }
 
 /* ---------- النماذج ---------- */
-.adm-form { margin-top: 1.6rem; display: grid; gap: 1rem; }
+.adm-form { margin-top: clamp(1.35rem, 1rem + 1.2vw, 1.85rem); display: grid; gap: 0.95rem; }
 .adm-field { display: grid; gap: 0.5rem; }
 .adm-field[data-invalid="true"] .adm-hint { color: #ff9d97; }
 [data-theme="light"] .adm-field[data-invalid="true"] .adm-hint { color: #b3251c; }
@@ -165,7 +162,7 @@ body.adm-editing { overflow: hidden; }
   box-shadow: 0 0 0 3px var(--teal-a14);
 }
 .adm-input::placeholder { color: var(--faint); }
-.adm-row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+.adm-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.35rem; }
 .adm-alert {
   padding: 0.7rem 0.9rem;
   border-radius: var(--r-sm);

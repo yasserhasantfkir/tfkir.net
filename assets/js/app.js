@@ -34,6 +34,7 @@
     var header = $("#site-header");
     var bar = $("#scroll-progress");
     var toTop = $("#to-top");
+    var root = document.documentElement;
     if (!header) return;
     var last = -1;
 

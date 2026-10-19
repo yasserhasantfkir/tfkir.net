@@ -775,6 +775,7 @@
 /* ---------- Projects ---------- */
 .proj {
   position: relative;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   padding: 1.5rem 1.5rem 1.6rem;
@@ -789,6 +790,18 @@
   background: #fff;
   box-shadow: var(--sh-sm);
 }
+.proj::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--teal-400) 30%, var(--brass-400) 70%, transparent 100%);
+  opacity: 0.35;
+  pointer-events: none;
+  transition: opacity 0.45s var(--ease), inset-inline 0.45s var(--ease);
+}
+.proj:hover::before { opacity: 1; inset-inline: 6%; }
 .proj:hover { transform: translateY(-6px); border-color: var(--teal-a30); box-shadow: var(--sh-lg); }
 .proj__top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
 .proj__thumb {
@@ -1012,7 +1025,7 @@
   -webkit-mask-image: radial-gradient(circle at 50% 50%, #000, transparent 74%);
   opacity: 0.7;
 }
-.cta-band__title { font-size: clamp(1.6rem, 1.15rem + 2.2vw, 2.9rem); }
+.cta-band__title { font-size: var(--fs-h2); }
 .cta-band__text { margin: 0.9rem auto 0; max-width: 56ch; color: var(--text-soft); }
 .cta-band__actions {
   margin-top: 1.9rem;
