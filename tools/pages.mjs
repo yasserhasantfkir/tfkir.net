@@ -86,12 +86,14 @@ export function homePage() {
     <div class="grid grid--2" style="gap:clamp(1.5rem,1rem+3vw,3.5rem);align-items:start">
       <div>
         <span class="chip-num" data-i18n="intro.chip">01 — عن المنصة</span>
-        <h2 style="margin-top:1rem" data-i18n="intro.title">${esc(D.title)}</h2>
+        <h2 style="margin-top:1rem" data-i18n="intro.title">فلسفة المنصة</h2>
         <p class="lead" style="margin-top:1.1rem" data-i18n="intro.lead">${leadHtml()}</p>
         <p style="margin-top:1rem;color:var(--muted)">
-          هذه منصة فكرية وتدريبية: نظريات ومنهجيات ودورات في الطب والمنطق والحِجاج
-          واللغة والنهضة والتحقيق والتجديد — يجمعها خيط واحد. كل ميدان يبدأ من
-          سؤال واحد: كيف نفكّر فيه؟
+          ميادين المنصة، نظريات ومنهجيات، ودورات في الطب والمنطق والحوار والحِجاج
+          واللغة والنهضة والتحقيق والابتكار والتجديد يجمعها خيط واحد إذ يبدأ كل ميدان
+          منها بسؤال جوهري ثلاثي الأضلاع يمثل روح التفكير النهضوي الذي نشتغل عليه
+          حاليًا وهذا السؤال هو: كيف نفكر في هذا الميدان وكيف نستثمره وكيف ننقله
+          للآخرين.
         </p>
         <div class="hero__cta" style="margin-top:1.8rem">
           <a class="btn btn--primary" href="/thinking">${icon("compass")}<span data-i18n="intro.cta1">ابدأ من الميادين</span></a>
