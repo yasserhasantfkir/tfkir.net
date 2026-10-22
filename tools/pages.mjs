@@ -2,7 +2,7 @@
    tools/pages.mjs — بناء صفحات الموقع
    ============================================================ */
 import {
-  site, doctor, marquee, domains,
+  site, doctor, marquee, domains, standaloneFields,
   timeline, ideas, ideaCategories, projects, projectFilters, talks, talkTypes,
   linkGroups,
 } from "./content.mjs";
@@ -37,6 +37,29 @@ const articleHref = (slug) => `/article?id=${encodeURIComponent(slug)}`;
 
 /* الوصف التعريفي: كل جملة في سطر مستقل */
 const leadHtml = (d = D) => d.leadLines.map((l) => esc(l)).join("<br>\n        ");
+
+const standaloneFieldSection = () => {
+  const cards = standaloneFields
+    .map(
+      (d) => `<div class="card" data-reveal>
+            <span class="card__icon">${icon("pen")}</span>
+            <h2 class="card__title">${esc(d.t)}</h2>
+            <p class="card__text">${esc(d.p)}</p>
+          </div>`
+    )
+    .join("\n          ");
+
+  return `<section class="section section--tight" id="standalone-fields">
+  <div class="shell">
+    <div class="sect-head" style="margin-bottom:1.2rem">
+      <span class="kicker" data-reveal>${icon("layers")} <span>حقل مستقل</span></span>
+    </div>
+    <div class="grid" style="grid-template-columns:minmax(0,1fr);max-width:760px;margin-inline:auto">
+          ${cards}
+    </div>
+  </div>
+</section>`;
+};
 
 /* ============================================================
    1) الرئيسية
@@ -114,11 +137,10 @@ export function homePage() {
         <span class="chip-num" data-i18n="intro.chip">01 — ميادين المنصة</span>
         <h2 style="margin-top:1rem" data-i18n="intro.title">ميادين المنصة</h2>
         <p class="lead" style="margin-top:1.1rem;color:var(--muted)">
-          نظريات ومنهجيات، ودورات في الطب والمنطق والحوار والحِجاج
-          واللغة والنهضة والتحقيق والابتكار والتجديد يجمعها خيط واحد إذ يبدأ كل ميدان
-          منها بسؤال جوهري ثلاثي الأضلاع يمثل روح التفكير النهضوي الذي نشتغل عليه
-          حاليًا، وهذا السؤال هو: 1- كيف نفكر في هذا الميدان، 2- كيف نستثمره،
-          3- كيف ننقله للآخرين.
+          نظريات ومنهجيات ودورات في الطب والمنطق والحوار والحجاج واللغة والنهضة
+          والتحقيق والابتكار والتجديد، يجمعها خيط واحد وروح التفكير النهضوي: كل ميدان
+          يبدأ بسؤال واحد مكتوب مسبقًا، ثم تكتمل أضلاعه في مثلث الأضلاع: كيف نفكر فيه،
+          وكيف نستثمره، وكيف ننقله إلى الآخرين.
         </p>
         <div class="hero__cta" style="margin-top:1.8rem">
           <a class="btn btn--primary" href="/thinking">${icon("compass")}<span data-i18n="intro.cta1">ابدأ من الميادين</span></a>
@@ -138,13 +160,13 @@ export function homePage() {
         <div class="card" data-reveal="left" style="--d:110ms">
           <span class="card__icon">${icon("checkCircle")}</span>
           <h3 class="card__title">${esc(D.availability)}</h3>
-          <p class="card__text">لطلبات الدورات والحوارات والتعاون الفكري.</p>
+          <p class="card__text">لطلبات الدورات والحوارات والتعاون الفكري والنهضوي التجديدي والابتكاري.</p>
           <div class="card__foot"><a class="tlink" href="/contact">قدّم طلبك${icon("arrowLeft", "btn__arrow")}</a></div>
         </div>
         <div class="card" data-reveal="left" style="--d:200ms">
           <span class="card__icon">${icon("phone")}</span>
-          <h3 class="card__title">${esc(D.phone)}</h3>
-          <p class="card__text">هاتف / واتساب.</p>
+          <h3 class="card__title">هاتف واتساب فريق المنصة</h3>
+          <p class="card__text"><span class="latin">${esc(D.phone)}</span> — هذا الرقم خاص بفريق المنصة، وليس رقمًا شخصيًا.</p>
           <div class="card__foot">
             <a class="tlink" href="${esc(D.socials.whatsapp)}" target="_blank" rel="noopener">${icon("whatsapp")}فتح واتساب</a>
           </div>
@@ -160,13 +182,15 @@ export function homePage() {
     <div class="sect-head sect-head--center">
       <span class="kicker" data-reveal>${icon("compass")} <span data-i18n="domains.kicker">الميادين</span></span>
       <h2 style="margin-top:.9rem" data-reveal data-i18n="domains.title">ستة ميادين، <span class="gradient-text">خيطٌ واحد</span></h2>
-      <p class="lead" data-reveal style="--d:120ms" data-i18n="domains.lead">كل ميدان يبدأ من سؤال واحد: كيف نفكّر فيه؟</p>
+      <p class="lead" data-reveal style="--d:120ms" data-i18n="domains.lead">كل ميدان يبدأ من سؤال واحد مكتوب مسبقًا، ثم يكتمل بمثلث الأضلاع: كيف نفكّر فيه، وكيف نستثمره، وكيف ننقله إلى الآخرين.</p>
     </div>
     <div class="grid grid--3">
           ${domainCards}
     </div>
   </div>
 </section>
+
+${standaloneFieldSection()}
 
 <!-- ===================== شريط المقالات المتحرك ===================== -->
 <section class="section" id="articles-rail" data-rail hidden>
@@ -351,6 +375,8 @@ export function thinkingPage() {
     </div>
   </div>
 </section>
+
+${standaloneFieldSection()}
 
 ${ctaBand({
   title: "لديك فكرة أو طلب؟",
