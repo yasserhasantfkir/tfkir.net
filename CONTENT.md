@@ -108,7 +108,10 @@ cp IMG-20251209-WA0052.jpg assets/img/doctor-yasser.jpg
 | `assets/img/og-cover.png` | صورة المشاركة ١٢٠٠×٦٣٠ | بديل |
 | `assets/img/icon-192.png` | أيقونة PWA | بديل |
 | `assets/img/icon-512.png` | أيقونة PWA | بديل |
+| `assets/img/icon-maskable-512.png` | أيقونة PWA مقنّعة | بديل |
+| `assets/img/favicon-32.png` | أيقونة المتصفح | بديل |
 | `assets/img/apple-touch-icon.png` | أيقونة iOS | بديل |
+| `assets/img/icon-source.png` | المصدر الأصلي للأيقونة | بديل |
 
 ## ١٣) لوحة التحرير — `/admin`
 

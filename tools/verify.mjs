@@ -171,7 +171,7 @@ for (const lang of LANGS) for (const p of PAGES) {
   }
 }
 const urls = [...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].length;
-if (urls !== 33) warnings.push(`sitemap.xml: ${urls} رابطًا (المتوقع 33)`);
+if (urls !== 36) warnings.push(`sitemap.xml: ${urls} رابطًا (المتوقع 36)`);
 if (!exists("feed.xml")) errors.push("feed.xml مفقود");
 if (!exists("_headers")) errors.push("_headers مفقود");
 if (!exists("_redirects")) warnings.push("_redirects مفقود");

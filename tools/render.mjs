@@ -76,7 +76,8 @@ ${noIndex ? '<meta name="robots" content="noindex, follow">' : '<meta name="robo
 <meta name="twitter:description" content="${esc(desc)}">
 <meta name="twitter:image" content="${esc(img)}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+<link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png" sizes="180x180">
 <link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="${esc(site.shortName)} — الأفكار" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -244,6 +245,11 @@ ${p.body}
 </main>
 
 ${siteFooter()}
+
+<a class="now-bubble" href="/now" aria-label="الآن — سحابة التفكير">
+  <span class="now-bubble__dot" aria-hidden="true"></span>
+  <span class="now-bubble__text">الآن</span>
+</a>
 
 ${p.scripts || ""}
 <script src="/assets/js/app.js" defer></script>

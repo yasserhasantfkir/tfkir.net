@@ -2,7 +2,7 @@
    tools/pages.mjs — بناء صفحات الموقع
    ============================================================ */
 import {
-  site, doctor, marquee, domains, standaloneFields,
+  site, doctor, marquee, domains, standaloneFields, now,
   timeline, ideas, ideaCategories, projects, projectFilters, talks, talkTypes,
   linkGroups,
 } from "./content.mjs";
@@ -1203,4 +1203,68 @@ export function privacyPage() {
     desc: "سياسة خصوصية موقع tfkir.net: البيانات المرسلة عبر نموذج التواصل، وملفات الارتباط، والخطوط الخارجية.",
     body,
   });
+}
+
+/* ============================================================
+   الآن — طبقة خدمية مؤقتة (Ephemeral Layer)
+   ============================================================ */
+export function nowPage() {
+  const itemCards = (now.items || [])
+    .map((item, i) => {
+      const countdown = item.until
+        ? `<div class="now-countdown" data-until="${esc(item.until)}" aria-live="polite">...</div>`
+        : "";
+      return `<article class="card card--now" data-reveal style="--d:${i * 60}ms">
+            <span class="card__icon">${icon("spark")}</span>
+            <h3 class="card__title">${esc(item.title)}</h3>
+            <p class="card__text">${esc(item.desc)}</p>
+            <div class="card__foot now-card__foot">
+              <span class="tag tag--brass">${esc(item.badge)}</span>
+              ${countdown}
+              <a class="btn btn--primary btn--sm" href="${esc(item.href)}">التفاصيل${icon("arrowLeft", "btn__arrow")}</a>
+            </div>
+          </article>`;
+    })
+    .join("\n          ");
+
+  const body = `${pageHero({ kicker: now.kicker, title: now.title, lead: now.lead, crumbs: [{ label: "الرئيسية", href: "/" }, { label: "الآن", href: "/now" }] })}
+
+<section class="section section--tight">
+  <div class="shell">
+    ${
+      (now.items || []).length
+        ? `<div class="grid grid--3">
+            ${itemCards}
+          </div>`
+        : `<div class="empty-note empty-note--tall">
+            <p class="empty-note__t">${esc(now.emptyTitle)}</p>
+            <p class="empty-note__d">${esc(now.emptyDesc)}</p>
+          </div>`
+    }
+  </div>
+</section>
+
+${ctaBand({ title: "هل لديك طلب خدمة؟", text: "تواصل مع فريق المنصة للاستفسار عن الخدمات المؤقتة.", primary: { href: "/contact", label: "تواصل" }, secondary: { href: "/links", label: "كل الروابط" } })}`;
+
+  const scripts = (now.items || []).some((i) => i.until)
+    ? `<script>
+(function () {
+  document.querySelectorAll(".now-countdown").forEach((el) => {
+    const until = new Date(el.dataset.until).getTime();
+    const tick = () => {
+      const diff = until - Date.now();
+      if (diff <= 0) { el.textContent = "انتهى"; return; }
+      const d = Math.floor(diff / 86400000);
+      const h = Math.floor(diff / 3600000) % 24;
+      const m = Math.floor(diff / 60000) % 60;
+      el.textContent = d + " يوم " + h + " ساعة " + m + " دقيقة";
+    };
+    tick();
+    setInterval(tick, 60000);
+  });
+})();
+</script>`
+    : "";
+
+  return layout({ title: now.title, desc: now.lead, path: "/now", body, scripts });
 }

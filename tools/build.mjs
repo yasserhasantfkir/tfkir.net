@@ -125,6 +125,7 @@ const PAGES = [
   ["thank-you.html", P.thankYouPage(), "/thank-you"],
   ["404.html", P.notFoundPage(), "/404"],
   ["privacy.html", P.privacyPage(), "/privacy"],
+  ["now.html", P.nowPage(), "/now"],
 ];
 for (const [file, html, urlPath] of PAGES) emitPage(file, html, urlPath);
 
@@ -234,6 +235,7 @@ const statics = [
   { loc: "/links", pri: "0.6", freq: "monthly" },
   { loc: "/contact", pri: "0.7", freq: "yearly" },
   { loc: "/privacy", pri: "0.3", freq: "yearly" },
+  { loc: "/now", pri: "0.5", freq: "weekly" },
 ];
 const articleUrls = ideas.map((i) => ({ loc: `/article?id=${encodeURIComponent(i.slug)}`, pri: "0.7", freq: "monthly", mod: i.date }));
 const allStatics = [...statics, ...articleUrls];
@@ -406,9 +408,9 @@ done(
         background_color: site.themeColor,
         theme_color: site.themeColor,
         icons: [
-          { src: "/favicon.svg", sizes: "any", type: "image/svg+xml", purpose: "any" },
-          { src: "/assets/img/icon-192.png", sizes: "192x192", type: "image/png", purpose: "maskable" },
-          { src: "/assets/img/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+          { src: `/assets/img/icon-192.png?v=${assetHash("/assets/img/icon-192.png")}`, sizes: "192x192", type: "image/png", purpose: "any" },
+          { src: `/assets/img/icon-512.png?v=${assetHash("/assets/img/icon-512.png")}`, sizes: "512x512", type: "image/png", purpose: "any" },
+          { src: `/assets/img/icon-maskable-512.png?v=${assetHash("/assets/img/icon-maskable-512.png")}`, sizes: "512x512", type: "image/png", purpose: "maskable" },
         ],
         shortcuts: nav.slice(1, 4).map((n) => ({ name: n.label, url: n.href })),
       },
@@ -666,7 +668,10 @@ cp IMG-20251209-WA0052.jpg assets/img/doctor-yasser.jpg
 | \`assets/img/og-cover.png\` | صورة المشاركة ١٢٠٠×٦٣٠ | بديل |
 | \`assets/img/icon-192.png\` | أيقونة PWA | بديل |
 | \`assets/img/icon-512.png\` | أيقونة PWA | بديل |
+| \`assets/img/icon-maskable-512.png\` | أيقونة PWA مقنّعة | بديل |
+| \`assets/img/favicon-32.png\` | أيقونة المتصفح | بديل |
 | \`assets/img/apple-touch-icon.png\` | أيقونة iOS | بديل |
+| \`assets/img/icon-source.png\` | المصدر الأصلي للأيقونة | بديل |
 
 ## ١٣) لوحة التحرير — \`/admin\`
 

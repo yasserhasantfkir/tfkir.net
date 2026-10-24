@@ -267,7 +267,7 @@ export function applyDict(html, dict, stats) {
 }
 
 /* ---------- الروابط والرأس ---------- */
-const PAGE_PATHS = ["about", "thinking", "ideas", "article", "projects", "talks", "links", "contact", "thank-you", "privacy", "404"];
+const PAGE_PATHS = ["about", "thinking", "ideas", "article", "projects", "talks", "links", "contact", "thank-you", "privacy", "404", "now"];
 const SKIP_PREFIX = ["/assets/", "/api/", "/functions/", "/admin"];
 const SKIP_FILE = /\.(xml|txt|webmanifest|svg|png|jpe?g|webp|ico|css|js)(\?|$)/;
 

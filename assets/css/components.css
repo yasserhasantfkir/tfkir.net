@@ -801,3 +801,57 @@
   .site-header__bar { gap: 0.55rem; }
   .brand__sub { display: none; }
 }
+
+/* ---------- Now bubble (ephemeral layer entry) ---------- */
+.now-bubble {
+  position: fixed;
+  inset-inline-end: 1.1rem;
+  bottom: calc(1.1rem + env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.55rem 0.95rem 0.55rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--teal-a30);
+  background: color-mix(in srgb, var(--ink-700) 88%, transparent);
+  backdrop-filter: blur(14px);
+  color: var(--text);
+  box-shadow: 0 12px 30px -12px var(--teal-a50), var(--sh-md);
+  text-decoration: none;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  transition: transform 0.3s var(--ease-out), border-color 0.3s, box-shadow 0.3s;
+  animation: now-bubble-pulse 2.6s ease-in-out infinite;
+}
+.now-bubble:hover {
+  transform: translateY(-3px);
+  border-color: var(--teal-400);
+  box-shadow: 0 16px 34px -12px var(--teal-a60), var(--sh-lg);
+}
+.now-bubble__dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--teal-400);
+  box-shadow: 0 0 0 0 var(--teal-a50);
+  animation: now-bubble-dot 1.8s ease-out infinite;
+}
+.now-bubble__text { letter-spacing: 0.02em; }
+@keyframes now-bubble-pulse {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+@keyframes now-bubble-dot {
+  0% { box-shadow: 0 0 0 0 var(--teal-a60); }
+  70% { box-shadow: 0 0 0 8px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@media (max-width: 480px) {
+  .now-bubble { padding: 0.45rem 0.8rem; font-size: var(--fs-xs); }
+}
+
+/* ---------- Now cards ---------- */
+.card--now { border-color: var(--teal-a20); }
+.card--now:hover { border-color: var(--teal-a40); }
+.now-card__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; margin-top: auto; padding-top: 1rem; }
+.now-countdown { font-family: var(--font-latin); font-size: var(--fs-xs); color: var(--brass-300); padding: 0.25rem 0.6rem; border: 1px solid var(--brass-500); border-radius: 999px; }

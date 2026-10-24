@@ -331,4 +331,34 @@
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  <url>
+    <loc>https://tfkir.net/now</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://tfkir.net/now"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tfkir.net/tr/now"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tfkir.net/en/now"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tfkir.net/now"/>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://tfkir.net/tr/now</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://tfkir.net/now"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tfkir.net/tr/now"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tfkir.net/en/now"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tfkir.net/now"/>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://tfkir.net/en/now</loc>
+    <xhtml:link rel="alternate" hreflang="ar" href="https://tfkir.net/now"/>
+    <xhtml:link rel="alternate" hreflang="tr" href="https://tfkir.net/tr/now"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://tfkir.net/en/now"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://tfkir.net/now"/>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>
