@@ -10,7 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const PAGES = ["index", "about", "thinking", "ideas", "article", "projects", "talks", "links", "contact", "thank-you", "404", "privacy"];
+const PAGES = ["index", "about", "thinking", "ideas", "article", "projects", "talks", "links", "contact", "thank-you", "404", "privacy", "now"];
 const LANGS = ["ar", "tr", "en"];
 const HAS_AR = /[\u0600-\u06FF]/;
 const errors = [];

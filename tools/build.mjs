@@ -412,7 +412,7 @@ done(
           { src: `/assets/img/icon-512.png?v=${assetHash("/assets/img/icon-512.png")}`, sizes: "512x512", type: "image/png", purpose: "any" },
           { src: `/assets/img/icon-maskable-512.png?v=${assetHash("/assets/img/icon-maskable-512.png")}`, sizes: "512x512", type: "image/png", purpose: "maskable" },
         ],
-        shortcuts: nav.slice(1, 4).map((n) => ({ name: n.label, url: n.href })),
+        shortcuts: nav.slice(1, 4).map((n) => ({ name: n.label, url: n.href.replace(/\.html$/, "") })),
       },
       null,
       2

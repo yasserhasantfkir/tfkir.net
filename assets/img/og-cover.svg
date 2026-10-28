@@ -1,22 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="tfkir.net — الدكتور ياسر حسن">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#070b10"/>
-      <stop offset=".55" stop-color="#0a1119"/>
-      <stop offset="1" stop-color="#0d1620"/>
+      <stop offset="0" stop-color="#080D13"/>
+      <stop offset=".55" stop-color="#121B2D"/>
+      <stop offset="1" stop-color="#0B1530"/>
     </linearGradient>
     <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#34d0b8"/>
-      <stop offset=".45" stop-color="#7fd7e8"/>
-      <stop offset="1" stop-color="#d9b96a"/>
+      <stop offset="0" stop-color="#4C7DFF"/>
+      <stop offset=".45" stop-color="#93b4ff"/>
+      <stop offset="1" stop-color="#F3B24A"/>
     </linearGradient>
     <radialGradient id="a1" cx=".82" cy=".08" r=".62">
-      <stop offset="0" stop-color="#34d0b8" stop-opacity=".30"/>
-      <stop offset="1" stop-color="#34d0b8" stop-opacity="0"/>
+      <stop offset="0" stop-color="#4C7DFF" stop-opacity=".30"/>
+      <stop offset="1" stop-color="#4C7DFF" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="a2" cx=".06" cy=".96" r=".6">
-      <stop offset="0" stop-color="#d9b96a" stop-opacity=".22"/>
-      <stop offset="1" stop-color="#d9b96a" stop-opacity="0"/>
+      <stop offset="0" stop-color="#F3B24A" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#F3B24A" stop-opacity="0"/>
     </radialGradient>
     <pattern id="grid" width="72" height="72" patternUnits="userSpaceOnUse">
       <path d="M72 0H0V72" fill="none" stroke="#ffffff" stroke-opacity=".05" stroke-width="1"/>
@@ -32,7 +32,7 @@
 
     <!-- waveform -->
     <path d="M-20 470h150l14-2 12-26 10 46 12-38 12 20h150l14-2 12-26 10 46 12-38 12 20h150l14-2 12-26 10 46 12-38 12 20h150l14-2 12-26 10 46 12-38 12 20h140"
-          fill="none" stroke="#34d0b8" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/>
+          fill="none" stroke="#4C7DFF" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/>
 
     <!-- ring -->
     <circle cx="960" cy="250" r="150" fill="none" stroke="url(#brand)" stroke-opacity=".28" stroke-width="1.5" stroke-dasharray="5 9"/>
@@ -40,13 +40,8 @@
 
     <!-- monogram -->
     <g transform="translate(78 96)">
-      <rect width="72" height="72" rx="20" fill="url(#brand)"/>
-      <g fill="none" stroke="#04100e" stroke-width="6.5" stroke-linecap="round">
-        <path d="M17 22h38"/>
-        <path d="M36 22v26"/>
-        <path d="M36 33c0 9-8 15-18 16"/>
-        <path d="M36 33c0 7 7 13 17 13"/>
-      </g>
+      <rect width="72" height="72" rx="20" fill="#FBF7EE" stroke="#4C7DFF" stroke-opacity=".35"/>
+      <image x="4" y="4" width="64" height="64" href="data:image/png;base64,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"/>
     </g>
 
     <text x="176" y="146" font-family="IBM Plex Sans Arabic, sans-serif" font-size="26"
@@ -64,19 +59,19 @@
     <!-- chips -->
     <g font-family="IBM Plex Sans Arabic, sans-serif" font-size="22" fill="#c3ccd6">
       <g transform="translate(78 486)">
-        <rect width="196" height="52" rx="26" fill="#ffffff" fill-opacity=".05" stroke="#34d0b8" stroke-opacity=".35"/>
+        <rect width="196" height="52" rx="26" fill="#ffffff" fill-opacity=".05" stroke="#4C7DFF" stroke-opacity=".35"/>
         <text x="98" y="34" text-anchor="middle">التفكير الطبي</text>
       </g>
       <g transform="translate(290 486)">
-        <rect width="176" height="52" rx="26" fill="#ffffff" fill-opacity=".05" stroke="#d9b96a" stroke-opacity=".35"/>
+        <rect width="176" height="52" rx="26" fill="#ffffff" fill-opacity=".05" stroke="#F3B24A" stroke-opacity=".35"/>
         <text x="88" y="34" text-anchor="middle">أفكار ومقالات</text>
       </g>
       <g transform="translate(482 486)">
-        <rect width="164" height="52" rx="26" fill="#ffffff" fill-opacity=".05" stroke="#7fd7e8" stroke-opacity=".3"/>
+        <rect width="164" height="52" rx="26" fill="#ffffff" fill-opacity=".05" stroke="#93b4ff" stroke-opacity=".3"/>
         <text x="82" y="34" text-anchor="middle">مشاريع</text>
       </g>
       <g transform="translate(662 486)">
-        <rect width="164" height="52" rx="26" fill="#ffffff" fill-opacity=".05" stroke="#d9b96a" stroke-opacity=".3"/>
+        <rect width="164" height="52" rx="26" fill="#ffffff" fill-opacity=".05" stroke="#F3B24A" stroke-opacity=".3"/>
         <text x="82" y="34" text-anchor="middle">محاضرات</text>
       </g>
     </g>

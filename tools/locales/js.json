@@ -103,5 +103,25 @@
   "ar": "تفكير.نت",
   "tr": "tfkir.net",
   "en": "tfkir.net"
+ },
+ "nowDays": {
+  "ar": "يوم",
+  "tr": "gün",
+  "en": "days"
+ },
+ "nowHours": {
+  "ar": "ساعة",
+  "tr": "saat",
+  "en": "hours"
+ },
+ "nowMinutes": {
+  "ar": "دقيقة",
+  "tr": "dakika",
+  "en": "minutes"
+ },
+ "nowEnded": {
+  "ar": "انتهت",
+  "tr": "sona erdi",
+  "en": "Ended"
  }
 }

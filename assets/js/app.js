@@ -124,6 +124,7 @@
       }
     });
     window.addEventListener("resize", function () { if (window.innerWidth > 1080 && isOpen()) close(); });
+    document.addEventListener("tfkir:now-open", function () { if (isOpen()) close(); });
   }
 
   /* ---------------------------------------------------------

@@ -1,209 +1,197 @@
 /* ============================================================
    tfkir.net — Design System / Base
-   الدكتور ياسر حسن — موقع شخصي
+   «مشكاة» — هوية بصرية جديدة: حبر ليلي، لازورد، ونور عنبري
    ============================================================ */
 
 /* ---------- Fonts ---------- */
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap");
 
 /* ---------- Tokens ---------- */
 :root {
-  /* Brand */
-  --ink-900: #05080b;
-  --ink-850: #070b10;
-  --ink-800: #0a0f15;
-  --ink-750: #0e141b;
-  --ink-700: #131b24;
-  --ink-600: #1b2530;
-  --ink-500: #263341;
-  --line: rgba(255, 255, 255, 0.08);
-  --line-strong: rgba(255, 255, 255, 0.16);
+  /* Ink — ليل معرفي عميق */
+  --ink-950: #050913;
+  --ink-900: #070d19;
+  --ink-850: #0a1222;
+  --ink-800: #0d172a;
+  --ink-750: #111e35;
+  --ink-700: #16263f;
+  --ink-600: #1f3555;
+  --ink-500: #2b466c;
+  --line: rgba(157, 185, 228, 0.12);
+  --line-strong: rgba(157, 185, 228, 0.22);
 
-  /* Teal — medicine / clinical calm */
-  --teal-100: #d6f7f0;
-  --teal-300: #6fe3d0;
-  --teal-400: #34d0b8;
-  --teal-500: #14b8a6;
-  --teal-600: #0d9488;
-  --teal-700: #0b7268;
+  /* Lapis — العقل والمنهج */
+  --lapis-100: #e2ebff;
+  --lapis-200: #c0d3ff;
+  --lapis-300: #9bb9ff;
+  --lapis-400: #6f97ff;
+  --lapis-500: #4c7dff;
+  --lapis-600: #2f61e8;
+  --lapis-700: #2349b8;
 
-  /* Brass — thought / philosophy */
-  --brass-100: #f8eecd;
-  --brass-300: #e8cf8a;
-  --brass-400: #d9b96a;
-  --brass-500: #c39b3f;
-  --brass-600: #9a7628;
+  /* Amber — نور الفكرة */
+  --amber-100: #fff2d7;
+  --amber-200: #ffe1a8;
+  --amber-300: #ffd084;
+  --amber-400: #f3b24a;
+  --amber-500: #e39a2b;
+  --amber-600: #b57816;
+
+  /* Jade — إشارة الحياة */
+  --jade-300: #7cebd3;
+  --jade-400: #3dd6b7;
+  --jade-500: #1cb79b;
 
   /* Text */
-  --text: #e9edf2;
-  --text-soft: #c3ccd6;
-  --muted: #8b97a5;
-  --faint: #7a8694;
+  --text: #f0f4fb;
+  --text-soft: #ccd7e8;
+  --muted: #9aabc4;
+  --faint: #7f91ac;
 
   /* Semantic */
-  --bg: var(--ink-900);
-  --bg-elev: var(--ink-800);
-  --surface: rgba(255, 255, 255, 0.028);
-  --surface-2: rgba(255, 255, 255, 0.05);
-  --accent: var(--teal-400);
-  --accent-2: var(--brass-400);
+  --bg: var(--ink-950);
+  --bg-elev: var(--ink-850);
+  --surface: rgba(180, 205, 245, 0.045);
+  --surface-2: rgba(180, 205, 245, 0.075);
+  --surface-3: rgba(180, 205, 245, 0.11);
+  --accent: var(--lapis-400);
+  --accent-2: var(--amber-400);
+  --danger-300: #ffc4bd;
+  --danger-400: #ff9d93;
+  --danger-500: #f4776b;
+  --danger-600: #c2382c;
 
-  /* شفافية العلامة (تتتبّع السمة تلقائيًا بخلاف rgba الثابت) */
-  --teal-a08: color-mix(in srgb, var(--teal-400) 8%, transparent);
-  --teal-a14: color-mix(in srgb, var(--teal-400) 14%, transparent);
-  --teal-a30: color-mix(in srgb, var(--teal-400) 30%, transparent);
-  --teal-a35: color-mix(in srgb, var(--teal-400) 35%, transparent);
-  --teal-a55: color-mix(in srgb, var(--teal-400) 55%, transparent);
-  --teal-a70: color-mix(in srgb, var(--teal-400) 70%, transparent);
-  --teal-a80: color-mix(in srgb, var(--teal-400) 80%, transparent);
-  --brass-a08: color-mix(in srgb, var(--brass-400) 8%, transparent);
-  --brass-a28: color-mix(in srgb, var(--brass-400) 28%, transparent);
-  --brass-a35: color-mix(in srgb, var(--brass-400) 35%, transparent);
-  --danger-300: #f5b4af;
-  --danger-400: #f08a83;
-  --danger-500: #e0645c;
-  --danger-600: #b3251c;
+  /* Aliases — للتوافق مع الوحدات القديمة ولوحة التحرير */
+  --teal-100: var(--lapis-100);
+  --teal-300: var(--lapis-300);
+  --teal-400: var(--lapis-400);
+  --teal-500: var(--lapis-500);
+  --teal-600: var(--lapis-600);
+  --teal-700: var(--lapis-700);
+  --brass-100: var(--amber-100);
+  --brass-300: var(--amber-300);
+  --brass-400: var(--amber-400);
+  --brass-500: var(--amber-500);
+  --brass-600: var(--amber-600);
+
+  --teal-a08: color-mix(in srgb, var(--lapis-400) 8%, transparent);
+  --teal-a14: color-mix(in srgb, var(--lapis-400) 14%, transparent);
+  --teal-a20: color-mix(in srgb, var(--lapis-400) 20%, transparent);
+  --teal-a30: color-mix(in srgb, var(--lapis-400) 30%, transparent);
+  --teal-a35: color-mix(in srgb, var(--lapis-400) 35%, transparent);
+  --teal-a40: color-mix(in srgb, var(--lapis-400) 40%, transparent);
+  --teal-a50: color-mix(in srgb, var(--lapis-400) 50%, transparent);
+  --teal-a55: color-mix(in srgb, var(--lapis-400) 55%, transparent);
+  --teal-a60: color-mix(in srgb, var(--lapis-400) 60%, transparent);
+  --teal-a70: color-mix(in srgb, var(--lapis-400) 70%, transparent);
+  --teal-a80: color-mix(in srgb, var(--lapis-400) 80%, transparent);
+  --brass-a08: color-mix(in srgb, var(--amber-400) 8%, transparent);
+  --brass-a14: color-mix(in srgb, var(--amber-400) 14%, transparent);
+  --brass-a28: color-mix(in srgb, var(--amber-400) 28%, transparent);
+  --brass-a35: color-mix(in srgb, var(--amber-400) 35%, transparent);
+  --amber-a16: color-mix(in srgb, var(--amber-400) 16%, transparent);
+  --amber-a30: color-mix(in srgb, var(--amber-400) 30%, transparent);
 
   /* Gradients */
-  --grad-brand: linear-gradient(115deg, var(--teal-400) 0%, #7fd7e8 45%, var(--brass-400) 100%);
-  --grad-brand-soft: linear-gradient(115deg, rgba(52, 208, 184, 0.16), rgba(217, 185, 106, 0.14));
+  --grad-brand: linear-gradient(112deg, #a9c4ff 0%, var(--lapis-500) 48%, var(--amber-400) 118%);
+  --grad-primary: linear-gradient(115deg, var(--lapis-600) 0%, var(--lapis-500) 52%, #7aa2ff 100%);
+  --grad-amber: linear-gradient(115deg, var(--amber-300) 0%, var(--amber-400) 48%, #e78c2c 100%);
+  --grad-brand-soft: linear-gradient(120deg, rgba(76, 125, 255, 0.16), rgba(243, 178, 74, 0.1));
+  --grad-surface: linear-gradient(165deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.012));
   --grad-fade-x: linear-gradient(90deg, transparent, var(--ink-850) 82%);
 
   /* Typography */
-  --font-display: "Noto Naskh Arabic", "IBM Plex Sans Arabic", "Amiri", serif;
+  --font-display: "Alexandria", "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
   --font-body: "IBM Plex Sans Arabic", "Segoe UI", system-ui, sans-serif;
   --font-serif: "Noto Naskh Arabic", "Amiri", "Times New Roman", serif;
-  --font-latin: "IBM Plex Sans Arabic", "Noto Naskh Arabic", system-ui, sans-serif;
+  --font-latin: "Alexandria", "IBM Plex Sans Arabic", system-ui, sans-serif;
 
   /* Fluid type scale */
-  --fs-hero: clamp(2.3rem, 1.1rem + 4.6vw, 5rem);
-  --fs-h1: clamp(2rem, 1.15rem + 3.4vw, 4.15rem);
-  --fs-h2: clamp(1.62rem, 1.1rem + 2.1vw, 2.9rem);
-  --fs-h3: clamp(1.22rem, 0.98rem + 0.95vw, 1.72rem);
-  --fs-h4: clamp(1.06rem, 0.95rem + 0.5vw, 1.28rem);
-  --fs-lead: clamp(1.02rem, 0.95rem + 0.45vw, 1.32rem);
-  --fs-body: clamp(0.97rem, 0.93rem + 0.2vw, 1.06rem);
-  --fs-small: clamp(0.9rem, 0.88rem + 0.12vw, 0.96rem);
+  --fs-hero: clamp(2.55rem, 1.05rem + 5.6vw, 5.55rem);
+  --fs-h1: clamp(2.15rem, 1.15rem + 3.7vw, 4.3rem);
+  --fs-h2: clamp(1.72rem, 1.12rem + 2.2vw, 3rem);
+  --fs-h3: clamp(1.24rem, 1rem + 0.95vw, 1.74rem);
+  --fs-h4: clamp(1.07rem, 0.96rem + 0.5vw, 1.3rem);
+  --fs-lead: clamp(1.04rem, 0.96rem + 0.48vw, 1.34rem);
+  --fs-body: clamp(0.98rem, 0.94rem + 0.2vw, 1.07rem);
+  --fs-small: clamp(0.91rem, 0.89rem + 0.12vw, 0.97rem);
   --fs-sm: 0.875rem;
   --fs-xs: 0.775rem;
-  --fs-kicker: 0.735rem;
+  --fs-kicker: 0.75rem;
 
   /* Space */
-  --shell: 1240px;
-  --shell-narrow: 820px;
-  --gut: clamp(1.15rem, 0.6rem + 2.4vw, 2.75rem);
-  --sect-y: clamp(3.75rem, 2rem + 7vw, 8.5rem);
-  --sect-y-md: clamp(2.5rem, 1.6rem + 2.6vw, 4.25rem);
+  --shell: 1280px;
+  --shell-narrow: 800px;
+  --gut: clamp(1.15rem, 0.62rem + 2.4vw, 2.75rem);
+  --sect-y: clamp(4rem, 2.2rem + 7vw, 8.75rem);
+  --sect-y-md: clamp(2.6rem, 1.7rem + 2.8vw, 4.5rem);
 
   /* Radii */
-  --r-xs: 6px;
-  --r-sm: 10px;
-  --r-md: 16px;
-  --r-lg: 22px;
-  --r-xl: 30px;
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 26px;
+  --r-xl: 34px;
   --r-pill: 999px;
 
   /* Shadows */
-  --sh-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --sh-md: 0 14px 34px -14px rgba(0, 0, 0, 0.65);
-  --sh-lg: 0 34px 80px -30px rgba(0, 0, 0, 0.8);
-  --sh-glow: 0 0 0 1px rgba(52, 208, 184, 0.25), 0 22px 60px -26px rgba(52, 208, 184, 0.45);
+  --sh-sm: 0 1px 2px rgba(0, 0, 0, 0.35), 0 10px 26px -18px rgba(0, 0, 0, 0.6);
+  --sh-md: 0 22px 58px -30px rgba(0, 0, 0, 0.72);
+  --sh-lg: 0 48px 110px -48px rgba(0, 0, 0, 0.84);
+  --sh-glow: 0 0 0 1px rgba(76, 125, 255, 0.26), 0 30px 80px -34px rgba(76, 125, 255, 0.5);
+  --sh-amber: 0 24px 70px -30px rgba(243, 178, 74, 0.45);
 
   --ease: cubic-bezier(0.22, 0.68, 0.24, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --dur: 0.55s;
 
-  --header-h: 74px;
+  --header-h: 82px;
   color-scheme: dark;
 }
 
-/* ---------- Light theme ---------- */
+/* ---------- Light theme — ورقٌ دافئ ---------- */
 [data-theme="light"] {
-  --ink-900: #f6f8fa;
-  --ink-850: #ffffff;
-  --ink-800: #ffffff;
-  --ink-750: #f2f5f8;
-  --ink-700: #eaeff4;
-  --ink-600: #dde5ec;
-  --ink-500: #c8d3dd;
-  --line: rgba(9, 20, 28, 0.09);
-  --line-strong: rgba(9, 20, 28, 0.17);
-  --text: #0d151c;
-  --text-soft: #26333f;
-  --muted: #5a6a78;
-  --faint: #6b7b8a;
-  --surface: rgba(10, 25, 35, 0.028);
-  --surface-2: rgba(10, 25, 35, 0.05);
-  --teal-500: #0c8b7e;
-  --teal-400: #0d9488;
-  --teal-600: #0a7268;
-  --teal-100: #0a5f56;
-  --brass-500: #8a6a1f;
-  --brass-400: #a37f2a;
-  --grad-brand: linear-gradient(115deg, #0d9488 0%, #2b7fa8 45%, #a37f2a 100%);
-  --grad-brand-soft: linear-gradient(115deg, rgba(13, 148, 136, 0.1), rgba(163, 127, 42, 0.1));
-  --grad-fade-x: linear-gradient(90deg, transparent, #fff 82%);
-  --sh-sm: 0 1px 2px rgba(13, 30, 45, 0.06), 0 8px 20px -14px rgba(13, 30, 45, 0.18);
-  --sh-md: 0 14px 34px -18px rgba(13, 30, 45, 0.28);
-  --sh-lg: 0 30px 70px -34px rgba(13, 30, 45, 0.3);
-  --danger-300: #b3251c;
-  --danger-400: #b3251c;
-  --danger-500: #b3251c;
+  --ink-950: #f7f3ea;
+  --ink-900: #f9f6ef;
+  --ink-850: #fffdf8;
+  --ink-800: #fffdf8;
+  --ink-750: #f4eee2;
+  --ink-700: #ece4d5;
+  --ink-600: #ded3c0;
+  --ink-500: #c9bba3;
+  --line: rgba(22, 36, 58, 0.1);
+  --line-strong: rgba(22, 36, 58, 0.18);
+  --text: #0e1727;
+  --text-soft: #26344a;
+  --muted: #5c6b82;
+  --faint: #728096;
+  --surface: rgba(20, 38, 65, 0.035);
+  --surface-2: rgba(20, 38, 65, 0.06);
+  --surface-3: rgba(20, 38, 65, 0.09);
+  --teal-500: #2d5bd1;
+  --teal-400: #2f63d9;
+  --teal-600: #2349b8;
+  --teal-100: #173a8c;
+  --teal-300: #2a55c4;
+  --brass-500: #9a6410;
+  --brass-400: #a86c0c;
+  --brass-300: #8d5a0b;
+  --brass-600: #7a4e09;
+  --grad-brand: linear-gradient(112deg, #2349b8 0%, #2f63d9 50%, #b57816 118%);
+  --grad-primary: linear-gradient(115deg, #2349b8 0%, #2f63d9 55%, #4c7dff 100%);
+  --grad-amber: linear-gradient(115deg, #b57816 0%, #c8871c 55%, #a86c0c 100%);
+  --grad-brand-soft: linear-gradient(120deg, rgba(47, 99, 217, 0.1), rgba(201, 135, 28, 0.09));
+  --grad-surface: linear-gradient(165deg, #fffdf8, rgba(255, 253, 248, 0.62));
+  --grad-fade-x: linear-gradient(90deg, transparent, #fffdf8 82%);
+  --sh-sm: 0 1px 2px rgba(22, 36, 58, 0.05), 0 10px 26px -20px rgba(22, 36, 58, 0.22);
+  --sh-md: 0 22px 58px -34px rgba(22, 36, 58, 0.3);
+  --sh-lg: 0 40px 100px -48px rgba(22, 36, 58, 0.32);
+  --sh-glow: 0 0 0 1px rgba(47, 99, 217, 0.18), 0 30px 80px -36px rgba(47, 99, 217, 0.28);
+  --danger-300: #a92a20;
+  --danger-400: #a92a20;
+  --danger-500: #a92a20;
   color-scheme: light;
-
-  /* ناقصة سابقًا: لا بديل عنها في السمة الفاتحة */
-  --teal-300: #0a7268;
-  --brass-300: #8a6a1f;
-  --brass-600: #8a6a1f;
 }
-
-/* ---------- العربية: لا تباعد حروف على نصوص عربية ---------- */
-.footer-col__title,
-.toc__title,
-.hub__group-title,
-.post-card__meta,
-.status,
-.reason__step,
-.field__label { letter-spacing: normal; text-transform: none; }
-
-/* ---------- خط الإضاءة أعلى البطاقات ----------
-   شريط رفيع يتلاشى عند الطرفين (فلا يخرج عن استدارة الزوايا)
-   مع توهّج خفيف تحته — التوقيع البصري الموحّد للبطاقات. */
-.card,
-.adm-card,
-.pv { position: relative; isolation: isolate; }
-.card::before,
-.adm-card::before,
-.pv::before {
-  content: "";
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline: 15%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, var(--teal-400) 30%, var(--brass-400) 70%, transparent 100%);
-  opacity: 0.4;
-  pointer-events: none;
-  transition: opacity 0.45s var(--ease), inset-inline 0.45s var(--ease);
-}
-.card::after,
-.adm-card::after {
-  content: "";
-  position: absolute;
-  inset-block-start: 0;
-  inset-inline: 26%;
-  height: 30px;
-  background: radial-gradient(58% 100% at 50% 0%, var(--teal-a14), transparent 72%);
-  pointer-events: none;
-  opacity: 0.7;
-  transition: opacity 0.45s var(--ease);
-}
-.card:hover::before,
-.adm-card:hover::before,
-.adm-card:focus-within::before,
-.pv:hover::before { opacity: 1; inset-inline: 6%; }
-.card:hover::after,
-.adm-card:hover::after,
-.adm-card:focus-within::after { opacity: 1; }
 
 /* ---------- Reset ---------- */
 *,
@@ -216,6 +204,7 @@ html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
   scroll-padding-top: calc(var(--header-h) + 18px);
+  background: var(--bg);
 }
 
 body {
@@ -233,16 +222,24 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Ambient background layers */
+/* ---------- Ambient light — مشكاة ---------- */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   z-index: -3;
+  pointer-events: none;
   background:
-    radial-gradient(880px 620px at 88% -8%, rgba(52, 208, 184, 0.13), transparent 62%),
-    radial-gradient(760px 560px at 4% 8%, rgba(217, 185, 106, 0.1), transparent 60%),
-    radial-gradient(1100px 780px at 50% 108%, rgba(45, 120, 160, 0.11), transparent 66%),
+    radial-gradient(980px 700px at 88% -12%, rgba(76, 125, 255, 0.2), transparent 62%),
+    radial-gradient(780px 560px at 2% 12%, rgba(243, 178, 74, 0.1), transparent 60%),
+    radial-gradient(1100px 800px at 50% 110%, rgba(76, 125, 255, 0.09), transparent 66%),
+    var(--bg);
+}
+[data-theme="light"] body::before {
+  background:
+    radial-gradient(980px 700px at 88% -12%, rgba(47, 99, 217, 0.12), transparent 62%),
+    radial-gradient(780px 560px at 2% 12%, rgba(201, 135, 28, 0.11), transparent 60%),
+    radial-gradient(1100px 800px at 50% 110%, rgba(47, 99, 217, 0.06), transparent 66%),
     var(--bg);
 }
 
@@ -250,20 +247,21 @@ body::before {
 body::after {
   content: "";
   position: fixed;
-  inset: -50%;
+  inset: -40%;
   z-index: -2;
   pointer-events: none;
-  opacity: 0.032;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  animation: grain 7s steps(6) infinite;
+  opacity: 0.022;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain 9s steps(6) infinite;
 }
+[data-theme="light"] body::after { opacity: 0.014; }
 
 @keyframes grain {
   0%, 100% { transform: translate(0, 0); }
-  20% { transform: translate(-4%, 3%); }
-  40% { transform: translate(3%, -4%); }
-  60% { transform: translate(-3%, -3%); }
-  80% { transform: translate(4%, 4%); }
+  20% { transform: translate(-3%, 2%); }
+  40% { transform: translate(2%, -3%); }
+  60% { transform: translate(-2%, -2%); }
+  80% { transform: translate(3%, 3%); }
 }
 
 img, svg, video { display: block; max-width: 100%; height: auto; }
@@ -276,7 +274,8 @@ button, input, textarea, select {
 button { cursor: pointer; background: none; border: none; }
 
 a { color: var(--accent); text-decoration: none; }
-a:hover { color: var(--teal-300); }
+a:hover { color: var(--lapis-300); }
+[data-theme="light"] a:hover { color: var(--lapis-600); }
 
 ul, ol { padding-inline-start: 1.25em; }
 
@@ -288,30 +287,32 @@ hr {
 }
 
 :focus-visible {
-  outline: 2px solid var(--teal-400);
+  outline: 2px solid var(--lapis-400);
   outline-offset: 3px;
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 ::selection {
-  background: rgba(52, 208, 184, 0.28);
+  background: rgba(76, 125, 255, 0.32);
   color: var(--text);
 }
 
 ::-webkit-scrollbar { width: 11px; height: 11px; }
-::-webkit-scrollbar-track { background: var(--ink-850); }
+::-webkit-scrollbar-track { background: var(--ink-900); }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--teal-600), var(--brass-600));
+  background: linear-gradient(180deg, var(--lapis-600), var(--amber-600));
   border-radius: 99px;
-  border: 3px solid var(--ink-850);
+  border: 3px solid var(--ink-900);
 }
+[data-theme="light"] ::-webkit-scrollbar-track { background: #f0eadf; }
+[data-theme="light"] ::-webkit-scrollbar-thumb { border-color: #f0eadf; }
 
 /* ---------- Typography ---------- */
 h1, h2, h3, h4, h5 {
   font-family: var(--font-display);
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.005em;
+  font-weight: 700;
+  line-height: 1.32;
+  letter-spacing: 0;
   color: var(--text);
   text-wrap: balance;
 }
@@ -335,28 +336,30 @@ strong, b { font-weight: 600; color: var(--text); }
 .kicker {
   font-size: var(--fs-kicker);
   font-weight: 600;
-  /* العربية خطّ متّصل: تباعد الحروف يفكّ الوصل — للأبجدية اللاتينية فقط */
   letter-spacing: normal;
   text-transform: none;
-  color: var(--teal-400);
+  color: var(--amber-300);
   display: inline-flex;
   align-items: center;
-  gap: 0.7em;
+  gap: 0.68em;
 }
-/ .u-up { font-family: var(--font-latin); letter-spacing: 0.16em; text-transform: uppercase; }
+[data-theme="light"] .kicker { color: var(--amber-600); }
 
 .kicker::before {
   content: "";
-  width: clamp(20px, 4vw, 42px);
+  width: clamp(18px, 3.4vw, 36px);
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--teal-400));
+  flex: none;
+  background: linear-gradient(90deg, transparent, currentColor);
 }
 
 .kicker svg {
-  width: 1.55em;
-  height: 1.55em;
+  width: 1.45em;
+  height: 1.45em;
   flex: none;
+  color: var(--lapis-300);
 }
+[data-theme="light"] .kicker svg { color: var(--lapis-600); }
 .kicker > span { flex: none; }
 
 .latin {
@@ -379,9 +382,17 @@ strong, b { font-weight: 600; color: var(--text); }
   color: transparent;
 }
 
-.mark { background: linear-gradient(transparent 62%, rgba(217, 185, 106, 0.28) 62%); }
+.mark {
+  background: linear-gradient(transparent 62%, rgba(243, 178, 74, 0.3) 62%);
+}
 [data-theme="light"] .mark {
-  background: linear-gradient(transparent 62%, rgba(163, 127, 42, 0.24) 62%);
+  background: linear-gradient(transparent 62%, rgba(201, 135, 28, 0.26) 62%);
+}
+
+.u-up {
+  font-family: var(--font-latin);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
 }
 
 /* ---------- Layout ---------- */
@@ -395,7 +406,7 @@ strong, b { font-weight: 600; color: var(--text); }
 .shell--narrow { max-width: var(--shell-narrow); }
 
 .section { padding-block: var(--sect-y); position: relative; }
-.section--tight { padding-block: clamp(2.5rem, 1.5rem + 3.5vw, 4.75rem); }
+.section--tight { padding-block: clamp(2.6rem, 1.6rem + 3.6vw, 5rem); }
 
 .sect-head { max-width: 68ch; margin-bottom: clamp(2rem, 1.2rem + 2.4vw, 3.4rem); }
 .sect-head > * + * { margin-top: 0.85rem; }
@@ -418,7 +429,7 @@ strong, b { font-weight: 600; color: var(--text); }
   display: inline-flex;
   align-items: center;
   gap: 0.45em;
-  padding: 0.32em 0.85em;
+  padding: 0.34em 0.88em;
   border: 1px solid var(--line-strong);
   border-radius: var(--r-pill);
   font-size: var(--fs-xs);
@@ -428,8 +439,29 @@ strong, b { font-weight: 600; color: var(--text); }
   white-space: nowrap;
 }
 
-.tag--teal { border-color: rgba(52, 208, 184, 0.32); color: var(--teal-300); background: rgba(52, 208, 184, 0.07); }
-.tag--brass { border-color: rgba(217, 185, 106, 0.32); color: var(--brass-300); background: rgba(217, 185, 106, 0.07); }
+.tag--teal { border-color: var(--teal-a35); color: var(--lapis-200); background: var(--teal-a08); }
+.tag--brass { border-color: var(--brass-a35); color: var(--amber-200); background: var(--brass-a08); }
+[data-theme="light"] .tag--teal { color: var(--lapis-700); }
+[data-theme="light"] .tag--brass { color: var(--amber-600); }
+
+.chip-num {
+  font-family: var(--font-latin);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--faint);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--line);
+}
+.chip-num::after {
+  content: "";
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--amber-400), transparent);
+}
 
 .skip-link {
   position: fixed;
@@ -439,11 +471,12 @@ strong, b { font-weight: 600; color: var(--text); }
   z-index: 999;
   padding: 0.7rem 1.4rem;
   background: var(--ink-700);
-  border: 1px solid var(--teal-500);
+  border: 1px solid var(--lapis-500);
   border-radius: var(--r-pill);
+  color: var(--text);
   transition: transform 0.25s var(--ease);
 }
-.skip-link:focus { transform: translate(50%, 0); color: var(--text); }
+.skip-link:focus { transform: translate(-50%, 0); color: var(--text); }
 
 /* ---------- Accessibility helpers ---------- */
 .sr-only {
@@ -469,7 +502,7 @@ strong, b { font-weight: 600; color: var(--text); }
 }
 
 @media print {
-  .site-header, .site-footer, .hero__portrait, .fab, .to-top { display: none !important; }
+  .site-header, .site-footer, .hero__portrait, .to-top, .now-cloud, .now-dialog { display: none !important; }
   body { background: #fff; color: #000; }
   body::before, body::after { display: none; }
 }

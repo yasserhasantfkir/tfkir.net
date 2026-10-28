@@ -38,6 +38,32 @@ const articleHref = (slug) => `/article?id=${encodeURIComponent(slug)}`;
 /* الوصف التعريفي: كل جملة في سطر مستقل */
 const leadHtml = (d = D) => d.leadLines.map((l) => esc(l)).join("<br>\n        ");
 
+/* شريط «الآن» في الرئيسية */
+const nowRibbon = () => {
+  const item = (now.items || [])[0];
+  if (!item) return "";
+  const until = item.until ? ` data-until="${esc(item.until)}"` : "";
+  return `<section class="now-ribbon-wrap" aria-labelledby="now-ribbon-title">
+  <div class="shell">
+    <div class="now-ribbon" data-reveal>
+      <span class="now-ribbon__glow" aria-hidden="true"></span>
+      <div class="now-ribbon__text">
+        <span class="now-ribbon__eyebrow"><span class="now-live-dot" aria-hidden="true"></span> ${esc(now.eyebrow)}</span>
+        <h2 class="now-ribbon__title" id="now-ribbon-title">${esc(item.title)}</h2>
+        <p class="now-ribbon__lead">${esc(now.lead)}</p>
+      </div>
+      <div class="now-ribbon__side">
+        <span class="now-clock" data-now-countdown${until} aria-live="polite">${esc(now.clockLabel)}</span>
+        <div class="now-ribbon__actions">
+          <button class="btn btn--primary btn--sm" type="button" data-now-open aria-haspopup="dialog">${esc(now.detail)}</button>
+          <a class="btn btn--ghost btn--sm" href="/now">${esc(now.pageLink)}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>`;
+};
+
 const standaloneFieldSection = () => {
   const cards = standaloneFields
     .map(
@@ -67,7 +93,8 @@ const standaloneFieldSection = () => {
 export function homePage() {
   const domainCards = domains
     .map(
-      (d, i) => `<a class="card" href="/thinking" data-reveal style="--d:${i * 60}ms">
+      (d, i) => `<a class="card card--domain" href="/thinking" data-reveal style="--d:${i * 60}ms">
+            <span class="card__index" aria-hidden="true">${String(i + 1).padStart(2, "0")}</span>
             <span class="card__icon">${icon("compass")}</span>
             <h3 class="card__title">${esc(d.t)}</h3>
             <p class="card__text">${esc(d.p)}</p>
@@ -95,27 +122,28 @@ export function homePage() {
       <span class="kicker" data-reveal>${icon("stethoscope")} <span data-i18n="hero.kicker">${esc(D.nameAr)}</span></span>
 
       <h1 class="hero__title" data-reveal style="--d:90ms">
-        <span class="ln"><span class="split-line"><span class="gradient-text" data-i18n="hero.title">${esc(D.title)}</span></span></span>
+        <span class="ln"><span class="split-line">إصلاح التفكير</span></span>
+        <span class="ln"><span class="split-line"><span class="gradient-text">مفتاح كل إصلاح</span></span></span>
       </h1>
 
       <div class="hero__role" data-reveal style="--d:180ms">
         <span class="tag tag--teal">${esc(D.roleLine)}</span>
       </div>
+
+      <div class="hero__cta" data-reveal style="--d:260ms">
+        <a class="btn btn--primary btn--lg" href="/thinking">${icon("compass")}<span>ابدأ من الميادين</span></a>
+        <a class="btn btn--ghost btn--lg" href="/about">${icon("user")}<span>من هو الدكتور؟</span></a>
+        <a class="btn btn--quiet btn--lg" href="/ideas">الأفكار${icon("arrowLeft", "btn__arrow")}</a>
+      </div>
     </div>
 
           ${portrait()}
-
-    <aside class="hero__note" data-reveal="scale" style="--d:260ms">
-      <h2 class="hero__note-title">فلسفة المنصة</h2>
-      <p class="hero__note-text">${leadHtml()}</p>
-    </aside>
-
-    <div class="hero__cta hero__grid-actions" data-reveal style="--d:340ms">
-      <a class="btn btn--primary btn--lg" href="/thinking">${icon("compass")}<span>ابدأ من الميادين</span></a>
-      <a class="btn btn--ghost btn--lg" href="/about">${icon("user")}<span>من هو الدكتور؟</span></a>
-      <a class="btn btn--quiet btn--lg" href="/ideas">الأفكار${icon("arrowLeft", "btn__arrow")}</a>
-    </div>
   </div>
+
+  <aside class="hero__note" data-reveal="scale" style="--d:260ms">
+    <h2 class="hero__note-title">فلسفة المنصة</h2>
+    <p class="hero__note-text">${leadHtml()}</p>
+  </aside>
 
   <div class="hero__cue" aria-hidden="true">
     <span>scroll</span>
@@ -128,6 +156,8 @@ export function homePage() {
             ${marqueeItems}
   </div>
 </div>
+
+${nowRibbon()}
 
 <!-- ===================== من أنا ===================== -->
 <section class="section" id="intro">
@@ -184,7 +214,7 @@ export function homePage() {
       <h2 style="margin-top:.9rem" data-reveal data-i18n="domains.title">ستة ميادين، <span class="gradient-text">خيطٌ واحد</span></h2>
       <p class="lead" data-reveal style="--d:120ms" data-i18n="domains.lead">كل ميدان يبدأ من سؤال واحد مكتوب مسبقًا، ثم يكتمل بمثلث الأضلاع: كيف نفكّر فيه، وكيف نستثمره، وكيف ننقله إلى الآخرين.</p>
     </div>
-    <div class="grid grid--3">
+    <div class="domain-grid">
           ${domainCards}
     </div>
   </div>
@@ -1209,33 +1239,76 @@ export function privacyPage() {
    الآن — طبقة خدمية مؤقتة (Ephemeral Layer)
    ============================================================ */
 export function nowPage() {
-  const itemCards = (now.items || [])
-    .map((item, i) => {
-      const countdown = item.until
-        ? `<div class="now-countdown" data-until="${esc(item.until)}" aria-live="polite">...</div>`
-        : "";
+  const items = now.items || [];
+  const item = items[0];
+  const until = item && item.until ? ` data-until="${esc(item.until)}"` : "";
+
+  const itemCards = items
+    .map((it, i) => {
+      const meta = (it.meta || []).map((m) => `<span class="tag tag--teal">${esc(m)}</span>`).join("");
       return `<article class="card card--now" data-reveal style="--d:${i * 60}ms">
+            <span class="card__index" aria-hidden="true">NOW</span>
             <span class="card__icon">${icon("spark")}</span>
-            <h3 class="card__title">${esc(item.title)}</h3>
-            <p class="card__text">${esc(item.desc)}</p>
-            <div class="card__foot now-card__foot">
-              <span class="tag tag--brass">${esc(item.badge)}</span>
-              ${countdown}
-              <a class="btn btn--primary btn--sm" href="${esc(item.href)}">التفاصيل${icon("arrowLeft", "btn__arrow")}</a>
+            <h3 class="card__title">${esc(it.title)}</h3>
+            <p class="card__text">${esc(it.desc)}</p>
+            <div class="now-card__foot">
+              <span class="tag tag--brass">${esc(it.badge)}</span>
+              ${meta}
+            </div>
+            <div class="card__foot">
+              <span class="now-clock" data-now-countdown${it.until ? ` data-until="${esc(it.until)}"` : ""} aria-live="polite">${esc(now.clockLabel)}</span>
+              <a class="btn btn--primary btn--sm" href="${esc(it.href)}">${esc(it.cta)}${icon("arrowLeft", "btn__arrow")}</a>
             </div>
           </article>`;
     })
     .join("\n          ");
 
-  const body = `${pageHero({ kicker: now.kicker, title: now.title, lead: now.lead, crumbs: [{ label: "الرئيسية", href: "/" }, { label: "الآن", href: "/now" }] })}
+  const pillars = (now.intro.pillars || [])
+    .map(
+      (pil, i) => `<article class="now-pillar" data-reveal style="--d:${i * 70}ms">
+              <span class="card__num">${String(i + 1).padStart(2, "0")}</span>
+              <h3 class="card__title">${esc(pil.title)}</h3>
+              <p class="card__text">${esc(pil.text)}</p>
+            </article>`
+    )
+    .join("\n            ");
 
-<section class="section section--tight">
+  const aside = item
+    ? `<div class="card card--now">
+            <span class="card__icon">${icon("clock")}</span>
+            <span class="kicker">${esc(now.dialogEyebrow)}</span>
+            <h2 class="card__title">${esc(now.clockLabel)}</h2>
+            <span class="now-clock" data-now-countdown${until} aria-live="polite">لفترة محدودة</span>
+            <p class="card__text">${esc(now.note)}</p>
+          </div>`
+    : "";
+
+  const body = `${pageHero({
+    kicker: now.kicker,
+    title: esc(now.title),
+    lead: esc(now.lead),
+    crumbs: [{ label: "الرئيسية", href: "/" }, { label: "الآن", href: "/now" }],
+    aside,
+  })}
+
+<section class="section">
+  <div class="shell now-intro">
+    <div class="section-head" style="margin-bottom:0">
+      <span class="kicker" data-reveal>${icon("layers")} ${esc(now.kicker)}</span>
+      <h2 class="sec-title" data-reveal style="--d:80ms">${esc(now.intro.title)}</h2>
+      <p class="sec-lead" data-reveal style="--d:140ms">${esc(now.intro.lead)}</p>
+    </div>
+    <div class="now-pillars">
+      ${pillars}
+    </div>
+  </div>
+</section>
+
+<section class="section section--tight" id="now-services">
   <div class="shell">
     ${
-      (now.items || []).length
-        ? `<div class="grid grid--3">
-            ${itemCards}
-          </div>`
+      items.length
+        ? `<div class="now-item-grid">${itemCards}</div>`
         : `<div class="empty-note empty-note--tall">
             <p class="empty-note__t">${esc(now.emptyTitle)}</p>
             <p class="empty-note__d">${esc(now.emptyDesc)}</p>
@@ -1244,27 +1317,12 @@ export function nowPage() {
   </div>
 </section>
 
-${ctaBand({ title: "هل لديك طلب خدمة؟", text: "تواصل مع فريق المنصة للاستفسار عن الخدمات المؤقتة.", primary: { href: "/contact", label: "تواصل" }, secondary: { href: "/links", label: "كل الروابط" } })}`;
+${ctaBand({
+  title: "هل لديك طلب خدمة؟",
+  text: "تواصل مع فريق المنصة للاستفسار عن الخدمات المؤقتة.",
+  primary: { href: "/contact", label: "تواصل" },
+  secondary: { href: "/links", label: "كل الروابط" },
+})}`;
 
-  const scripts = (now.items || []).some((i) => i.until)
-    ? `<script>
-(function () {
-  document.querySelectorAll(".now-countdown").forEach((el) => {
-    const until = new Date(el.dataset.until).getTime();
-    const tick = () => {
-      const diff = until - Date.now();
-      if (diff <= 0) { el.textContent = "انتهى"; return; }
-      const d = Math.floor(diff / 86400000);
-      const h = Math.floor(diff / 3600000) % 24;
-      const m = Math.floor(diff / 60000) % 60;
-      el.textContent = d + " يوم " + h + " ساعة " + m + " دقيقة";
-    };
-    tick();
-    setInterval(tick, 60000);
-  });
-})();
-</script>`
-    : "";
-
-  return layout({ title: now.title, desc: now.lead, path: "/now", body, scripts });
+  return layout({ active: "/now", title: now.title, desc: now.lead, path: "/now", body });
 }

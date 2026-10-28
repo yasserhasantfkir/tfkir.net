@@ -97,7 +97,7 @@ export function adminPage() {
 <header class="adm-top" id="adm-top" hidden>
   <div class="adm-top__bar">
     <a class="brand" href="/" aria-label="الصفحة الرئيسية">
-      <span class="brand__mark" aria-hidden="true">ت</span>
+      <span class="brand__mark" aria-hidden="true"><img class="brand__mark-img" src="/assets/img/logo-mark-sm.png" alt="" width="44" height="44" decoding="async" data-no-translate></span>
       <span class="brand__text">
         <span class="brand__name">${esc(site.shortName)}</span>
         <span class="brand__sub">لوحة التحرير</span>
