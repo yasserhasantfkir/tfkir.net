@@ -28,30 +28,18 @@ const brandMark = (extra = "") =>
 
 function nowClouds() {
   if (!nowItems.length) return "";
-  const slots = nowItems
+  const buttons = nowItems
     .map((item, i) => {
       const iconName = item.icon || (i === 0 ? "spark" : "stethoscope");
-      return `<div class="now-slot" data-now-slot>
-  <article class="now-cloud" id="now-cloud-${i}" data-now-card aria-label="${esc(item.title)}">
-    <span class="now-cloud__tail" aria-hidden="true"></span>
-    <button class="now-cloud__close" type="button" data-now-collapse aria-label="${esc(now.closeCloud)}"></button>
-    <span class="now-cloud__eyebrow"><span class="now-live-dot" aria-hidden="true"></span> ${esc(now.eyebrow)}</span>
-    <p class="now-cloud__title">${esc(item.title)}</p>
-    <p class="now-cloud__text">${esc(item.desc)}</p>
-    <div class="now-cloud__foot">
-      <a class="btn btn--primary btn--sm" href="${esc(item.href)}" data-now-open data-now-target="now-dialog-${i}" aria-haspopup="dialog">${esc(now.detail)}</a>
-    </div>
-  </article>
-  <button class="now-trigger" type="button" data-now-reopen aria-label="${esc(item.title)}" hidden>
-    ${icon(iconName)}
-    <span class="now-trigger__label">${esc(item.shortTitle || item.title)}</span>
-  </button>
-</div>`;
+      return `<button class="now-trigger" type="button" data-now-open data-now-target="now-dialog-${i}" aria-haspopup="dialog" aria-label="${esc(item.title)}" title="${esc(item.title)}">
+  ${icon(iconName)}
+  <span class="now-trigger__label">${esc(item.title)}</span>
+</button>`;
     })
     .join("\n");
 
   return `<aside class="now-clouds" id="now-clouds" aria-label="الخدمات الحالية النشطة">
-${slots}
+${buttons}
 </aside>`;
 }
 

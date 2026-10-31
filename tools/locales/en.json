@@ -466,5 +466,12 @@
   "اطلب الخدمة": "Request the service",
   "الدورة": "The course",
   "التواصل الطبي": "Medical communication",
-  "{0} الآن — الخدمات الحالية النشطة": "{0} Now — Current Active Services"
+  "{0} الآن — الخدمات الحالية النشطة": "{0} Now — Current Active Services",
+  "التجديد بالحقائق الأصلية، أو بطرائق تعليمها واستثمارها.": "Renewal through original facts, or through the methods of teaching and investing them.",
+  "رقم فريق المنصة، وليس رقمًا شخصيًا. تواصل عبر واتساب أو الاتصال، ويمكنك إظهار الرقم عند الحاجة.": "The platform team's number, not a personal number. Contact via WhatsApp or call, and you can show the number when needed.",
+  "هاتف فريق المنصة": "Platform team phone",
+  "اتصال": "Call",
+  "إظهار الرقم": "Show number",
+  "إخفاء الرقم": "Hide number",
+  "{0}اتصال": "{0}Call"
 }

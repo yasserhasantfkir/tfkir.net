@@ -1,12 +1,10 @@
-/* tfkir.net — طبقة «الخدمات الحالية»: نافذة عائمة، تفاصيل، وأزرار إعادة الفتح. سكربت مستقل بلا مكتبات. */
+/* tfkir.net — طبقة «الخدمات الحالية»: أزرار عائمة دائرية ونوافذ تفاصيل. سكربت مستقل بلا مكتبات. */
 (function () {
   "use strict";
 
   if (window.TFKIR_NOW) return;
 
   var opens = Array.prototype.slice.call(document.querySelectorAll("[data-now-open]"));
-  var collapses = Array.prototype.slice.call(document.querySelectorAll("[data-now-collapse]"));
-  var reopens = Array.prototype.slice.call(document.querySelectorAll("[data-now-reopen]"));
   var dialogCloses = Array.prototype.slice.call(document.querySelectorAll("[data-now-close]"));
   var dialogs = Array.prototype.slice.call(document.querySelectorAll(".now-dialog"));
 
@@ -32,37 +30,10 @@
     } catch (e) {}
   }
 
-  function slotFor(el) {
-    return el.closest ? el.closest("[data-now-slot]") : null;
-  }
-
   opens.forEach(function (el) {
     el.addEventListener("click", function (event) {
       event.preventDefault();
       openDialogFor(el);
-    });
-  });
-
-  collapses.forEach(function (el) {
-    el.addEventListener("click", function (event) {
-      event.preventDefault();
-      var slot = slotFor(el);
-      if (!slot) return;
-      var card = slot.querySelector("[data-now-card]");
-      var trigger = slot.querySelector("[data-now-reopen]");
-      if (card) card.hidden = true;
-      if (trigger) trigger.hidden = false;
-    });
-  });
-
-  reopens.forEach(function (el) {
-    el.addEventListener("click", function (event) {
-      event.preventDefault();
-      var slot = slotFor(el);
-      if (!slot) return;
-      var card = slot.querySelector("[data-now-card]");
-      if (card) card.hidden = false;
-      el.hidden = true;
     });
   });
 

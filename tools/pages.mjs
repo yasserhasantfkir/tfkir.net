@@ -158,11 +158,16 @@ export function homePage() {
         </div>
         <div class="card" data-reveal="left" style="--d:200ms">
           <span class="card__icon">${icon("phone")}</span>
-          <h3 class="card__title">هاتف واتساب فريق المنصة</h3>
-          <p class="card__text"><span class="latin">${esc(D.phone)}</span> — هذا الرقم خاص بفريق المنصة، وليس رقمًا شخصيًا.</p>
+          <h3 class="card__title">هاتف فريق المنصة</h3>
+          <p class="card__text">رقم فريق المنصة، وليس رقمًا شخصيًا. تواصل عبر واتساب أو الاتصال، ويمكنك إظهار الرقم عند الحاجة.</p>
           <div class="card__foot">
             <a class="tlink" href="${esc(D.socials.whatsapp)}" target="_blank" rel="noopener">${icon("whatsapp")}فتح واتساب</a>
+            <a class="tlink" href="tel:${esc(D.phone)}">${icon("phone")}اتصال</a>
+            <button class="tlink" type="button" data-phone-toggle aria-expanded="false" aria-controls="platform-phone">
+              ${icon("eye")}<span data-phone-show>إظهار الرقم</span><span data-phone-hide hidden>إخفاء الرقم</span>
+            </button>
           </div>
+          <p class="phone-reveal" id="platform-phone" hidden><span class="latin">${esc(D.phone)}</span></p>
         </div>
       </div>
     </div>

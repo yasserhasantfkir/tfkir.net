@@ -553,6 +553,25 @@
   }
 
   /* ---------------------------------------------------------
+     14) إظهار رقم فريق المنصة وإخفاؤه
+     --------------------------------------------------------- */
+  function initPhoneReveal() {
+    var btn = $("[data-phone-toggle]");
+    var box = $("#platform-phone");
+    if (!btn || !box) return;
+    var show = $("[data-phone-show]", btn);
+    var hide = $("[data-phone-hide]", btn);
+
+    btn.addEventListener("click", function () {
+      var opening = box.hidden;
+      box.hidden = !opening;
+      btn.setAttribute("aria-expanded", String(opening));
+      if (show) show.hidden = opening;
+      if (hide) hide.hidden = !opening;
+    });
+  }
+
+  /* ---------------------------------------------------------
      boot
      --------------------------------------------------------- */
   function boot() {
@@ -566,6 +585,7 @@
     initCopy();
     initPortrait();
     initContactForm();
+    initPhoneReveal();
     initYear();
     initAutoUpdate();
     document.documentElement.classList.add("js-ready");
