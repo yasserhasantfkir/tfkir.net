@@ -583,7 +583,7 @@ html:has(.now-cloud) .now-bubble { display: none; }
 .now-cloud {
   position: fixed; inset-block-end: calc(82px + env(safe-area-inset-bottom, 0px));
   inset-inline-start: calc(22px + env(safe-area-inset-left, 0px)); z-index: 95;
-  inline-size: min(360px, calc(100vw - 32px)); max-inline-size: 360px; padding: clamp(1.05rem, 0.9rem + 0.5vw, 1.35rem);
+  inline-size: min(288px, calc(100vw - 32px)); max-inline-size: 288px; padding: 0.95rem 1rem;
   border: 1px solid color-mix(in srgb, var(--lapis-400) 48%, transparent); border-radius: var(--r-lg);
   background: radial-gradient(130% 100% at 100% 0%, color-mix(in srgb, var(--amber-400) 12%, transparent), transparent 58%), linear-gradient(160deg, color-mix(in srgb, var(--ink-750) 94%, transparent), color-mix(in srgb, var(--ink-900) 96%, transparent));
   color: var(--text);
@@ -604,11 +604,14 @@ html:has(.now-cloud) .now-bubble { display: none; }
   transition: color 0.3s var(--ease), border-color 0.3s var(--ease), background-color 0.3s var(--ease), transform 0.3s var(--ease-out);
 }
 .now-cloud__close {
-  position: absolute; inset-block-start: 0.65rem; inset-inline-end: 0.65rem; inline-size: 2.5rem; block-size: 2.5rem;
+  position: absolute; inset-block-start: 0.45rem; inset-inline-end: 0.45rem; inline-size: 1.6rem; block-size: 1.6rem;
 }
 .now-dialog__close { position: absolute; inset-block-start: 0.7rem; inset-inline-end: 0.7rem; }
 .now-cloud__close::before, .now-cloud__close::after, .now-dialog__close::before, .now-dialog__close::after {
   content: ""; position: absolute; inline-size: 13px; block-size: 1.5px; border-radius: 2px; background: currentColor;
+}
+.now-cloud__close::before, .now-cloud__close::after {
+  inline-size: 9px; block-size: 1.25px;
 }
 .now-cloud__close::before, .now-dialog__close::before { transform: translate(-50%, -50%) rotate(45deg); }
 .now-cloud__close::after, .now-dialog__close::after { transform: translate(-50%, -50%) rotate(-45deg); }
@@ -620,18 +623,18 @@ html:has(.now-cloud) .now-bubble { display: none; }
   transform: rotate(90deg);
 }
 .now-cloud__eyebrow {
-  display: inline-flex; align-items: center; gap: 0.5rem; padding-inline-end: 3.5rem; color: var(--amber-200);
-  font-size: var(--fs-kicker); font-weight: 600;
+  display: inline-flex; align-items: center; gap: 0.4rem; padding-inline-end: 2rem; color: var(--amber-200);
+  font-size: 0.68rem; font-weight: 600; line-height: 1.5;
 }
 [data-theme="light"] .now-cloud__eyebrow { color: var(--amber-600); }
 .now-cloud__title {
-  margin-block-start: 0.65rem; padding-inline-end: 2.5rem; color: var(--text); font-family: var(--font-display);
-  font-size: clamp(1.02rem, 0.96rem + 0.35vw, 1.18rem); font-weight: 600; line-height: 1.5;
+  margin-block-start: 0.45rem; padding-inline-end: 1.8rem; color: var(--text); font-family: var(--font-display);
+  font-size: 0.98rem; font-weight: 600; line-height: 1.5;
 }
-.now-cloud__text { margin-block-start: 0.45rem; color: var(--muted); font-size: var(--fs-small); line-height: 1.8; }
+.now-cloud__text { margin-block-start: 0.3rem; color: var(--muted); font-size: 0.78rem; line-height: 1.7; }
 .now-cloud__foot {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;
-  margin-block-start: 1rem; padding-block-start: 0.9rem; border-block-start: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 0.6rem;
+  margin-block-start: 0.8rem; padding-block-start: 0.7rem; border-block-start: 1px solid var(--line);
 }
 [data-theme="light"] .now-cloud {
   background: radial-gradient(130% 100% at 100% 0%, color-mix(in srgb, var(--amber-400) 16%, transparent), transparent 58%), linear-gradient(160deg, var(--ink-850), var(--ink-900));
@@ -650,7 +653,7 @@ html:has(.now-cloud) .now-bubble { display: none; }
 /* ---------- نافذة «الآن» ---------- */
 
 .now-dialog {
-  inline-size: min(560px, calc(100vw - 2rem)); max-inline-size: 560px; max-block-size: calc(100dvh - 2rem);
+  inline-size: min(460px, calc(100vw - 2rem)); max-inline-size: 460px; max-block-size: calc(100dvh - 2rem);
   margin: auto; padding: 0; border: 0; background: transparent; color: var(--text); overflow: visible;
 }
 .now-dialog::backdrop {
@@ -946,12 +949,12 @@ html:has(.now-cloud) .now-bubble { display: none; }
 }
 @media (max-width: 640px) {
   .now-cloud {
-    inline-size: min(340px, calc(100vw - 24px)); max-inline-size: none;
+    inline-size: min(288px, calc(100vw - 24px)); max-inline-size: none;
     inset-block-end: calc(84px + env(safe-area-inset-bottom, 0px));
     inset-inline-start: calc(12px + env(safe-area-inset-left, 0px));
   }
   [dir="rtl"] .now-cloud { inset-inline-start: calc(12px + env(safe-area-inset-right, 0px)); }
-  .now-cloud__close { inline-size: 2.75rem; block-size: 2.75rem; }
+  .now-cloud__close { inline-size: 1.6rem; block-size: 1.6rem; }
   .now-dialog__panel { padding: 1.25rem; padding-block-start: 2.6rem; }
   .hero__now { inset-inline: 0.75rem; inset-block-end: 0.75rem; inline-size: auto; }
   .now-bubble {

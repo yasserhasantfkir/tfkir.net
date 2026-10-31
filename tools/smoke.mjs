@@ -1,7 +1,11 @@
-/* اختبار دخان لـ assets/js/app.js و assets/js/admin.js
+/* اختبار دخان لـ assets/js/app.js
    يشغّل boot() على DOM وهمي ويرصد أي استثناء أو مرجع غير معرّف. */
 import fs from "node:fs";
+import path from "node:path";
 import vm from "node:vm";
+import { fileURLToPath } from "node:url";
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 /* ---------- DOM وهمي بسيط ---------- */
 const ALL_ATTR = ["id", "href", "src", "value", "type", "content", "alt", "class", "lang", "dir"];
@@ -149,32 +153,14 @@ export function run(file, idList = [], opts = {}) {
 /* ---------- تشغيل ---------- */
 const appIds = [
   "site-header", "scroll-progress", "to-top", "nav-toggle", "drawer",
-  "theme-toggle", "toast", "toast-text", "contact-form", "article-head",
-  "article-body", "article-loading", "article-404", "article-cat", "article-title",
-  "article-date", "article-read", "crumb-title", "toc", "toc-list", "article-share",
-  "share-x", "share-wa", "share-in", "share-copy", "year", "idea-grid", "idea-empty",
-  "idea-filters", "hero", "articles-rail",
-];
-const adminIds = [
-  "adm-top", "adm-user", "adm-theme", "adm-settings", "adm-logout", "adm-main",
-  "view-login", "view-force", "view-app", "view-editor", "login-form", "login-error",
-  "login-submit", "force-form", "cred-form", "modal", "preview", "confirm", "toast",
-  "toast-text", "adm-list", "adm-empty", "adm-stats", "c-drafts", "c-published",
-  "c-total", "adm-search", "adm-cat", "adm-refresh", "adm-new", "ed-content", "ed-toolbar",
-  "ed-back", "ed-status", "ed-preview", "ed-draft", "ed-publish", "ed-delete",
-  "ed-title", "ed-excerpt", "ed-category", "ed-tags", "ed-slug", "ed-counts",
-  "ed-autosave", "pv-title", "pv-cat", "pv-read", "pv-body", "confirm-text",
-  "confirm-title", "confirm-yes", "fc-old", "fc-user", "fc-pass", "fc-pass2",
-  "cc-old", "cc-user", "cc-pass", "cc-pass2", "lg-user", "lg-pass",
+  "theme-toggle", "toast", "toast-text", "contact-form", "year", "hero",
 ];
 
 let bad = 0;
 for (const [f, ids, opts] of [
   ["assets/js/app.js", appIds, { path: "/", tag: "div" }],
-  ["assets/js/app.js", appIds, { path: "/article", search: "?id=x", tag: "div" }],
-  ["assets/js/admin.js", adminIds, { path: "/admin", tag: "div" }],
 ]) {
-  const errs = run("/workspace/tfkir.net/" + f, ids, opts);
+  const errs = run(path.join(ROOT, f), ids, opts);
   if (errs.length) { bad++; console.log("✗", f, opts.path, "→"); errs.forEach((e) => console.log("   ", e)); }
   else console.log("✓", f, opts.path);
 }

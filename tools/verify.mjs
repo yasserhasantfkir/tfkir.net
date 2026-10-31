@@ -1,6 +1,6 @@
 /* ============================================================
    tools/verify.mjs — تحقق شامل من الموقع حرفًا بحرف
-   يفحص النسخ الثلاث (ar/tr/en) في 12 صفحة:
+   يفحص النسخ الثلاث (ar/tr/en) في 10 صفحات:
      الروابط الداخلية، المبدّل، الوسوم، الـ head، JSON-LD،
      بقايا العربية، نصوص التطوير، تعارض الصيغ، الخريطة، التغذية.
    الاستعمال:  node tools/verify.mjs
@@ -10,7 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const PAGES = ["index", "about", "thinking", "ideas", "article", "projects", "talks", "links", "contact", "thank-you", "404", "privacy", "now"];
+const PAGES = ["index", "about", "thinking", "projects", "talks", "links", "contact", "thank-you", "404", "privacy"];
 const LANGS = ["ar", "tr", "en"];
 const HAS_AR = /[\u0600-\u06FF]/;
 const errors = [];
@@ -22,7 +22,7 @@ const exists = (rel) => fs.existsSync(path.join(ROOT, rel));
 
 /* أدوات مساعدة */
 const stripTags = (h) => h.replace(/<svg[\s\S]*?<\/svg>/g, " ").replace(/<[^>]*>/g, "\u0000");
-const ALLOWED_ROOT = /^\/(assets\/|api\/|functions\/|admin|feed\.xml|robots\.txt|sitemap\.xml|site\.webmanifest|favicon)/;
+const ALLOWED_ROOT = /^\/(assets\/|api\/|functions\/|robots\.txt|sitemap\.xml|site\.webmanifest|favicon)/;
 
 for (const lang of LANGS) {
   for (const p of PAGES) {
@@ -171,33 +171,11 @@ for (const lang of LANGS) for (const p of PAGES) {
   }
 }
 const urls = [...sm.matchAll(/<loc>([^<]+)<\/loc>/g)].length;
-if (urls !== 36) warnings.push(`sitemap.xml: ${urls} رابطًا (المتوقع 36)`);
-if (!exists("feed.xml")) errors.push("feed.xml مفقود");
+if (urls !== 27) warnings.push(`sitemap.xml: ${urls} رابطًا (المتوقع 27)`);
 if (!exists("_headers")) errors.push("_headers مفقود");
 if (!exists("_redirects")) warnings.push("_redirects مفقود");
 
-/* ---- لوحة التحرير ---- */
-if (!exists("admin.html")) {
-  errors.push("admin.html مفقود");
-} else {
-  const ah = read("admin.html");
-  const atag = "admin.html";
-  if (!/lang="ar"/.test(ah) || !/dir="rtl"/.test(ah)) errors.push(`${atag}: <html> يجب أن تكون ar/rtl`);
-  if (!/<meta name="robots" content="noindex/.test(ah)) errors.push(`${atag}: لا بد من noindex للوحة التحرير`);
-  if (/<title>[^<]*<\/title>/.test(ah) === false) errors.push(`${atag}: العنوان مفقود`);
-  for (const id of ["view-login", "view-force", "view-app", "view-editor", "ed-content", "ed-toolbar", "login-form", "cred-form"]) {
-    if (!ah.includes(`id="${id}"`)) errors.push(`${atag}: عنصر مفقود → #${id}`);
-  }
-  for (const m of ah.matchAll(/(?:href|src)="(\/assets\/[^"]+)"/g)) {
-    if (!exists(m[1].split("?")[0])) errors.push(`${atag}: ملف مفقود → ${m[1]}`);
-  }
-  if (!/\?v=[0-9a-f]{8}"/.test(ah)) errors.push(`${atag}: الأصول بلا بصمة ?v=`);
-  const aOpens = (ah.match(/<(?:div|section|nav|header|footer|main|article|aside|form|label|button)\b/g) || []).length;
-  const aCloses = (ah.match(/<\/(?:div|section|nav|header|footer|main|article|aside|form|label|button)>/g) || []).length;
-  if (aOpens !== aCloses) errors.push(`${atag}: وسوم كتلية غير متوازنة (${aOpens}/${aCloses})`);
-}
-
-/* ---- دخان جافاسكربت: يشغّل app.js و admin.js على DOM وهمي ---- */
+/* ---- دخان جافاسكربت: يشغّل app.js على DOM وهمي ---- */
 {
   const { execFileSync } = await import("node:child_process");
   try {
@@ -221,9 +199,7 @@ if (!exists("_routes.json")) {
 }
 
 /* ---- دوال الخادم ---- */
-for (const fn of ["functions/api/auth/login.js", "functions/api/posts/index.js", "functions/article.js", "functions/ideas.js", "functions/_lib.js"]) {
-  if (!exists(fn)) errors.push(`دالة مفقودة → ${fn}`);
-}
+if (!exists("functions/api/contact.js")) errors.push("دالة مفقودة → functions/api/contact.js");
 
 /* ---- التقرير ---- */
 console.log(`\n  فُحص ${LANGS.length * PAGES.length} صفحة + الخريطة والملفات العامة`);

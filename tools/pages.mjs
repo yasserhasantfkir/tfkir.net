@@ -2,8 +2,8 @@
    tools/pages.mjs — بناء صفحات الموقع
    ============================================================ */
 import {
-  site, doctor, marquee, domains, standaloneFields, now,
-  timeline, ideas, ideaCategories, projects, projectFilters, talks, talkTypes,
+  site, doctor, marquee, domains, standaloneFields,
+  projects, projectFilters, talks, talkTypes,
   linkGroups,
 } from "./content.mjs";
 import { icon, socialIcon } from "./icons.mjs";
@@ -33,36 +33,8 @@ const listSection = ({ id, chips, cards, empty, title, desc }) => `
     }
   </div>
 </section>`;
-const articleHref = (slug) => `/article?id=${encodeURIComponent(slug)}`;
-
 /* الوصف التعريفي: كل جملة في سطر مستقل */
 const leadHtml = (d = D) => d.leadLines.map((l) => esc(l)).join("<br>\n        ");
-
-/* شريط «الآن» في الرئيسية */
-const nowRibbon = () => {
-  const item = (now.items || [])[0];
-  if (!item) return "";
-  const until = item.until ? ` data-until="${esc(item.until)}"` : "";
-  return `<section class="now-ribbon-wrap" aria-labelledby="now-ribbon-title">
-  <div class="shell">
-    <div class="now-ribbon" data-reveal>
-      <span class="now-ribbon__glow" aria-hidden="true"></span>
-      <div class="now-ribbon__text">
-        <span class="now-ribbon__eyebrow"><span class="now-live-dot" aria-hidden="true"></span> ${esc(now.eyebrow)}</span>
-        <h2 class="now-ribbon__title" id="now-ribbon-title">${esc(item.title)}</h2>
-        <p class="now-ribbon__lead">${esc(now.lead)}</p>
-      </div>
-      <div class="now-ribbon__side">
-        <span class="now-clock" data-now-countdown${until} aria-live="polite">${esc(now.clockLabel)}</span>
-        <div class="now-ribbon__actions">
-          <button class="btn btn--primary btn--sm" type="button" data-now-open aria-haspopup="dialog">${esc(now.detail)}</button>
-          <a class="btn btn--ghost btn--sm" href="/now">${esc(now.pageLink)}</a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>`;
-};
 
 const standaloneFieldSection = () => {
   const cards = standaloneFields
@@ -133,7 +105,6 @@ export function homePage() {
       <div class="hero__cta" data-reveal style="--d:260ms">
         <a class="btn btn--primary btn--lg" href="/thinking">${icon("compass")}<span>ابدأ من الميادين</span></a>
         <a class="btn btn--ghost btn--lg" href="/about">${icon("user")}<span>من هو الدكتور؟</span></a>
-        <a class="btn btn--quiet btn--lg" href="/ideas">الأفكار${icon("arrowLeft", "btn__arrow")}</a>
       </div>
     </div>
 
@@ -156,8 +127,6 @@ export function homePage() {
             ${marqueeItems}
   </div>
 </div>
-
-${nowRibbon()}
 
 <!-- ===================== من أنا ===================== -->
 <section class="section" id="intro">
@@ -222,26 +191,6 @@ ${nowRibbon()}
 
 ${standaloneFieldSection()}
 
-<!-- ===================== شريط المقالات المتحرك ===================== -->
-<section class="section" id="articles-rail" data-rail hidden>
-  <div class="shell rail__head">
-    <div class="rail__head-text">
-      <span class="kicker" data-reveal>${icon("book")} المقالات</span>
-      <h2 class="rail__title" data-reveal style="--d:80ms">آخر ما كُتب على المنصة</h2>
-    </div>
-    <div class="rail__tools">
-      <button class="rail__toggle" type="button" data-rail-toggle aria-pressed="false"
-              data-label-resume="إيقاف الحركة" data-label-pause="تشغيل الحركة">
-        <span class="dot" aria-hidden="true"></span><span data-rail-label>إيقاف الحركة</span>
-      </button>
-      <a class="tlink" href="/ideas" data-reveal style="--d:160ms">كل المقالات${icon("arrowLeft", "btn__arrow")}</a>
-    </div>
-  </div>
-  <div class="rail" data-rail-viewport role="region" aria-label="أحدث المقالات">
-    <div class="rail__track" data-rail-track></div>
-  </div>
-</section>
-
 ${ctaBand()}`;
 
   return layout({
@@ -261,11 +210,6 @@ ${ctaBand()}`;
           name: site.shortName,
           inLanguage: "ar",
           publisher: { "@id": site.origin + "/#person" },
-          potentialAction: {
-            "@type": "SearchAction",
-            target: { "@type": "EntryPoint", urlTemplate: site.origin + "/ideas?q={search_term_string}" },
-            "query-input": "required name=search_term_string",
-          },
         },
       ],
     },
@@ -284,7 +228,7 @@ export function aboutPage() {
     kicker: "عن الدكتور",
     title: `${esc(D.nameShort)}، <span class="gradient-text">طبيبٌ يفكّر ويكتب</span>`,
     lead:
-      "صفحة تعريفية بالمنصة ومؤسسها: الأفكار، والميادين، والدعوة.",
+      "صفحة تعريفية بالمنصة ومؤسسها: الميادين، والمنهج، والدعوة.",
     crumbs: [{ label: "الرئيسية", href: "/" }, { label: "عن الدكتور" }],
     aside: `<div class="contact-method" style="background:var(--grad-brand-soft)">
             <span class="contact-method__ico">${icon("user")}</span>
@@ -367,7 +311,7 @@ ${ctaBand({
 }
 
 /* ============================================================
-   4) الأفكار
+   4) التفكير الطبي
    ============================================================ */
 export function thinkingPage() {
   const domainCards = domains
@@ -427,181 +371,6 @@ ${ctaBand({
       name: "التفكير الطبي",
       about: { "@type": "Thing", name: "التفكير السريري" },
     },
-  });
-}
-
-export function ideasPage() {
-  const chips = ideaCategories
-    .map(
-      (c, i) =>
-        `<button class="chip" type="button" data-filter="${c === "الكل" ? "*" : esc(c)}" aria-pressed="${i === 0}">${esc(c)}</button>`
-    )
-    .join("\n            ");
-
-  const cards = ideas
-    .map(
-      (i, idx) => `<a class="post-card" href="${articleHref(i.slug)}" data-reveal
-             data-cat="${esc(i.category)}"${i.featured ? ' data-featured="true"' : ""} style="--d:${(idx % 3) * 90}ms">
-            <div class="post-card__meta">
-              <span class="post-card__cat">${esc(i.category)}</span>
-              <span>${esc(i.dateAr)}</span>
-              <span>${esc(i.read)}</span>
-            </div>
-            <h2 class="post-card__title">${esc(i.title)}</h2>
-            <p class="post-card__excerpt">${esc(i.excerpt)}</p>
-            <div class="post-card__foot">
-              <span class="post-card__read">اقرأ المقال${icon("arrowLeft")}</span>
-              <span>${i.tags.map(esc).join(" · ")}</span>
-            </div>
-          </a>`
-    )
-    .join("\n          ");
-
-  const body = `${pageHero({
-    kicker: "الأرشيف",
-    title: "أفكار <span class=\"gradient-text\">ومقالات</span>",
-    lead:
-      `مقالات في التفكير الطبي وقراءة الأدلة وتعليم الطب والكتابة، مكتوبة على مهل ومفتوحة للنقاش: ` +
-      "كل مقال رأي شخصي قابل للتصحيح.",
-    crumbs: [{ label: "الرئيسية", href: "/" }, { label: "الأفكار" }],
-    meta: [
-      `<span data-posts-count>${ideas.length}</span> مقالات منشورة`,
-      `${ideaCategories.length - 1} تصنيفات`,
-    ],
-  })}
-
-<section class="section section--tight">
-  <div class="shell">
-    <div class="chips" id="idea-filters" role="group" aria-label="تصفية المقالات">
-            ${chips}
-    </div>
-
-    <div class="grid grid--3" id="idea-grid" style="margin-top:1.8rem"><!--#POSTS_GRID-->${cards}
-    </div>
-
-    <p class="empty-note" id="idea-empty" hidden>لا توجد مقالات منشورة بعد. المقالات ستُضاف لاحقًا.</p>
-  </div>
-</section>
-
-${ctaBand({
-  title: "هل لديك فكرة أو طلب؟",
-  text: "أرسل طلبك أو نبذة عن فكرتك، وسأقرأها بتمعّن.",
-  primary: { href: "/contact", label: "أرسل طلبك" },
-  secondary: { href: "/links", label: "كل الروابط" },
-})}`;
-
-  return layout({
-    active: "/ideas",
-    path: "/ideas",
-    title: "الأفكار والمقالات",
-    desc: "مقالات في التفكير الطبي وقراءة الأدلة وتعليم الطب والكتابة. قراءةٌ سريعة في الفهم، بطيئة في الحكم.",
-    body,
-    jsonLd: {
-      "@context": "https://schema.org",
-      "@type": "CollectionPage",
-      name: "الأفكار والمقالات",
-      hasPart: ideas.map((i) => ({
-        "@type": "Article",
-        headline: i.title,
-        description: i.excerpt,
-        datePublished: i.date,
-        url: site.origin + articleHref(i.slug),
-        author: { "@type": "Person", name: D.nameAr },
-      })),
-    },
-  });
-}
-
-/* ============================================================
-   5) صفحة المقال (article.html?id=...)
-   ============================================================ */
-export function articlePage() {
-  const fallbackCards = ideas
-    .slice(0, 3)
-    .map(
-      (i) => `<a class="post-card" href="${articleHref(i.slug)}">
-            <div class="post-card__meta"><span class="post-card__cat">${esc(i.category)}</span><span>${esc(i.dateAr)}</span></div>
-            <h3 class="post-card__title">${esc(i.title)}</h3>
-            <p class="post-card__excerpt">${esc(i.excerpt)}</p>
-          </a>`
-    )
-    .join("\n          ");
-
-  const body = `<article class="article" id="article">
-  <div class="shell">
-    <nav class="crumbs" aria-label="مسار التصفح" style="margin-bottom:1.5rem">
-      <a href="/">الرئيسية</a><span class="crumbs__sep" aria-hidden="true">/</span>
-      <a href="/ideas">الأفكار</a><span class="crumbs__sep" aria-hidden="true">/</span>
-      <span aria-current="page" id="crumb-title">…</span>
-    </nav>
-
-    <div class="article-layout">
-      <div>
-        <header class="article__head" id="article-head" hidden>
-          <span class="kicker" id="article-cat">—</span>
-          <h1 class="article__title" id="article-title">—</h1>
-          <div class="article__meta">
-            <span>${icon("calendar")} <time id="article-date">—</time></span>
-            <span>${icon("clock")} <span id="article-read">—</span></span>
-            <span>${icon("user")} ${esc(D.nameShort)}</span>
-          </div>
-        </header>
-
-        <div class="prose" id="article-body" hidden></div>
-
-        <div class="prose" id="article-loading">
-          <p class="lead">جارٍ تحميل المقال…</p>
-        </div>
-
-        <section id="article-404" hidden style="padding-top:1rem">
-          <div class="empty-note" style="margin-bottom:1.5rem">
-            <p>تعذّر العثور على هذا المقال.</p>
-          </div>
-          ${
-            fallbackCards.trim()
-              ? `<h2 style="font-size:var(--fs-h3);margin-bottom:1rem">مقالات أخرى</h2>
-          <div class="grid grid--3">
-            ${fallbackCards}
-          </div>`
-              : ""
-          }
-        </section>
-
-        <div class="article__share" id="article-share" hidden>
-          <span style="font-size:var(--fs-xs);color:var(--faint)">شارك المقال:</span>
-          <a class="btn btn--ghost btn--sm" id="share-x" href="#" target="_blank" rel="noopener">${icon("x")}<span>إكس</span></a>
-          <a class="btn btn--ghost btn--sm" id="share-wa" href="#" target="_blank" rel="noopener">${icon("whatsapp")}<span>واتساب</span></a>
-          <a class="btn btn--ghost btn--sm" id="share-in" href="#" target="_blank" rel="noopener">${icon("linkedin")}<span>لينكدإن</span></a>
-          <button class="btn btn--ghost btn--sm" type="button" id="share-copy">${icon("copy")}<span>نسخ الرابط</span></button>
-        </div>
-      </div>
-
-      <aside class="article-layout__aside">
-        <div class="toc" id="toc" hidden>
-          <p class="toc__title">في هذا المقال</p>
-          <ol id="toc-list"></ol>
-        </div>
-      </aside>
-    </div>
-  </div>
-</article>
-
-${ctaBand({
-  title: "الفكرة تهمّك؟ ناقشها.",
-  text: "المقالات مفتوحة للنقاش. إن كان لديك اعتراض أو إضافة أو مثال من عيادتك، الباب مفتوح.",
-  primary: { href: "/contact", label: "اكتب ردّك" },
-  secondary: { href: "/ideas", label: "كل المقالات" },
-})}`;
-
-  return layout({
-    active: "/ideas",
-    path: "/article",
-    noIndex: true,
-    title: "مقال",
-    desc: "قراءة مقال من أرشيف التفكير الطبي للدكتور ياسر حسن: فكرة كاملة، بأقسامها ومراجعها، قابلة للمناقشة والتصحيح.",
-    body,
-    /* بيانات المقالات الثابتة (window.TFKIR_IDEAS) — تسبق app.js لأنها تُقرأ عند الإقلاع */
-    scripts: '<script src="/assets/js/ideas.data.js" defer></script>',
   });
 }
 
@@ -696,7 +465,7 @@ ${ctaBand({
   title: "لديك مشروع يخرج من فكرة؟",
   text: "أرسل وصف المشكلة في سطرين. أبحث عن المشاريع التي تختصر خطوة مكررة، لا عن أفكار جديدة كليًا.",
   primary: { href: "/contact", label: "ناقش مشروعك" },
-  secondary: { href: "/ideas", label: "اقرأ الأفكار" },
+  secondary: { href: "/thinking", label: "الميادين" },
 })}`;
 
   return layout({
@@ -1097,7 +866,7 @@ export function thankYouPage() {
     </p>
     <div class="err__actions">
       <a class="btn btn--primary btn--lg" href="/">${icon("arrowRight")}<span>العودة للرئيسية</span></a>
-      <a class="btn btn--ghost btn--lg" href="/ideas">${icon("book")}<span>تصفّح الأفكار</span></a>
+      <a class="btn btn--ghost btn--lg" href="/projects">${icon("spark")}<span>تصفّح المشاريع</span></a>
     </div>
   </div>
 </section>`;
@@ -1119,7 +888,7 @@ export function notFoundPage() {
   const quick = [
     { href: "/", label: "الرئيسية", icon: "arrowRight" },
     { href: "/about", label: "عن الدكتور", icon: "user" },
-    { href: "/ideas", label: "الأفكار", icon: "book" },
+    { href: "/thinking", label: "التفكير الطبي", icon: "compass" },
     { href: "/projects", label: "المشاريع", icon: "spark" },
     { href: "/links", label: "الروابط", icon: "link" },
     { href: "/contact", label: "اتصل بنا", icon: "message" },
@@ -1142,8 +911,8 @@ export function notFoundPage() {
         ${quick}
     </div>
     <p class="form-note" style="margin-top:2.5rem">
-      ${icon("search")} جرّب البحث في <a href="/ideas" class="tlink">الأرشيف</a>، أو انتقل مباشرة إلى
-      <a href="/links" class="tlink">صفحة الروابط</a>.
+      ${icon("search")} انتقل مباشرة إلى <a href="/thinking" class="tlink">ميادين التفكير</a>،
+      أو <a href="/links" class="tlink">صفحة الروابط</a>.
     </p>
   </div>
 </section>`;
@@ -1233,96 +1002,4 @@ export function privacyPage() {
     desc: "سياسة خصوصية موقع tfkir.net: البيانات المرسلة عبر نموذج التواصل، وملفات الارتباط، والخطوط الخارجية.",
     body,
   });
-}
-
-/* ============================================================
-   الآن — طبقة خدمية مؤقتة (Ephemeral Layer)
-   ============================================================ */
-export function nowPage() {
-  const items = now.items || [];
-  const item = items[0];
-  const until = item && item.until ? ` data-until="${esc(item.until)}"` : "";
-
-  const itemCards = items
-    .map((it, i) => {
-      const meta = (it.meta || []).map((m) => `<span class="tag tag--teal">${esc(m)}</span>`).join("");
-      return `<article class="card card--now" data-reveal style="--d:${i * 60}ms">
-            <span class="card__index" aria-hidden="true">NOW</span>
-            <span class="card__icon">${icon("spark")}</span>
-            <h3 class="card__title">${esc(it.title)}</h3>
-            <p class="card__text">${esc(it.desc)}</p>
-            <div class="now-card__foot">
-              <span class="tag tag--brass">${esc(it.badge)}</span>
-              ${meta}
-            </div>
-            <div class="card__foot">
-              <span class="now-clock" data-now-countdown${it.until ? ` data-until="${esc(it.until)}"` : ""} aria-live="polite">${esc(now.clockLabel)}</span>
-              <a class="btn btn--primary btn--sm" href="${esc(it.href)}">${esc(it.cta)}${icon("arrowLeft", "btn__arrow")}</a>
-            </div>
-          </article>`;
-    })
-    .join("\n          ");
-
-  const pillars = (now.intro.pillars || [])
-    .map(
-      (pil, i) => `<article class="now-pillar" data-reveal style="--d:${i * 70}ms">
-              <span class="card__num">${String(i + 1).padStart(2, "0")}</span>
-              <h3 class="card__title">${esc(pil.title)}</h3>
-              <p class="card__text">${esc(pil.text)}</p>
-            </article>`
-    )
-    .join("\n            ");
-
-  const aside = item
-    ? `<div class="card card--now">
-            <span class="card__icon">${icon("clock")}</span>
-            <span class="kicker">${esc(now.dialogEyebrow)}</span>
-            <h2 class="card__title">${esc(now.clockLabel)}</h2>
-            <span class="now-clock" data-now-countdown${until} aria-live="polite">لفترة محدودة</span>
-            <p class="card__text">${esc(now.note)}</p>
-          </div>`
-    : "";
-
-  const body = `${pageHero({
-    kicker: now.kicker,
-    title: esc(now.title),
-    lead: esc(now.lead),
-    crumbs: [{ label: "الرئيسية", href: "/" }, { label: "الآن", href: "/now" }],
-    aside,
-  })}
-
-<section class="section">
-  <div class="shell now-intro">
-    <div class="section-head" style="margin-bottom:0">
-      <span class="kicker" data-reveal>${icon("layers")} ${esc(now.kicker)}</span>
-      <h2 class="sec-title" data-reveal style="--d:80ms">${esc(now.intro.title)}</h2>
-      <p class="sec-lead" data-reveal style="--d:140ms">${esc(now.intro.lead)}</p>
-    </div>
-    <div class="now-pillars">
-      ${pillars}
-    </div>
-  </div>
-</section>
-
-<section class="section section--tight" id="now-services">
-  <div class="shell">
-    ${
-      items.length
-        ? `<div class="now-item-grid">${itemCards}</div>`
-        : `<div class="empty-note empty-note--tall">
-            <p class="empty-note__t">${esc(now.emptyTitle)}</p>
-            <p class="empty-note__d">${esc(now.emptyDesc)}</p>
-          </div>`
-    }
-  </div>
-</section>
-
-${ctaBand({
-  title: "هل لديك طلب خدمة؟",
-  text: "تواصل مع فريق المنصة للاستفسار عن الخدمات المؤقتة.",
-  primary: { href: "/contact", label: "تواصل" },
-  secondary: { href: "/links", label: "كل الروابط" },
-})}`;
-
-  return layout({ active: "/now", title: now.title, desc: now.lead, path: "/now", body });
 }

@@ -25,18 +25,15 @@ const attr = (o = {}) =>
 const nowItem = (now.items || [])[0] || null;
 const brandMark = (extra = "") =>
   `<span class="brand__mark${extra ? ` ${extra}` : ""}" aria-hidden="true"><img class="brand__mark-img" src="/assets/img/logo-mark-sm.png" alt="" width="44" height="44" decoding="async" data-no-translate></span>`;
-const clockAttr = (item) => (item && item.until ? ` data-until="${esc(item.until)}"` : "");
-
 function nowCloud() {
   if (!nowItem) return "";
-  return `<aside class="now-cloud" id="now-cloud" aria-label="سحابة التفكير — خدمة مؤقتة" hidden>
+  return `<aside class="now-cloud" id="now-cloud" aria-label="سحابة التفكير — الخدمة الحالية النشطة" hidden>
   <span class="now-cloud__tail" aria-hidden="true"></span>
   <button class="now-cloud__close" type="button" data-now-close aria-label="${esc(now.closeCloud)}"></button>
   <span class="now-cloud__eyebrow"><span class="now-live-dot" aria-hidden="true"></span> ${esc(now.eyebrow)}</span>
   <p class="now-cloud__title">${esc(nowItem.title)}</p>
   <p class="now-cloud__text">${esc(nowItem.desc)}</p>
   <div class="now-cloud__foot">
-    <span class="now-clock" data-now-countdown${clockAttr(nowItem)} aria-live="polite">${esc(now.clockLabel)}</span>
     <button class="btn btn--primary btn--sm" type="button" data-now-open>${esc(now.detail)}</button>
   </div>
 </aside>`;
@@ -52,15 +49,9 @@ function nowDialog() {
     <h2 class="now-dialog__title" id="now-dialog-title">${esc(nowItem.title)}</h2>
     <p class="now-dialog__lead">${esc(nowItem.desc)}</p>
     <ul class="now-dialog__meta">${meta}</ul>
-    <div class="now-dialog__clock">
-      <span>${esc(now.clockLabel)}</span>
-      <strong class="now-clock" data-now-countdown${clockAttr(nowItem)} aria-live="polite">لفترة محدودة</strong>
-    </div>
     <div class="now-dialog__actions">
       <a class="btn btn--primary" href="${esc(nowItem.href)}">${esc(nowItem.cta)}</a>
-      <a class="btn btn--ghost" href="/now">${esc(now.pageLink)}</a>
     </div>
-    <p class="now-dialog__note">${esc(now.note)}</p>
   </div>
 </dialog>`;
 }
@@ -124,7 +115,6 @@ ${noIndex ? '<meta name="robots" content="noindex, follow">' : '<meta name="robo
 <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png" sizes="180x180">
 <link rel="manifest" href="/site.webmanifest">
-<link rel="alternate" type="application/rss+xml" title="${esc(site.shortName)} — الأفكار" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="/assets/css/base.css">
@@ -172,10 +162,6 @@ export function header(active = "/") {
     </nav>
 
     <div class="header-actions">
-      <a class="now-chip" href="/now" data-now-open aria-haspopup="dialog" aria-label="الآن — سحابة التفكير">
-        <span class="now-chip__dot" aria-hidden="true"></span>
-        <span class="now-chip__text">الآن</span>
-      </a>
       <div class="lang-switch" role="group" aria-label="Language" data-lang-switch></div>
       <button class="icon-btn" id="theme-toggle" type="button" aria-label="تبديل السمة" title="تبديل السمة الفاتحة/الداكنة">
         ${icon("moon", "i-moon")}${icon("sun", "i-sun")}
@@ -197,14 +183,6 @@ export function header(active = "/") {
       <button class="icon-btn" type="button" data-close-drawer aria-label="إغلاق القائمة">${icon("close")}</button>
     </div>
         ${drawerLinks}
-    ${
-      nowItem
-        ? `<a class="drawer__now" href="/now" data-now-open aria-haspopup="dialog">
-      <span><span class="now-live-dot" aria-hidden="true"></span><span>الآن</span><small>${esc(now.eyebrow)}</small></span>
-      ${icon("arrowLeft")}
-    </a>`
-        : ""
-    }
     <div class="drawer__foot">
       <div class="lang-switch" role="group" aria-label="Language" style="margin-inline-end:auto" data-lang-switch></div>
       <a class="btn btn--ghost btn--sm" href="/links">${icon("link")}<span>الروابط</span></a>
@@ -275,22 +253,10 @@ export function portrait() {
               </div>
               <img class="portrait__img" src="/${doctor.portrait}"
                    alt="صورة الدكتور ياسر حسن"
-                   width="900" height="1125" decoding="async" fetchpriority="high"
+                   width="640" height="640" decoding="async" fetchpriority="high"
                    data-portrait-img>
               <span class="portrait__wash" aria-hidden="true"></span>
             </div>
-            ${
-              nowItem
-                ? `<a class="hero__now" href="/now" data-now-open aria-haspopup="dialog">
-              <span class="hero__now-eyebrow"><span class="now-live-dot" aria-hidden="true"></span> ${esc(now.eyebrow)}</span>
-              <strong class="hero__now-title">${esc(nowItem.title)}</strong>
-              <span class="hero__now-meta">
-                <span class="now-clock" data-now-countdown${clockAttr(nowItem)} aria-live="polite">${esc(now.clockLabel)}</span>
-                <span>${esc(now.detail)} ${icon("arrowLeft")}</span>
-              </span>
-            </a>`
-                : ""
-            }
           </div>`;
 }
 

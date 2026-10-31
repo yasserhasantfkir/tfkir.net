@@ -10,9 +10,18 @@ https://www.tfkir.net/*   https://tfkir.net/:splat   301
 /home            /            301
 /الرئيسية        /            301
 
-/rss             /feed.xml      301
-/feed            /feed.xml      301
-/feed.xml        /feed.xml      200
+# صفحات أُزيلت (المقالات ولوحة التحرير وطبقة الآن) — تحويل دائم إلى الرئيسية
+/ideas           /            301
+/ideas.html      /            301
+/article         /            301
+/article.html    /            301
+/now             /            301
+/now.html        /            301
+/admin           /            301
+/admin.html      /            301
+/feed.xml        /            301
+/rss             /            301
+/feed            /            301
 
 # اختصار عربي إضافي
 /ابدأ-من-هنا   /            301

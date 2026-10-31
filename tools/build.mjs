@@ -5,11 +5,10 @@ import { fileURLToPath } from "node:url";
 
 import {
   site, doctor, marquee, domains,
-  timeline, ideas, ideaCategories, projects, projectFilters, talks, talkTypes,
+  timeline, projects, projectFilters, talks, talkTypes,
   linkGroups, footer, nav,
 } from "./content.mjs";
 import * as P from "./pages.mjs";
-import { adminPage } from "./admin-page.mjs";
 import { applyDict, fillSwitcher, patchHead, prefixLinks } from "./i18n.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -116,8 +115,6 @@ const PAGES = [
   ["index.html", P.homePage(), "/"],
   ["about.html", P.aboutPage(), "/about"],
   ["thinking.html", P.thinkingPage(), "/thinking"],
-  ["ideas.html", P.ideasPage(), "/ideas"],
-  ["article.html", P.articlePage(), "/article"],
   ["projects.html", P.projectsPage(), "/projects"],
   ["talks.html", P.talksPage(), "/talks"],
   ["links.html", P.linksPage(), "/links"],
@@ -125,17 +122,8 @@ const PAGES = [
   ["thank-you.html", P.thankYouPage(), "/thank-you"],
   ["404.html", P.notFoundPage(), "/404"],
   ["privacy.html", P.privacyPage(), "/privacy"],
-  ["now.html", P.nowPage(), "/now"],
 ];
 for (const [file, html, urlPath] of PAGES) emitPage(file, html, urlPath);
-
-/* ---------------- لوحة التحرير (عربية فقط، بلا ترجمة) ---------------- */
-done(
-  write(
-    "admin.html",
-    versionAssets(adminPage().replace("__SITE_VERSION__", SITE_VERSION))
-  )
-);
 
 /* ---------------- _routes.json — الدوال على المسارات المطلوبة فقط ---------------- */
 done(
@@ -144,7 +132,7 @@ done(
     JSON.stringify(
       {
         version: 1,
-        include: ["/api/*", "/article/*", "/ideas/*"],
+        include: ["/api/*"],
         exclude: [],
       },
       null,
@@ -163,31 +151,6 @@ if (i18nStats.badPh.size) {
   [...i18nStats.badPh].slice(0, 10).forEach((k) => console.warn(`     · ${k.slice(0, 90)}`));
 }
 
-/* ---------------- بيانات المقالات للعميل ---------------- */
-done(
-  write(
-    "assets/js/ideas.data.js",
-    `/* مولَّد آليًا من tools/content.mjs — لا تعدّله يدويًا */
-window.TFKIR_IDEAS = ${JSON.stringify(
-      ideas.map((i) => ({
-        slug: i.slug,
-        title: i.title,
-        excerpt: i.excerpt,
-        category: i.category,
-        date: i.date,
-        dateAr: i.dateAr,
-        read: i.read,
-        tags: i.tags,
-        body: i.body,
-        quote: i.quote || null,
-      })),
-      null,
-      0
-    )};
-`
-  )
-);
-
 /* ---------------- version.json — النسخة الحيّة (يتحقق منها app.js) ---------------- */
 done(write("version.json", JSON.stringify({ v: SITE_VERSION })));
 
@@ -200,7 +163,6 @@ User-agent: *
 Allow: /
 Disallow: /functions/
 Disallow: /api/
-Disallow: /admin
 
 # Major crawlers
 User-agent: Googlebot
@@ -226,19 +188,15 @@ const today = site.updatedAt;
 const statics = [
   { loc: "/", pri: "1.0", freq: "weekly" },
   { loc: "/about", pri: "0.9", freq: "monthly" },
-  { loc: "/article", pri: "0.6", freq: "monthly" },
   { loc: "/thank-you", pri: "0.2", freq: "yearly" },
   { loc: "/thinking", pri: "0.9", freq: "monthly" },
-  { loc: "/ideas", pri: "0.8", freq: "weekly" },
   { loc: "/projects", pri: "0.8", freq: "monthly" },
   { loc: "/talks", pri: "0.7", freq: "monthly" },
   { loc: "/links", pri: "0.6", freq: "monthly" },
   { loc: "/contact", pri: "0.7", freq: "yearly" },
   { loc: "/privacy", pri: "0.3", freq: "yearly" },
-  { loc: "/now", pri: "0.5", freq: "weekly" },
 ];
-const articleUrls = ideas.map((i) => ({ loc: `/article?id=${encodeURIComponent(i.slug)}`, pri: "0.7", freq: "monthly", mod: i.date }));
-const allStatics = [...statics, ...articleUrls];
+const allStatics = statics;
 const localized = (lang, loc) => {
   const [p, qs] = loc.split("?");
   const base = lang === "ar" ? p : `/${lang}${p === "/" ? "/" : p}`;
@@ -271,37 +229,6 @@ ${urlEntries.join("\n")}
   )
 );
 
-/* ---------------- feed.xml (RSS) ---------------- */
-done(
-  write(
-    "feed.xml",
-    `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>${site.shortName} — ${site.tagline}</title>
-    <link>${site.origin}/</link>
-    <description>${doctor.subtitle}</description>
-    <language>ar</language>
-    <lastBuildDate>${new Date(today).toUTCString()}</lastBuildDate>
-    <atom:link href="${site.origin}/feed.xml" rel="self" type="application/rss+xml"/>
-${ideas
-  .map(
-    (i) => `    <item>
-      <title><![CDATA[${i.title}]]></title>
-      <link>${site.origin}/article?id=${encodeURIComponent(i.slug)}</link>
-      <guid isPermaLink="true">${site.origin}/article?id=${encodeURIComponent(i.slug)}</guid>
-      <category>${i.category}</category>
-      <pubDate>${new Date(i.date).toUTCString()}</pubDate>
-      <description><![CDATA[${i.excerpt}]]></description>
-    </item>`
-  )
-  .join("\n")}
-  </channel>
-</rss>
-`
-  )
-);
-
 /* ---------------- _headers (Cloudflare Pages) ---------------- */
 done(
   write(
@@ -322,14 +249,6 @@ done(
 /api/*
   Cache-Control: no-store
   X-Robots-Tag: noindex
-
-/admin
-  Cache-Control: no-store
-  X-Robots-Tag: noindex, nofollow, noarchive
-
-/admin.html
-  Cache-Control: no-store
-  X-Robots-Tag: noindex, nofollow, noarchive
 
 /version.json
   Cache-Control: no-store
@@ -381,9 +300,18 @@ https://www.tfkir.net/*   https://tfkir.net/:splat   301
 /home            /            301
 /الرئيسية        /            301
 
-/rss             /feed.xml      301
-/feed            /feed.xml      301
-/feed.xml        /feed.xml      200
+# صفحات أُزيلت (المقالات ولوحة التحرير وطبقة الآن) — تحويل دائم إلى الرئيسية
+/ideas           /            301
+/ideas.html      /            301
+/article         /            301
+/article.html    /            301
+/now             /            301
+/now.html        /            301
+/admin           /            301
+/admin.html      /            301
+/feed.xml        /            301
+/rss             /            301
+/feed            /            301
 
 # اختصار عربي إضافي
 /ابدأ-من-هنا   /            301
@@ -426,8 +354,8 @@ done(
     "README.md",
     `# tfkir.net — ${doctor.nameAr}
 
-موقع شخصي لـ${doctor.nameAr}: تفكير طبي، أفكار ومقالات، مشاريع شخصية، ومحاضرات.
-مبني كصفحات ثابتة (Static) بدون أي إطار عمل، ومنشور على **Cloudflare Pages**.
+موقع شخصي لـ${doctor.nameAr}: التفكير الطبي، والمشاريع، والمحاضرات.
+موقع ثابت (Static) بلا إطار عمل وبلا قاعدة بيانات، ومنشور على **Cloudflare Pages**.
 
 ---
 
@@ -436,8 +364,8 @@ done(
 \`\`\`
 index.html …            الصفحات المولَّدة (المحتوى النهائي)
 assets/css/             base · components · pages
-assets/js/app.js        كل الوظائف (سمة، قائمة، كشف، تصفية، نموذج…)
-assets/js/ideas.data.js بيانات المقالات (مولَّدة آليًا)
+assets/js/app.js        الوظائف العامة (سمة، قائمة، كشف، نموذج…)
+assets/js/cloud.js      نافذة الخدمة الحالية العائمة
 assets/img/             الصور والأيقونات
 functions/api/contact.js Cloudflare Pages Function — استقبال رسائل النموذج
 tools/content.mjs       ← المصدر الوحيد للمحتوى (عدّله أولًا)
@@ -447,59 +375,10 @@ tools/icons.mjs         أيقونات SVG
 tools/build.mjs         مُولّد الموقع
 \`\`\`
 
-## نظام المقالات ولوحة التحرير
+## الخدمة الحالية
 
-مقالات الموقع تأتي من مصدرين:
-
-1. **مقالات البناء الثابت** — تُعرَّف في \`tools/content.mjs\` (حقل \`ideas\`)، وتُدمج وقت البناء.
-2. **مقالات قاعدة البيانات** — يكتبها الدكتور من لوحة التحرير \`/admin\` وتُحفظ في **Cloudflare D1**،
-   فتظهر مباشرة في \`/ideas\` و\`/article\` بلا إعادة بناء.
-
-### الدخول إلى اللوحة
-
-\`\`\`
-https://tfkir.net/admin
-المستخدم الافتراضي: yas      كلمة المرور: 1234
-\`\`\`
-
-عند أول دخول **إلزامي** تغيير اسم المستخدم وكلمة المرور (٨ خانات فأكثر).
-يمكن تغييرهما لاحقًا من زر الإعدادات في الشريط العلوي.
-
-### ما تقدّمه اللوحة
-
-- محرّر نصوص غني: عناوين (H2–H4)، عريض/مائل/تحته خط/يتوسطه خط، نوع الخط وحجمه،
-  لون النص ولون التمييز، المحاذاة، قوائم، مسافات بادئة، روابط وصور، فاصل، إزالة التنسيق، تراجع/إعادة.
-- **حفظ تلقائي (Auto-draft)**: يُحفظ النص محليًا فورًا، وعلى الخادم كل ٣٠٠ حرف أو كل ٢٠ ثانية،
-  وعند مغادرة الصفحة (\`sendBeacon\`) — فلا يضيع شيء لو انقطع الإنترنت أو أُغلق المتصفح.
-- قوائم **المسودات** و**المنشورة** مع بحث وتصفية بالتصنيف.
-- نشر مباشر، أو إرجاع لمسودة، أو حذف نهائي، أو معاينة قبل النشر.
-
-### البنية الخلفية
-
-\`\`\`
-db/schema.sql                 مخطط D1 (مستخدمون · جلسات · مقالات · لقطات حفظ)
-functions/_lib.js             مصادقة، جلسات، تنظيف HTML، slug، التواريخ العربية
-functions/_render.js          بناء بطاقات وصفحات المقالات على الخادم
-functions/api/auth/*          تسجيل الدخول · الخروج · الجلسة · تغيير البيانات
-functions/api/posts/*         إنشاء · تعديل · نشر · حذف · حفظ تلقائي
-functions/article.js          SSR لصفحة المقال (لمحركات البحث)
-functions/ideas.js            SSR لقائمة المقالات
-tools/seed.mjs                تهيئة القاعدة + زرع المستخدم الافتراضي
-\`\`\`
-
-**الأمان**: كلمات المرور بـ PBKDF2-SHA256، الجلسات بكوكي \`HttpOnly; Secure; SameSite=Strict\`
-(يُخزَّن SHA-256 من التوكن فقط)، حماية من التخمين (قفل ١٥ دقيقة بعد ٨ محاولات فاشلة)،
-فحص أصل الطلب لكل عملية كتابة، وتنظيف HTML بقائمة سماح صارمة على الخادم
-(لا \`script\` ولا \`on*\` ولا \`javascript:\` ولا \`iframe\` ولا \`style\` خطرة).
-
-**تغيير بيانات الدخول يدويًا** (نسيت كلمة المرور):
-
-\`\`\`bash
-ADMIN_USERNAME=my-user ADMIN_PASSWORD='NewPass123!' node tools/seed.mjs
-\`\`\`
-
-> عدد تكرارات PBKDF2 = ١٠٠٠٠ (في \`functions/_lib.js\`) لأن دوال Pages على الخطة المجانية
-> تُمنح وقت معالج محدود؛ ارفعه إلى ٢١٠٠٠٠ بعد الترقية إلى خطة مدفوعة.
+تظهر الخدمة (الدورة) الحالية في **نافذة عائمة فقط**، تُعرَّف في \`tools/content.mjs\` تحت \`now\`.
+لا يوجد عدّاد ولا موعد إغلاق: تبقى معروضة حتى تُحدَّث أو تُحذف يدويًا.
 
 ## تعديل المحتوى
 
@@ -567,31 +446,20 @@ done(
 
 | الحقل | الحالة | ملاحظة |
 |---|---|---|
-| \`phone\` | فارغ | الرقم الذي يُعرض في صفحة الاتصال |
-| \`whatsapp\` | فارغ | يُستخدم في صفحة الروابط |
+| \`phone\` | موجود | الرقم الذي يُعرض في صفحة الاتصال |
+| \`whatsapp\` | موجود | يُستخدم في صفحة الروابط |
 | \`socials.x\` | فارغ | |
 | \`socials.linkedin\` | فارغ | |
-| \`socials.instagram\` | فارغ | |
 | \`socials.youtube\` | فارغ | |
 | \`socials.telegram\` | فارغ | |
 | \`socials.github\` | فارغ | |
 | \`emailPress\` | موجود | بدّله ببريد الإعلام |
-| \`portrait\` | مسار | ضع الصورة في \`assets/img/doctor-yasser.jpg\` |
+| \`portrait\` | مسار | الصورة في \`assets/img/doctor-yasser.jpg\` |
 
 ## ٢) الصورة الشخصية
 
-ضع ملف الصورة هنا:
-
 \`\`\`
 assets/img/doctor-yasser.jpg     (يُفضَّل 1200×1500 px، عمودي، أقل من 300KB)
-\`\`\`
-
-الأصل المتاح حاليًا: \`IMG-20251209-WA0052.jpg\` في جذر المشروع.
-انسخه مباشرة:
-
-\`\`\`bash
-cp IMG-20251209-WA0052.jpg assets/img/doctor-yasser.jpg
-# ثم اضغطه إن لزم (أداة disponibles: macOS sips / Linux imagemagick / اونلاين squoosh)
 \`\`\`
 
 الصورة في الهيرو تظهر **خافتة** (grayscale + opacity) وتظهر أوضح عند تمرير المؤشر فوقها.
@@ -601,93 +469,22 @@ cp IMG-20251209-WA0052.jpg assets/img/doctor-yasser.jpg
 
 خمسة محطات. \`when\` فيها \`TODO\` — ضع السنوات الحقيقية، واكتب نصًا موجزًا لكل محطة.
 
-## ٤) الإحصاءات — \`stats\`
+## ٤) المشاريع — \`projects\`
 
-الأرقام الحالية (١٢+، ٨+، ٣٤، ٦) **افتراضية**. بدّلها بأرقامك الحقيقية.
+أضف المشاريع المنشورة أو قيد التطوير، مع الحالة والرابط إن وُجد.
 
-## ٥) الأفكار — \`ideas\`
+## ٥) المحاضرات — \`talks\`
 
-> **ملاحظة:** حقول المقالات الآن يكتبها الدكتور مباشرة من \`/admin\` وتُحفظ في D1،
-> وتظهر في \`/ideas\` و\`/article\` بلا أي بناء. استخدم \`tools/content.mjs\` فقط
-> للمقالات التي تريد إدراجها ضمن مصدر البناء (مثل المقالات النموذجية).
-> لإضافة مقالة ثابتة:
+أضف المحاضرات والحوارات والورش، مع النوع والتاريخ والرابط.
 
-\`\`\`js
-{
-  slug: "unique-slug",
-  featured: false,
-  category: "التفكير الطبي",      // من ideaCategories
-  title: "…",
-  excerpt: "…",                     // ٢٠٠–٣٠٠ حرف
-  date: "2026-10-01",
-  dateAr: "١ أكتوبر ٢٠٢٦",
-  read: "٧ دقائق",
-  tags: ["…", "…"],
-  body: [ { h: "عنوان القسم", p: ["فقرة", "فقرة"] } ],
-  quote: { text: "…", cite: "…" },  // اختياري
-}
-\`\`\`
+## ٦) الخدمة الحالية — \`now\`
 
-## ٦) المشاريع — \`projects\`
+تُعرض الدورة الحالية في النافذة العائمة. عدّل الاسم والوصف ورابط التسجيل في
+\`now.items[0]\`، أو أفرغ \`now.items\` لإخفاء النافذة.
 
-ستة مشاريع. لكل مشروع: \`status\` (\`live\` / \`wip\` / \`idea\`)، \`link\` (فارغ حاليًا)، \`text\`.
-حدّث \`updated\` و\`year\` والقائمة \`stack\`.
+## ٧) الروابط — \`linkGroups\`
 
-## ٧) المحاضرات — \`talks\`
-
-خمس جلسات. أضف \`video\` و\`slides\` (روابط YouTube / Vimeo / PDF).
-
-## ٨) صفحة الروابط — \`linkGroups\`
-
-كل رابط بلا \`url\` يظهر بشارة **«يُضاف لاحقًا»**. املأ:
-
-- واتساب
-- إكس / لينكدإن / إنستغرام / يوتيوب / تيليجرام
-- المصادر الأربعة (إرشادات، أرشيف أدلة، أداة، قائمة قراءة)
-
-## ٩) التذييل والفوتر — \`footer\`
-
-الترويسة، والعمودان الثلاثة. راجع أن تبقى متوافقة مع خريطة التنقل في القائمة الجانبية.
-
-## ١٠) الخصوصية — قسم التحليلات
-
-في \`privacyPage()\` قسم **«أدوات التحليل»** فيه \`TODO\`. إن أضفت Cloudflare Web Analytics
-صف ما يُجمَّع بدقة، وإلا احذف القسم.
-
-## ١١) إرسال النموذج (اختياري)
-
-الافتراضي: النموذج يفتح برنامج بريد الزائر (يعمل بلا إعداد).
-للإرسال الحقيقي إلى بريدك، راجع قسم **نموذج التواصل** في \`README.md\`.
-
-## ١٢) صور إضافية (اختياري)
-
-| الملف | الاستخدام | الحالة |
-|---|---|---|
-| \`assets/img/doctor-yasser.jpg\` | صورة الهيرو | فارغ |
-| \`assets/img/og-cover.svg\` | صورة المشاركة | مولَّد (بديل) |
-| \`assets/img/og-cover.png\` | صورة المشاركة ١٢٠٠×٦٣٠ | بديل |
-| \`assets/img/icon-192.png\` | أيقونة PWA | بديل |
-| \`assets/img/icon-512.png\` | أيقونة PWA | بديل |
-| \`assets/img/icon-maskable-512.png\` | أيقونة PWA مقنّعة | بديل |
-| \`assets/img/favicon-32.png\` | أيقونة المتصفح | بديل |
-| \`assets/img/apple-touch-icon.png\` | أيقونة iOS | بديل |
-| \`assets/img/icon-source.png\` | المصدر الأصلي للأيقونة | بديل |
-
-## ١٣) لوحة التحرير — \`/admin\`
-
-- أول دخول: \`yas\` / \`1234\` ← **إجباري** تغيير اسم المستخدم وكلمة المرور.
-- المقالات في D1 لا تحتاج أي بناء أو رفع بعد كتابتها.
-- لتغيير البيانات يدويًا (نسيت كلمة المرور):
-  \`\`\`bash
-  ADMIN_USERNAME=my-user ADMIN_PASSWORD='NewPass123!' node tools/seed.mjs
-  \`\`\`
-- عند تعديل المخطط في \`db/schema.sql\` نفّذ \`node tools/seed.mjs\` (آمن، يُطبّق \`IF NOT EXISTS\`).
-
-## ١٤) SEO
-
-- \`site.origin\` — اضبطه إن تغيّر الدومين.
-- \`sitemap.xml\` و\`feed.xml\` — تُولَّدان تلقائيًا من المحتوى.
-- \`_headers\` — CSP وHSTS جاهزة.
+أضف روابط المنصات والحسابات، أو أزل ما لا تريده.
 `
   )
 );
