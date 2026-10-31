@@ -37,24 +37,21 @@ const listSection = ({ id, chips, cards, empty, title, desc }) => `
 const leadHtml = (d = D) => d.leadLines.map((l) => esc(l)).join("<br>\n        ");
 
 const standaloneFieldSection = () => {
-  const cards = standaloneFields
-    .map(
-      (d) => `<div class="card" data-reveal>
-            <span class="card__icon">${icon("pen")}</span>
-            <h2 class="card__title">${esc(d.t)}</h2>
-            <p class="card__text">${esc(d.p)}</p>
-          </div>`
-    )
-    .join("\n          ");
+  const f = standaloneFields[0];
+  if (!f) return "";
 
-  return `<section class="section section--tight" id="standalone-fields">
+  return `<section class="section" id="linguistic-theory">
   <div class="shell">
-    <div class="sect-head" style="margin-bottom:1.2rem">
-      <span class="kicker" data-reveal>${icon("layers")} <span>حقل مستقل</span></span>
+    <div class="sect-head sect-head--center">
+      <span class="kicker" data-reveal>${icon("pen")} <span>نظرية مستقلة</span></span>
+      <h2 style="margin-top:.9rem" data-reveal><span class="gradient-text">${esc(f.t)}</span></h2>
     </div>
-    <div class="grid" style="grid-template-columns:minmax(0,1fr);max-width:760px;margin-inline:auto">
-          ${cards}
+
+    <div class="quote" data-reveal="scale" style="max-width:780px;margin:1.6rem auto 0;padding:1.3rem 1.55rem">
+      <p style="font-size:1.08rem;line-height:1.9">${esc(f.quote)}</p>
     </div>
+
+    <p class="lead" data-reveal style="--d:120ms;max-width:64ch;margin:1.2rem auto 0;text-align:center">${esc(f.p)}</p>
   </div>
 </section>`;
 };
@@ -136,10 +133,8 @@ export function homePage() {
         <span class="chip-num" data-i18n="intro.chip">01 — ميادين المنصة</span>
         <h2 style="margin-top:1rem" data-i18n="intro.title">ميادين المنصة</h2>
         <p class="lead" style="margin-top:1.1rem;color:var(--muted)">
-          نظريات ومنهجيات ودورات في الطب والمنطق والحوار والحجاج واللغة والنهضة
-          والتحقيق والابتكار والتجديد، يجمعها خيط واحد وروح التفكير النهضوي: كل ميدان
-          يبدأ بسؤال واحد مكتوب مسبقًا، ثم تكتمل أضلاعه في مثلث الأضلاع: كيف نفكر فيه،
-          وكيف نستثمره، وكيف ننقله إلى الآخرين.
+          نظريات ومنهجيات ودورات في الطب والمنطق والحوار والحجاج واللغة والنهضة والتحقيق والابتكار والتجديد، يجمعها خيط واحد هو روح التفكير النهضوي.
+          كل ميدان يبدأ بسؤال واحد مثلث الأضلاع: كيف نفكر فيه، وكيف نستثمره، وكيف ننقله إلى الآخرين.
         </p>
         <div class="hero__cta" style="margin-top:1.8rem">
           <a class="btn btn--primary" href="/thinking">${icon("compass")}<span data-i18n="intro.cta1">ابدأ من الميادين</span></a>
@@ -181,7 +176,6 @@ export function homePage() {
     <div class="sect-head sect-head--center">
       <span class="kicker" data-reveal>${icon("compass")} <span data-i18n="domains.kicker">الميادين</span></span>
       <h2 style="margin-top:.9rem" data-reveal data-i18n="domains.title">ستة ميادين، <span class="gradient-text">خيطٌ واحد</span></h2>
-      <p class="lead" data-reveal style="--d:120ms" data-i18n="domains.lead">كل ميدان يبدأ من سؤال واحد مكتوب مسبقًا، ثم يكتمل بمثلث الأضلاع: كيف نفكّر فيه، وكيف نستثمره، وكيف ننقله إلى الآخرين.</p>
     </div>
     <div class="domain-grid">
           ${domainCards}
