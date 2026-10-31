@@ -43,8 +43,7 @@ const standaloneFieldSection = () => {
   return `<section class="section" id="linguistic-theory">
   <div class="shell">
     <div class="sect-head sect-head--center">
-      <span class="kicker" data-reveal>${icon("pen")} <span>نظرية مستقلة</span></span>
-      <h2 style="margin-top:.9rem" data-reveal><span class="gradient-text">${esc(f.t)}</span></h2>
+      <h2 data-reveal><span class="gradient-text">${esc(f.t)}</span></h2>
     </div>
 
     <div class="quote" data-reveal="scale" style="max-width:780px;margin:1.6rem auto 0;padding:1.3rem 1.55rem">
