@@ -174,7 +174,7 @@ export function homePage() {
   <div class="shell">
     <div class="sect-head sect-head--center">
       <span class="kicker" data-reveal>${icon("compass")} <span data-i18n="domains.kicker">الميادين</span></span>
-      <h2 style="margin-top:.9rem" data-reveal data-i18n="domains.title">ستة ميادين، <span class="gradient-text">خيطٌ واحد</span></h2>
+      <h2 style="margin-top:.9rem" data-reveal data-i18n="domains.title">سبعة ميادين، <span class="gradient-text">خيطٌ واحد</span></h2>
     </div>
     <div class="domain-grid">
           ${domainCards}
@@ -335,7 +335,7 @@ export function thinkingPage() {
     <div class="sect-head">
       <span class="kicker" data-reveal>${icon("layers")} المراحل</span>
       <h2 style="margin-top:.9rem" data-reveal>كيف يعمل <span class="mark">العقل السريري</span></h2>
-      <p class="lead" data-reveal style="--d:120ms">ستة ميادين، من أول انتباه إلى آخر توثيق.</p>
+      <p class="lead" data-reveal style="--d:120ms">سبعة ميادين، من أول انتباه إلى آخر توثيق.</p>
     </div>
     <div class="grid grid--3">
           ${domainCards}
