@@ -580,10 +580,18 @@ html:has(.now-cloud) .now-bubble { display: none; }
 
 /* ---------- سحابة «الآن» ---------- */
 
-.now-cloud {
+.now-clouds {
   position: fixed; inset-block-end: calc(82px + env(safe-area-inset-bottom, 0px));
   inset-inline-start: calc(22px + env(safe-area-inset-left, 0px)); z-index: 95;
-  inline-size: min(288px, calc(100vw - 32px)); max-inline-size: 288px; padding: 0.95rem 1rem;
+  display: flex; align-items: flex-end; gap: 0.65rem; max-inline-size: calc(100vw - 24px);
+}
+[dir="rtl"] .now-clouds { inset-inline-start: calc(22px + env(safe-area-inset-right, 0px)); }
+.now-slot {
+  display: flex; flex-direction: column; inline-size: 3cm; flex: 0 0 3cm; min-inline-size: 0;
+}
+.now-cloud[hidden], .now-trigger[hidden] { display: none !important; }
+.now-cloud {
+  position: relative; inline-size: 100%; max-inline-size: none; padding: 0.7rem 0.65rem;
   border: 1px solid color-mix(in srgb, var(--lapis-400) 48%, transparent); border-radius: var(--r-lg);
   background: radial-gradient(130% 100% at 100% 0%, color-mix(in srgb, var(--amber-400) 12%, transparent), transparent 58%), linear-gradient(160deg, color-mix(in srgb, var(--ink-750) 94%, transparent), color-mix(in srgb, var(--ink-900) 96%, transparent));
   color: var(--text);
@@ -591,7 +599,23 @@ html:has(.now-cloud) .now-bubble { display: none; }
   backdrop-filter: blur(20px) saturate(130%); -webkit-backdrop-filter: blur(20px) saturate(130%);
   animation: now-cloud-in 0.6s var(--ease-out) both;
 }
-[dir="rtl"] .now-cloud { inset-inline-start: calc(22px + env(safe-area-inset-right, 0px)); }
+.now-trigger {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem;
+  inline-size: 3cm; block-size: 3cm; aspect-ratio: 1; padding: 0.55rem; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--lapis-400) 48%, transparent); border-radius: 50%;
+  background: radial-gradient(130% 100% at 100% 0%, color-mix(in srgb, var(--amber-400) 12%, transparent), transparent 58%), linear-gradient(160deg, color-mix(in srgb, var(--ink-750) 94%, transparent), color-mix(in srgb, var(--ink-900) 96%, transparent));
+  color: var(--text); font: inherit; text-align: center;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--lapis-500) 18%, transparent), 0 30px 80px -32px color-mix(in srgb, var(--lapis-500) 55%, transparent), var(--sh-md);
+  backdrop-filter: blur(20px) saturate(130%); -webkit-backdrop-filter: blur(20px) saturate(130%);
+  transition: border-color 0.3s var(--ease), color 0.3s var(--ease), transform 0.3s var(--ease-out);
+}
+.now-trigger:hover { color: var(--amber-200); border-color: color-mix(in srgb, var(--amber-400) 52%, transparent); transform: translateY(-2px); }
+.now-trigger svg { inline-size: 22px; block-size: 22px; color: var(--amber-300); }
+.now-trigger__label { font-size: 0.68rem; font-weight: 600; line-height: 1.5; }
+[data-theme="light"] .now-trigger {
+  background: radial-gradient(130% 100% at 100% 0%, color-mix(in srgb, var(--amber-400) 16%, transparent), transparent 58%), linear-gradient(160deg, var(--ink-850), var(--ink-900));
+  border-color: color-mix(in srgb, var(--lapis-600) 32%, transparent);
+}
 .now-cloud__tail {
   position: absolute; inset-block-end: -9px; inset-inline-start: 26px; inline-size: 18px; block-size: 18px;
   border-inline-end: 1px solid color-mix(in srgb, var(--lapis-400) 48%, transparent);
@@ -604,7 +628,7 @@ html:has(.now-cloud) .now-bubble { display: none; }
   transition: color 0.3s var(--ease), border-color 0.3s var(--ease), background-color 0.3s var(--ease), transform 0.3s var(--ease-out);
 }
 .now-cloud__close {
-  position: absolute; inset-block-start: 0.45rem; inset-inline-end: 0.45rem; inline-size: 1.6rem; block-size: 1.6rem;
+  position: absolute; inset-block-start: 0.35rem; inset-inline-end: 0.35rem; inline-size: 1.35rem; block-size: 1.35rem;
 }
 .now-dialog__close { position: absolute; inset-block-start: 0.7rem; inset-inline-end: 0.7rem; }
 .now-cloud__close::before, .now-cloud__close::after, .now-dialog__close::before, .now-dialog__close::after {
@@ -623,19 +647,23 @@ html:has(.now-cloud) .now-bubble { display: none; }
   transform: rotate(90deg);
 }
 .now-cloud__eyebrow {
-  display: inline-flex; align-items: center; gap: 0.4rem; padding-inline-end: 2rem; color: var(--amber-200);
-  font-size: 0.68rem; font-weight: 600; line-height: 1.5;
+  display: inline-flex; align-items: center; gap: 0.3rem; padding-inline-end: 1.3rem; color: var(--amber-200);
+  font-size: 0.56rem; font-weight: 600; line-height: 1.45; white-space: normal;
 }
 [data-theme="light"] .now-cloud__eyebrow { color: var(--amber-600); }
 .now-cloud__title {
-  margin-block-start: 0.45rem; padding-inline-end: 1.8rem; color: var(--text); font-family: var(--font-display);
-  font-size: 0.98rem; font-weight: 600; line-height: 1.5;
+  margin-block-start: 0.35rem; padding-inline-end: 0.2rem; color: var(--text); font-family: var(--font-display);
+  font-size: 0.78rem; font-weight: 600; line-height: 1.45;
 }
-.now-cloud__text { margin-block-start: 0.3rem; color: var(--muted); font-size: 0.78rem; line-height: 1.7; }
+.now-cloud__text {
+  margin-block-start: 0.3rem; color: var(--muted); font-size: 0.65rem; line-height: 1.6;
+  display: -webkit-box; -webkit-line-clamp: 5; -webkit-box-orient: vertical; overflow: hidden;
+}
 .now-cloud__foot {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 0.6rem;
-  margin-block-start: 0.8rem; padding-block-start: 0.7rem; border-block-start: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: stretch; gap: 0.5rem;
+  margin-block-start: 0.65rem; padding-block-start: 0.55rem; border-block-start: 1px solid var(--line);
 }
+.now-cloud__foot .btn { inline-size: 100%; justify-content: center; padding-inline: 0.4rem; font-size: 0.65rem; }
 [data-theme="light"] .now-cloud {
   background: radial-gradient(130% 100% at 100% 0%, color-mix(in srgb, var(--amber-400) 16%, transparent), transparent 58%), linear-gradient(160deg, var(--ink-850), var(--ink-900));
   border-color: color-mix(in srgb, var(--lapis-600) 32%, transparent);
@@ -948,13 +976,13 @@ html:has(.now-cloud) .now-bubble { display: none; }
   .now-ribbon__side { align-items: flex-start; }
 }
 @media (max-width: 640px) {
-  .now-cloud {
-    inline-size: min(288px, calc(100vw - 24px)); max-inline-size: none;
+  .now-clouds {
     inset-block-end: calc(84px + env(safe-area-inset-bottom, 0px));
     inset-inline-start: calc(12px + env(safe-area-inset-left, 0px));
+    gap: 0.5rem;
   }
-  [dir="rtl"] .now-cloud { inset-inline-start: calc(12px + env(safe-area-inset-right, 0px)); }
-  .now-cloud__close { inline-size: 1.6rem; block-size: 1.6rem; }
+  [dir="rtl"] .now-clouds { inset-inline-start: calc(12px + env(safe-area-inset-right, 0px)); }
+  .now-cloud__close { inline-size: 1.35rem; block-size: 1.35rem; }
   .now-dialog__panel { padding: 1.25rem; padding-block-start: 2.6rem; }
   .hero__now { inset-inline: 0.75rem; inset-block-end: 0.75rem; inline-size: auto; }
   .now-bubble {
@@ -979,8 +1007,10 @@ html:has(.now-cloud) .now-bubble { display: none; }
   .card__index { font-size: 2.8rem; }
 }
 @media (max-height: 560px) {
-  .now-cloud { inset-block-end: calc(76px + env(safe-area-inset-bottom, 0px)); padding: 0.9rem; }
+  .now-clouds { inset-block-end: calc(76px + env(safe-area-inset-bottom, 0px)); }
+  .now-cloud { padding: 0.55rem; }
   .now-cloud__text { display: none; }
+  .now-trigger { inline-size: 2.6cm; block-size: 2.6cm; }
 }
 
 /* ---------- تقليل الحركة ---------- */

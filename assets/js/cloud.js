@@ -1,114 +1,97 @@
-/* tfkir.net — طبقة «الخدمة الحالية»: نافذة عائمة وتفاصيل. سكربت مستقل بلا مكتبات. */
+/* tfkir.net — طبقة «الخدمات الحالية»: نافذة عائمة، تفاصيل، وأزرار إعادة الفتح. سكربت مستقل بلا مكتبات. */
 (function () {
   "use strict";
 
   if (window.TFKIR_NOW) return;
 
-  var HOUR = 3600000;
-  var DISMISS_KEY = "tfkir-now-dismissed", DISMISS_AGE = 72 * HOUR;
-  var root = document.documentElement;
-  var dialog = document.getElementById("now-dialog");
-  var cloud = document.getElementById("now-cloud");
   var opens = Array.prototype.slice.call(document.querySelectorAll("[data-now-open]"));
-  var closes = Array.prototype.slice.call(document.querySelectorAll("[data-now-close]"));
-  var supportsDialog = !!(dialog && typeof dialog.showModal === "function");
-  var reduced = !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  var bubbleShown = false, bubbleStopped = false, bubbleTimer = 0;
+  var collapses = Array.prototype.slice.call(document.querySelectorAll("[data-now-collapse]"));
+  var reopens = Array.prototype.slice.call(document.querySelectorAll("[data-now-reopen]"));
+  var dialogCloses = Array.prototype.slice.call(document.querySelectorAll("[data-now-close]"));
+  var dialogs = Array.prototype.slice.call(document.querySelectorAll(".now-dialog"));
 
-  function dismissedRecently() {
-    try {
-      var t = Number(localStorage.getItem(DISMISS_KEY));
-      return t > 0 && Date.now() - t < DISMISS_AGE;
-    } catch (e) { return false; }
-  }
-
-  function hideBubble() {
-    if (cloud) cloud.hidden = true;
-    bubbleShown = false;
-  }
-  function showBubble() {
-    if (bubbleShown || bubbleStopped || dismissedRecently()) return;
-    if (dialog && dialog.open) return;
-    if (!cloud) return;
-    bubbleShown = true;
-    if (bubbleTimer) { clearTimeout(bubbleTimer); bubbleTimer = 0; }
-    cloud.hidden = false;
-  }
-
-  function onScroll() {
-    var y = window.scrollY || window.pageYOffset || root.scrollTop || 0;
-    if (y >= 220) showBubble();
-  }
-  function openDialog() {
-    if (!supportsDialog) return false;
+  function openDialogFor(el) {
+    var id = el && el.getAttribute("data-now-target");
+    var dialog = id ? document.getElementById(id) : dialogs[0];
+    if (!dialog) return false;
     if (!dialog.open) {
       try { dialog.showModal(); } catch (e) { return false; }
     }
-    hideBubble();
-    try { document.dispatchEvent(new CustomEvent("tfkir:now-open")); } catch (e) {}
+    try {
+      document.dispatchEvent(new CustomEvent("tfkir:now-open", { detail: { id: dialog.id } }));
+    } catch (e) {}
     return true;
   }
 
-  function closeDialog() {
-    if (supportsDialog && dialog.open) {
-      if (typeof dialog.close === "function") dialog.close();
-      else dialog.removeAttribute("open");
-    }
-    hideBubble();
-    try { document.dispatchEvent(new CustomEvent("tfkir:now-close")); } catch (e) {}
-    showBubble();
+  function closeDialog(dialog) {
+    if (!dialog || !dialog.open) return;
+    if (typeof dialog.close === "function") dialog.close();
+    else dialog.removeAttribute("open");
+    try {
+      document.dispatchEvent(new CustomEvent("tfkir:now-close", { detail: { id: dialog.id } }));
+    } catch (e) {}
   }
 
-  function dismissBubble() {
-    bubbleStopped = true;
-    hideBubble();
-    try { localStorage.setItem(DISMISS_KEY, String(Date.now())); } catch (e) {}
-  }
-
-  function linkOf(el) {
-    if (!el) return null;
-    if (el.tagName === "A" && el.getAttribute("href")) return el;
-    return el.closest ? el.closest("a[href]") : null;
-  }
-  function fallbackHref(link) {
-    var href = link && link.getAttribute("href");
-    return href && href.charAt(0) !== "#" ? href : "/contact";
+  function slotFor(el) {
+    return el.closest ? el.closest("[data-now-slot]") : null;
   }
 
   opens.forEach(function (el) {
     el.addEventListener("click", function (event) {
-      var link = linkOf(el);
-      if (!supportsDialog) {
-        if (link) { event.preventDefault(); window.location.href = fallbackHref(link); }
-        return;
-      }
-      if (link) event.preventDefault();
-      if (!openDialog() && link) window.location.href = fallbackHref(link);
+      event.preventDefault();
+      openDialogFor(el);
     });
   });
 
-  closes.forEach(function (el) {
+  collapses.forEach(function (el) {
     el.addEventListener("click", function (event) {
       event.preventDefault();
-      if (dialog && dialog.contains(el)) closeDialog();
-      else dismissBubble();
+      var slot = slotFor(el);
+      if (!slot) return;
+      var card = slot.querySelector("[data-now-card]");
+      var trigger = slot.querySelector("[data-now-reopen]");
+      if (card) card.hidden = true;
+      if (trigger) trigger.hidden = false;
     });
   });
 
-  if (dialog) {
-    dialog.addEventListener("click", function (event) {
-      if (event.target === dialog) closeDialog();
+  reopens.forEach(function (el) {
+    el.addEventListener("click", function (event) {
+      event.preventDefault();
+      var slot = slotFor(el);
+      if (!slot) return;
+      var card = slot.querySelector("[data-now-card]");
+      if (card) card.hidden = false;
+      el.hidden = true;
     });
-    dialog.addEventListener("cancel", closeDialog);
-    dialog.addEventListener("close", function () { hideBubble(); showBubble(); });
-  }
+  });
 
-  window.TFKIR_NOW = { open: openDialog, close: closeDialog };
+  dialogCloses.forEach(function (el) {
+    el.addEventListener("click", function (event) {
+      event.preventDefault();
+      closeDialog(el.closest ? el.closest("dialog") : null);
+    });
+  });
 
-  if (reduced) showBubble();
-  else if (cloud && !dismissedRecently()) {
-    bubbleTimer = setTimeout(showBubble, 2400);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-  }
+  dialogs.forEach(function (dialog) {
+    dialog.addEventListener("click", function (event) {
+      if (event.target === dialog) closeDialog(dialog);
+    });
+    dialog.addEventListener("cancel", function (event) {
+      event.preventDefault();
+      closeDialog(dialog);
+    });
+  });
+
+  window.TFKIR_NOW = {
+    open: function (index) {
+      var dialog = dialogs[index || 0];
+      if (!dialog) return false;
+      if (!dialog.open) {
+        try { dialog.showModal(); } catch (e) { return false; }
+      }
+      return true;
+    },
+    close: function (index) { closeDialog(dialogs[index || 0]); },
+  };
 })();

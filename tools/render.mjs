@@ -22,38 +22,57 @@ const attr = (o = {}) =>
     .join(" ");
 
 /* ---------- العلامة وطبقة «الآن» ---------- */
-const nowItem = (now.items || [])[0] || null;
+const nowItems = now.items || [];
 const brandMark = (extra = "") =>
   `<span class="brand__mark${extra ? ` ${extra}` : ""}" aria-hidden="true"><img class="brand__mark-img" src="/assets/img/logo-mark-sm.png" alt="" width="44" height="44" decoding="async" data-no-translate></span>`;
-function nowCloud() {
-  if (!nowItem) return "";
-  return `<aside class="now-cloud" id="now-cloud" aria-label="سحابة التفكير — الخدمة الحالية النشطة" hidden>
-  <span class="now-cloud__tail" aria-hidden="true"></span>
-  <button class="now-cloud__close" type="button" data-now-close aria-label="${esc(now.closeCloud)}"></button>
-  <span class="now-cloud__eyebrow"><span class="now-live-dot" aria-hidden="true"></span> ${esc(now.eyebrow)}</span>
-  <p class="now-cloud__title">${esc(nowItem.title)}</p>
-  <p class="now-cloud__text">${esc(nowItem.desc)}</p>
-  <div class="now-cloud__foot">
-    <button class="btn btn--primary btn--sm" type="button" data-now-open>${esc(now.detail)}</button>
-  </div>
+
+function nowClouds() {
+  if (!nowItems.length) return "";
+  const slots = nowItems
+    .map((item, i) => {
+      const iconName = item.icon || (i === 0 ? "spark" : "stethoscope");
+      return `<div class="now-slot" data-now-slot>
+  <article class="now-cloud" id="now-cloud-${i}" data-now-card aria-label="${esc(item.title)}">
+    <span class="now-cloud__tail" aria-hidden="true"></span>
+    <button class="now-cloud__close" type="button" data-now-collapse aria-label="${esc(now.closeCloud)}"></button>
+    <span class="now-cloud__eyebrow"><span class="now-live-dot" aria-hidden="true"></span> ${esc(now.eyebrow)}</span>
+    <p class="now-cloud__title">${esc(item.title)}</p>
+    <p class="now-cloud__text">${esc(item.desc)}</p>
+    <div class="now-cloud__foot">
+      <a class="btn btn--primary btn--sm" href="${esc(item.href)}" data-now-open data-now-target="now-dialog-${i}" aria-haspopup="dialog">${esc(now.detail)}</a>
+    </div>
+  </article>
+  <button class="now-trigger" type="button" data-now-reopen aria-label="${esc(item.title)}" hidden>
+    ${icon(iconName)}
+    <span class="now-trigger__label">${esc(item.shortTitle || item.title)}</span>
+  </button>
+</div>`;
+    })
+    .join("\n");
+
+  return `<aside class="now-clouds" id="now-clouds" aria-label="الخدمات الحالية النشطة">
+${slots}
 </aside>`;
 }
 
-function nowDialog() {
-  if (!nowItem) return "";
-  const meta = (nowItem.meta || []).map((m) => `<li>${esc(m)}</li>`).join("");
-  return `<dialog class="now-dialog" id="now-dialog" aria-labelledby="now-dialog-title">
+function nowDialogs() {
+  return nowItems
+    .map((item, i) => {
+      const meta = (item.meta || []).map((m) => `<li>${esc(m)}</li>`).join("");
+      return `<dialog class="now-dialog" id="now-dialog-${i}" aria-labelledby="now-dialog-title-${i}">
   <div class="now-dialog__panel">
     <button class="now-dialog__close" type="button" data-now-close aria-label="${esc(now.close)}"></button>
     <span class="now-dialog__eyebrow">${esc(now.dialogEyebrow)}</span>
-    <h2 class="now-dialog__title" id="now-dialog-title">${esc(nowItem.title)}</h2>
-    <p class="now-dialog__lead">${esc(nowItem.desc)}</p>
-    <ul class="now-dialog__meta">${meta}</ul>
+    <h2 class="now-dialog__title" id="now-dialog-title-${i}">${esc(item.title)}</h2>
+    <p class="now-dialog__lead">${esc(item.desc)}</p>
+    ${meta ? `<ul class="now-dialog__meta">${meta}</ul>` : ""}
     <div class="now-dialog__actions">
-      <a class="btn btn--primary" href="${esc(nowItem.href)}">${esc(nowItem.cta)}</a>
+      <a class="btn btn--primary" href="${esc(item.href)}">${esc(item.cta)}</a>
     </div>
   </div>
 </dialog>`;
+    })
+    .join("\n");
 }
 
 /* ---------- head ---------- */
@@ -277,8 +296,8 @@ ${p.body}
 
 ${siteFooter()}
 
-${nowCloud()}
-${nowDialog()}
+${nowClouds()}
+${nowDialogs()}
 
 ${p.scripts || ""}
 <script src="/assets/js/cloud.js" defer></script>
